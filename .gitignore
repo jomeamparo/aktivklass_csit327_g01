@@ -1,0 +1,30 @@
+# Virtual environment
+venv/
+
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+django-5.2.1-py3-none-any.whl
+build/
+dist/
+*.egg-info/
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+*.sqlite3
+db.sqlite3
+
+# If you use environment variables file
+.env
+
+# VSCode or IDE config folders (optional)
+.vscode/
+.idea/
+
+# MacOS specific files (optional)
+.DS_Store

@@ -1,0 +1,80 @@
+{% extends 'core/main.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Archived Classes</h2>
+    </div>
+
+    {% if classes %}
+        <div id="classList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for class in classes %}
+            <div class="relative border border-green-600 rounded-lg p-5 bg-white transition animate-float emboss-effect hover:shadow-lg">
+                <!-- Action icons -->
+                <div class="absolute top-2 right-2 flex space-x-2 z-10">
+                    <!-- Delete Icon (Trash can) -->
+                    <form action="{% url 'delete_archived_class' class.id %}" method="post" onsubmit="return confirm('Delete this class?');">
+                        {% csrf_token %}
+                        <button type="submit" title="Delete">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600 hover:text-red-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a2 2 0 012 2v2H8V5a2 2 0 012-2z" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Class content -->
+                <a href="{% url 'class_record_detail' class.id %}" class="block">
+                    <h3 class="text-xl font-semibold text-gray-900 emboss-text">{{ class.subject_name }}</h3>
+                    <p class="text-sm text-gray-600 mt-1">Code: {{ class.subject_code }}</p>
+                    <p class="text-sm text-gray-600 mt-1">Description: {{ class.description }}</p>
+                    <p class="text-sm text-gray-600 mt-1">Schedule: {{ class.schedule }}</p>
+                    <p class="text-sm text-gray-600 mt-1">Room: {{ class.room }}</p>
+                    <p class="text-sm text-gray-600 mt-1">Class Code: {{ class.class_code }}</p>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="flex justify-center items-center h-48">
+            <p class="text-gray-500 text-lg">No classes available.</p>
+        </div>
+        {% endif %}
+</div>
+
+<!-- JavaScript -->
+<script>
+</script>
+
+<style>
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Emboss effect for card background */
+.emboss-effect {
+  box-shadow:
+    inset 2px 2px 5px rgba(255, 255, 255, 0.7),
+    inset -2px -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Emboss effect for text */
+.emboss-text {
+  text-shadow:
+    1px 1px 0 #fff,
+    -1px -1px 0 #999;
+}
+</style>
+
+{% endblock %}

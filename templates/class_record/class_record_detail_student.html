@@ -1,0 +1,272 @@
+{% extends 'core/main.html' %}
+
+{% block title %}Class Record Detail{% endblock %}
+
+{% block content %}
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/handsontable/11.1.0/handsontable.full.min.css"
+  rel="stylesheet"
+/>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/handsontable/11.1.0/handsontable.full.min.js"
+  integrity="sha384-..."
+  crossorigin="anonymous"
+  data-license="non-commercial-and-evaluation"
+></script>
+
+<div class="container ">
+    <a href="{% url 'dashboard_student' %}" class="inline-block text-green-600 hover:underline">← Back</a>
+
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">
+            {{ class.subject_name }} ({{ class.subject_code }})
+        </h2>
+    </div>
+      
+    <div id="handsontable-container"></div>
+</div>
+
+<style>
+    #handsontable-container {
+      width: 100%; /* Adjust width to your desired size */
+      height: 500px; /* Set a fixed height for visibility */
+      overflow: auto; /* Allow scrolling if content overflows */
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+  
+    /* Table Header Styling */
+    .handsontable thead th {
+      background: linear-gradient(
+        135deg,
+        #1d4d9e,
+        #14529a
+      ); /* Elegant gradient for the header */
+      color: #e4e7ec; /* Soft light gray color for text, enhancing readability */
+      font-weight: 600; /* Slightly bold for professional appearance */
+      padding: 2px; /* Balanced padding for a refined look */
+      text-align: center;
+      border-bottom: 2px solid #1f3a5d; /* Clean border at the bottom for separation */
+      font-size: 12px; /* Appropriate font size for clarity */
+      letter-spacing: 0.5px; /* Slight letter spacing for readability */
+      transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transition for hover effects */
+      white-space: nowrap; /* Allow header cells to wrap text */
+      word-wrap: break-word; /* Break words if necessary */
+    }
+  
+    /* Hover effect on header */
+    .handsontable thead th:hover {
+      background: linear-gradient(
+        135deg,
+        #14529a,
+        #0e3b6a
+      ); /* Darker shade on hover for interactive feedback */
+      border-bottom: 2px solid #0e3b6a; /* Match the bottom border color with hover effect */
+    }
+  
+    /* Row Styling */
+    .handsontable tbody tr {
+      background-color: #fff;
+      transition: background-color 0.3s ease;
+    }
+  
+    .handsontable tbody tr:hover {
+      background-color: #f1f1f1;
+    }
+  
+    /* Cell Styling */
+    .handsontable td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      background-color: #ffffff;
+      white-space: normal; /* Allow cell content to wrap */
+      word-wrap: break-word; /* Break words if necessary */
+    }
+  
+    /* Left-align the first two columns */
+    .handsontable td:nth-child(1),
+    .handsontable td:nth-child(2) {
+      text-align: left;
+    }
+  
+    /* Center-align the rest of the columns */
+    .handsontable td:nth-child(n + 3) {
+      text-align: center;
+    }
+  
+    /* Focused Cells Styling */
+    .handsontable td.htSelected {
+      border-color: #007bff;
+      background-color: #e8f1fe;
+    }
+  
+    /* Read-only Cells Styling */
+    .handsontable td[readonly] {
+      background-color: #f4f4f4;
+      color: #aaa;
+    }
+  
+    /* Context Menu Styling */
+    .handsontable .htContextMenu {
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+  
+    /#save-button:disabled {
+      background-color: #ccc; /* Grey color when disabled */
+      cursor: not-allowed;
+    }
+  
+    /* Style for the enabled state */
+    #save-button {
+      background-color: green; /* Green color when enabled */
+      color: white;
+      cursor: pointer;
+    }
+  
+    #save-button:hover {
+      background-color: darkgreen; /* Dark green on hover */
+    }
+  
+    #save-form button:hover {
+      background-color: #45a049;
+    }
+  
+    /* Button Container Styling */
+    .button-container {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+  
+    /* Adjusted Scrollbar Style */
+    .handsontable .wtHolder::-webkit-scrollbar {
+      height: 8px;
+      width: 8px;
+    }
+  
+    .handsontable .wtHolder::-webkit-scrollbar-thumb {
+      background-color: #007bff;
+      border-radius: 4px;
+    }
+  
+    .handsontable .wtHolder::-webkit-scrollbar-thumb:hover {
+      background-color: #0056b3;
+    }
+
+    .htLeftAlign {
+        text-align: left !important;
+    }
+  </style>
+
+<script>
+    const initial_data = {{ exams|safe }};
+    const container = document.getElementById('handsontable-container');
+    const userRole = "{{ role }}";
+
+    const hot = new Handsontable(container, {
+        data:  initial_data,
+        nestedHeaders: [
+        [
+            { label: '', colspan: 2 },
+            { label: 'Quizzes', colspan: 5 },
+            { label: 'Assignments', colspan: 5 },
+            { label: 'Seatworks', colspan: 5 },
+            { label: 'Laboratory Works', colspan: 5 },
+            { label: 'PE', colspan: 1 },
+            { label: 'ME', colspan: 1 },
+            { label: 'PFE', colspan: 1 },
+            { label: 'FE', colspan: 1 },
+            { label: 'MG', colspan: 1 },
+            { label: 'FG', colspan: 1 },
+            { label: 'Remarks', colspan: 1 }
+        ],
+        [
+            { label: '', colspan: 2 },
+            { label: '1', colspan: 1 }, { label: '2', colspan: 1 }, { label: '3', colspan: 1 }, { label: '4', colspan: 1 }, { label: '5', colspan: 1 },
+            { label: '1', colspan: 1 }, { label: '2', colspan: 1 }, { label: '3', colspan: 1 }, { label: '4', colspan: 1 }, { label: '5', colspan: 1 },
+            { label: '1', colspan: 1 }, { label: '2', colspan: 1 }, { label: '3', colspan: 1 }, { label: '4', colspan: 1 }, { label: '5', colspan: 1 },
+            { label: '1', colspan: 1 }, { label: '2', colspan: 1 }, { label: '3', colspan: 1 }, { label: '4', colspan: 1 }, { label: '5', colspan: 1 },
+            null, null, null, null, 
+            null, null, null
+        ],
+        ['ID Number','Student Name', 
+        'Quiz 1', 'Quiz 2', 'Quiz 3', 'Quiz 4', 'Quiz 5',
+        'Assign 1', 'Assign 2', 'Assign 3', 'Assign 4', 'Assign 5',
+        'SW 1', 'SW 2', 'SW 3', 'SW 4', 'SW 5',
+        'Lab 1', 'Lab 2', 'Lab 3', 'Lab 4', 'Lab 5',
+        ' ', ' ', ' ', ' ', 
+        ' ', ' ', ' ']
+        ],
+        licenseKey: 'non-commercial-and-evaluation',
+        cells: (row, col) => {
+            const cell = {};
+            if (col === 0 || col === 1) {
+                cell.className = 'htLeftAlign'; // Apply left alignment
+            }
+
+            if (userRole === 'faculty') {
+                if (col === 0 || col === 1) {
+                    cell.readOnly = true;
+                }
+            } else {
+                cell.readOnly = true;
+            }
+            
+            return cell;
+        },
+        colWidths: (index) => {
+            if (index === 0) return 120;
+            if (index === 1) return 250;
+            return 100;
+          },
+        width: '100%',
+        rowHeaders: true,
+        colHeaders: true,
+        manualColumnFreeze: true,
+        contextMenu: {
+        items: {
+            freezeColumn: {
+            name: 'Freeze this column',
+            disabled: function () {
+                const selectedColumn = this.getSelectedRangeLast()?.from?.col;
+                return selectedColumn !== 0; // Allow freeze only for the first column
+            }
+            },
+            unfreezeColumn: {
+            name: 'Unfreeze this column',
+            disabled: function () {
+                const selectedColumn = this.getSelectedRangeLast()?.from?.col;
+                return selectedColumn !== 0; // Allow unfreeze only for the first column
+            }
+            },
+            separator: Handsontable.plugins.ContextMenu.SEPARATOR,
+            copy: { name: 'Copy' },
+            paste: { name: 'Paste' }
+        }
+        },
+        fixedColumnsStart: 1,
+        autoWrapRow: true,
+        autoWrapCol: true,
+    });
+
+    // Compare data for changes
+    let changesMade = false;
+
+    hot.addHook('afterChange', (changes) => {
+        if (changes) {
+        changesMade = true;
+        document.getElementById('save-button').disabled = false; // Enable save button
+        document.getElementById('save-button').style.backgroundColor = 'green'; // Change to green when enabled
+        }
+    });
+
+  // Disable save button initially
+  document.getElementById('save-button').disabled = true;
+  document.getElementById('save-button').style.backgroundColor = '#ccc'; // Set initial color to grey
+</script>
+
+{% endblock %}

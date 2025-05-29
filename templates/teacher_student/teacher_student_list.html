@@ -1,0 +1,96 @@
+{% extends 'core/main.html' %} 
+{% block title %}Student - Grades{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold text-gray-800">
+            Student List
+        </h2>
+    </div>
+
+    <div class="p-2">
+        <div class="flex flex-wrap justify-between items-center gap-4">
+            <!-- Search Box with Button (Left) -->
+            <div class="flex items-center space-x-2">
+                
+            </div>
+
+            <!-- Filters (Right) -->
+            <div class="flex flex-wrap items-center gap-4">
+                <!-- Sort Filter -->
+                <div class="flex items-center space-x-2">
+                    <label for="sort" class="text-gray-700 font-medium">Sort Classes:</label>
+                    <select id="sort" name="sort" class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="">Select</option>
+                        <option value="ascending">A - Z</option>
+                        <option value="descending">Z - A</option>
+                    </select>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <label for="school_year" class="text-gray-700 font-medium">School Year:</label>
+                    <select id="school_year" name="school_year" class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="">All</option>
+                        <option value="2425">2425</option>
+                        <option value="2526">2526</option>
+                    </select>
+                </div>
+
+                <!-- Year Filter -->
+                <div class="flex items-center space-x-2">
+                    <label for="semester" class="text-gray-700 font-medium">Semester:</label>
+                    <select id="semester" name="semester" class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="">All</option>
+                        <option value="first">1st Semester</option>
+                        <option value="second">2nd Semester</option>
+                        <option value="summer">Summer</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if class_students %}
+        {% for class in class_students %}
+        <div class="mb-4 p-2">
+            <h2 class="text-xl font-semibold mb-4">{{ class.subject_code }} - {{ class.subject_name }}</h2>
+            {% if class.students %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full border border-gray-200">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="border px-4 py-2 text-left">Last Name</th>
+                            <th class="border px-4 py-2 text-left">First Name</th>
+                            <th class="border px-4 py-2 text-left">Middle Name</th>
+                            <th class="border px-4 py-2 text-left">Course</th>
+                            <th class="border px-4 py-2 text-left">Year</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in class.students %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="border px-4 py-2">{{ student.last_name }}</td>
+                            <td class="border px-4 py-2">{{ student.first_name }}</td>
+                            <td class="border px-4 py-2">{{ student.middle_name }}</td>
+                            <td class="border px-4 py-2">{{ student.course }}</td>
+                            <td class="border px-4 py-2">{{ student.year }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-gray-500 italic">No students enrolled in this class.</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% else %}
+    <div class="bg-white p-6 rounded-lg shadow text-center text-gray-500 font-medium">
+        No enrolled students found in any class.
+    </div>
+    {% endif %}
+</div>
+
+<script>
+</script>
+{% endblock %}

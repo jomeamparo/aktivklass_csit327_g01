@@ -1,0 +1,54 @@
+<!-- register/templates/register/register.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen font-sans">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <div class="w-full flex justify-center items-center mt-4">
+            <h1 class="text-3xl font-bold tracking-tight" style="font-family: 'Poppins', sans-serif;">
+                <span class="text-green-600">Aktiv</span><span class="text-gray-800">Klass</span>
+                <span class="font-medium text-gray-500">Management</span>
+            </h1>
+        </div>
+        <br />
+        <h2 class="text-3xl font-semibold text-center mb-6 text-gray-800">Register</h2>
+
+        <form method="POST" novalidate>
+            {% csrf_token %}
+
+            <label for="id_username" class="block text-gray-700 font-medium mb-1">Username</label>
+            {{ form.username.errors }}
+            <input type="text" name="username" id="id_username"
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value="{{ form.username.value|default:'' }}" required>
+
+            <label for="id_password1" class="block text-gray-700 font-medium mt-4 mb-1">Password</label>
+            {{ form.password1.errors }}
+            <input type="password" name="password1" id="id_password1"
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required>
+
+            <label for="id_password2" class="block text-gray-700 font-medium mt-4 mb-1">Confirm Password</label>
+            {{ form.password2.errors }}
+            <input type="password" name="password2" id="id_password2"
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required>
+
+            <button type="submit"
+                class="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-md transition-colors">
+                Register
+            </button>
+        </form>
+
+        <div class="text-center mt-4 text-sm">
+            <a href="{% url 'login' %}" class="text-blue-600 hover:underline">Back to Login</a>
+        </div>
+    </div>
+</body>
+</html>

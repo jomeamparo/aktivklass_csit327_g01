@@ -1,0 +1,68 @@
+{% extends 'core/main.html' %}
+{% block title %}Faculty - Join Requests{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold text-gray-800">Class Join Requests</h2>
+    </div>
+
+    {% if has_pending %}
+        {% for class_obj, requests in class_join_requests_map.items %}
+        <div class="mb-8 p-4">
+            <h2 class="text-xl font-semibold mb-4">
+                {{ class_obj.subject_code }} - {{ class_obj.subject_name }}
+            </h2>
+
+            {% if requests %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full border border-gray-200">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="border px-4 py-2 text-left">Student</th>
+                            <th class="border px-4 py-2 text-left">Requested At</th>
+                            <th class="border px-4 py-2 text-left">Status</th>
+                            <th class="border px-4 py-2 text-left">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for request in requests %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="border px-4 py-2">
+                                {{ request.student.last_name }}, {{ request.student.first_name }}
+                                {% if request.student.middle_name %}
+                                    {{ request.student.middle_name|first }}.
+                                {% endif %}
+                            </td>
+                            <td class="border px-4 py-2">{{ request.requested_at|date:"M d, Y H:i" }}</td>
+                            <td class="border px-4 py-2 capitalize">{{ request.status }}</td>
+                            <td class="border px-4 py-2">
+                                {% if request.status == 'pending' %}
+                                <div class="flex space-x-2">
+                                    <form method="post" action="{% url 'approve_join_request' request.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="text-green-600 hover:text-green-800">Approve</button>
+                                    </form>
+                                    <form method="post" action="{% url 'reject_join_request' request.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="text-red-600 hover:text-red-800">Reject</button>
+                                    </form>
+                                </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-gray-500 italic">No pending requests for this class.</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% else %}
+    <div class="p-6 text-center text-gray-500 font-medium">
+        No pending join requests.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

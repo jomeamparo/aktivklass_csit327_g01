@@ -1,0 +1,227 @@
+{% extends 'core/main.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Classes</h2>
+        <button id="openModalBtn" 
+                class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+            Create New
+        </button>
+    </div>
+
+    {% if classes %}
+        <div id="classList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for class in classes %}
+            <div class="relative border border-green-600 rounded-lg p-5 bg-white transition animate-float emboss-effect hover:shadow-lg">
+                <!-- Action icons -->
+                <div class="absolute top-2 right-2 flex space-x-2 z-10">
+                    <!-- Archive Icon (Box with downward arrow - represents storing/archive) -->
+                    <form action="{% url 'archive_class' class.id %}" method="post" onsubmit="return confirm('Archive this class?');">
+                        {% csrf_token %}
+                        <button type="submit" title="Archive">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-600 hover:text-yellow-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9.75V19a2 2 0 002 2h14a2 2 0 002-2V9.75M9 12l3 3m0 0l3-3m-3 3V3" />
+                            </svg>
+                        </button>
+                    </form>
+
+                    <!-- Delete Icon (Trash can) -->
+                    <form action="{% url 'delete_class' class.id %}" method="post" onsubmit="return confirm('Delete this class?');">
+                        {% csrf_token %}
+                        <button type="submit" title="Delete">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600 hover:text-red-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a2 2 0 012 2v2H8V5a2 2 0 012-2z" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Class content -->
+                <a href="{% url 'class_record_detail' class.id %}" class="block">
+                    <h3 class="text-xl font-semibold text-gray-900 emboss-text">{{ class.subject_name }}</h3>
+                    <p class="text-sm text-gray-600 mt-1">Code: {{ class.subject_code }}</p>
+                    <p class="text-sm text-gray-600 mt-1">Description: {{ class.description }}</p>
+                    <p class="text-sm text-gray-600 mt-1">Schedule: {{ class.schedule }}</p>
+                    <p class="text-sm text-gray-600 mt-1">Room: {{ class.room }}</p>
+                    <p class="text-sm text-gray-600 mt-1">Class Code: {{ class.class_code }}</p>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="flex justify-center items-center h-48">
+            <p class="text-gray-500 text-lg">No classes available.</p>
+        </div>
+        {% endif %}
+</div>
+
+<!-- Modal for Creating Class -->
+<div id="modal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative">
+        <h3 class="text-xl font-bold mb-4">Create New Class</h3>
+        <form id="createClassForm" method="POST" action="{% url 'create_class' %}">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label class="block text-gray-700">Subject Name</label>
+                <input type="text" name="subject_name" required class="w-full px-3 py-2 border rounded" />
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700">Subject Code</label>
+                <input type="text" name="subject_code" required class="w-full px-3 py-2 border rounded" />
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700">Subject Description</label>
+                <textarea name="description" required class="w-full px-3 py-2 border rounded"></textarea>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700">Schedule</label>
+                <input type="text" name="schedule" required class="w-full px-3 py-2 border rounded" />
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700">Room</label>
+                <input type="text" name="room" required class="w-full px-3 py-2 border rounded" />
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button type="button" id="closeModalBtn" 
+                        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('modal');
+    const openModalBtn = document.getElementById('openModalBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const form = document.getElementById('createClassForm');
+    const classList = document.getElementById('classList');
+
+    openModalBtn.addEventListener('click', () => modal.classList.remove('hidden'));
+    closeModalBtn.addEventListener('click', () => modal.classList.add('hidden'));
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.add('hidden');
+        }
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+    
+        const formData = new FormData(form);
+        const csrfToken = formData.get('csrfmiddlewaretoken');
+    
+        const response = await fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+            },
+            body: formData,
+        });
+    
+        if (response.ok) {
+            const newClass = await response.json();
+            modal.classList.add('hidden');
+            form.reset();
+    
+            const emptyMessage = document.querySelector('.text-gray-500');
+            if (emptyMessage) {
+                emptyMessage.parentElement.remove();
+            }
+    
+            const card = document.createElement('a');
+            card.href = `/class_record/${newClass.id}/`;
+            card.className = "block relative border border-green-600 rounded-lg p-5 bg-white cursor-pointer transition animate-float emboss-effect hover:shadow-lg";
+    
+            card.innerHTML = `
+                <h3 class="text-xl font-semibold text-gray-900 emboss-text">${newClass.subject_name}</h3>
+                <p class="text-sm text-gray-600 mt-1">Code: ${newClass.subject_code}</p>
+                <p class="text-sm text-gray-600 mt-1">Description: ${newClass.description}</p>
+                <p class="text-sm text-gray-600 mt-1">Schedule: ${newClass.schedule}</p>
+                <p class="text-sm text-gray-600 mt-1">Room: ${newClass.room}</p>
+                <p class="text-sm text-gray-600 mt-1">Class Code: ${newClass.class_code}</p>
+    
+                <div class="absolute top-2 right-2 flex space-x-2 z-10">
+                    <form action="/archive_class/${newClass.id}/" method="post" onsubmit="return confirm('Archive this class?');">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+                        <button type="submit" title="Archive">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-600 hover:text-yellow-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9.75V19a2 2 0 002 2h14a2 2 0 002-2V9.75M9 12l3 3m0 0l3-3m-3 3V3" />
+                            </svg>
+                        </button>
+                    </form>
+    
+                    <form action="/delete_class/${newClass.id}/" method="post" onsubmit="return confirm('Delete this class?');">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+                        <button type="submit" title="Delete">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600 hover:text-red-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a2 2 0 012 2v2H8V5a2 2 0 012-2z" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            `;
+    
+            if (!classList.classList.contains('grid')) {
+                classList.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3', 'gap-6');
+            }
+    
+            classList.appendChild(card);
+        } else {
+            const errorText = await response.text();
+            alert("Failed to create class: " + errorText);
+        }
+    });
+});
+</script>
+
+<style>
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Emboss effect for card background */
+.emboss-effect {
+  box-shadow:
+    inset 2px 2px 5px rgba(255, 255, 255, 0.7),
+    inset -2px -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Emboss effect for text */
+.emboss-text {
+  text-shadow:
+    1px 1px 0 #fff,
+    -1px -1px 0 #999;
+}
+</style>
+
+{% endblock %}

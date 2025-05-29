@@ -1,0 +1,171 @@
+{% extends 'core/main.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Classes</h2>
+        <button id="openModalBtn" 
+                class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+            Join Class
+        </button>
+    </div>
+
+    {% if classes %}
+        <div id="classList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for class in classes %}
+                <div class="relative">  <!-- Added this wrapper div with relative positioning -->
+                    <form method="post" action="{% url 'leave_class' class.id %}" class="absolute top-2 right-2 z-10">
+                        {% csrf_token %}
+                        <button type="submit" class="text-red-500 hover:text-red-700" 
+                                onclick="return confirm('Are you sure you want to leave this class?');">
+                            <!-- Heroicons Logout / Leave Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                 viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h5a2 2 0 012 2v1" />
+                            </svg>
+                        </button>
+                    </form>
+                    <a href="{% url 'class_record_detail' class.id role %}" 
+                    class="block border border-green-600 rounded-lg p-5 bg-white cursor-pointer transition animate-float emboss-effect hover:shadow-lg">
+                        <h3 class="text-xl font-semibold text-gray-900 emboss-text">{{ class.subject_name }}</h3>
+                        <p class="text-sm text-gray-600 mt-1">Code: {{ class.subject_code }}</p>
+                        <p class="text-sm text-gray-600 mt-1">Description: {{ class.description }}</p>
+                        <p class="text-sm text-gray-600 mt-1">Schedule: {{ class.schedule }}</p>
+                        <p class="text-sm text-gray-600 mt-1">Room: {{ class.room }}</p>
+                        <p class="text-sm text-gray-600 mt-1">Class Code: {{ class.class_code }}</p>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+    <div class="flex justify-center items-center h-48">
+        <p class="text-gray-500 text-lg">No enrolled classes.</p>
+    </div>
+    {% endif %}
+</div>
+
+<div id="modal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative">
+        <h3 class="text-xl font-bold mb-4">Join Class</h3>
+        <form id="joinClass" method="POST" action="{% url 'join_class' %}">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label class="block text-gray-700">Class code</label>
+                <input type="text" id="class_code" name="class_code" required class="w-full px-3 py-2 border rounded" />
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button type="button" id="closeModalBtn" 
+                        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Request Join</button>
+            </div>
+        </form>
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <script>
+                        window.onload = function() {
+                            alert("{{ message }}");
+                        };
+                    </script>
+            {% endif %}
+        {% endfor %}
+{% endif %}
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('modal');
+    const openModalBtn = document.getElementById('openModalBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const form = document.getElementById('joinClass');
+    const classList = document.getElementById('classList');
+
+    openModalBtn.addEventListener('click', () => modal.classList.remove('hidden'));
+    closeModalBtn.addEventListener('click', () => modal.classList.add('hidden'));
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.add('hidden');
+        }
+    });
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+    
+        const formData = new FormData(form);
+    
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                },
+                body: formData,
+            });
+    
+            // First try to read as text
+            const text = await response.text();
+            
+            try {
+                // Then try to parse as JSON
+                const data = JSON.parse(text);
+                
+                if (response.ok) {
+                    modal.classList.add('hidden');
+                    alert("Request to join the class has been submitted successfully.");
+                } else {
+                    console.error('Error response:', data);
+                    alert(data.error || text);  // Fallback to raw text if no error property
+                }
+            } catch {
+                // If not JSON, use the raw text
+                if (response.ok) {
+                    console.log('SUCCESS (non-JSON)', text);
+                } else {
+                    console.error('Error response (non-JSON):', text);
+                    alert(text);
+                }
+            }
+        } catch (error) {
+            console.error('Submission error:', error);
+            alert('Network error. Please check your connection and try again.');
+        }
+    });
+});
+</script>
+
+<style>
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Emboss effect for card background */
+.emboss-effect {
+  box-shadow:
+    inset 2px 2px 5px rgba(255, 255, 255, 0.7),
+    inset -2px -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Emboss effect for text */
+.emboss-text {
+  text-shadow:
+    1px 1px 0 #fff,
+    -1px -1px 0 #999;
+}
+</style>
+
+{% endblock %}

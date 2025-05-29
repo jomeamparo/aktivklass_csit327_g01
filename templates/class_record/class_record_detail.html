@@ -1,0 +1,726 @@
+{% extends 'core/main.html' %}
+
+{% block title %}Class Record Detail{% endblock %}
+
+{% block content %}
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/handsontable/11.1.0/handsontable.full.min.css"
+  rel="stylesheet"
+/>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/handsontable/11.1.0/handsontable.full.min.js"
+  integrity="sha384-..."
+  crossorigin="anonymous"
+  data-license="non-commercial-and-evaluation"
+></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+
+<div class="container ">
+    <a href="{% url 'dashboard_teacher' %}" class="inline-block text-green-600 hover:underline">← Back</a>
+
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">
+            {{ class.subject_name }} ({{ class.subject_code }})
+        </h2>
+        
+    </div>
+
+    <div class="flex justify-end items-center space-x-2">
+        <!-- Add Student Button -->
+        <button
+          id="openModalBtn"
+          type="button"
+          class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+        >
+          Add Student
+        </button>
+      
+        <!-- Upload Form -->
+        <form
+          id="uploadForm"
+          method="post"
+          enctype="multipart/form-data"
+          action="{% url 'upload_class_list' class.id %}"
+        >
+          {% csrf_token %}
+          <label
+            for="uploadInput"
+            class="cursor-pointer bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition inline-block"
+          >
+            Upload Class List
+          </label>
+          <input
+            id="uploadInput"
+            name="class_list"
+            type="file"
+            class="hidden"
+            onchange="document.getElementById('uploadForm').submit()"
+          />
+        </form>
+      
+        <!-- Save Button -->
+        <form id="save-form" method="POST">
+          {% csrf_token %}
+          <button
+            id="save-button"
+            type="submit"
+            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition flex items-center justify-center"
+          >
+            <i class="fas fa-save text-xl"></i>
+          </button>
+        </form>
+      </div>
+
+    <div id="handsontable-container" class="mt-4"></div>
+</div>
+
+<div id="addStudentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 relative">
+        <h3 class="text-xl font-semibold mb-4">Add Student</h3>
+        <div class="flex space-x-2 mb-4">
+            <input id="searchInput" type="text" placeholder="Search by ID, First or Last name" 
+                   class="border border-gray-300 rounded px-3 py-2 flex-grow" />
+            <button id="searchBtn" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                Search
+            </button>
+            <button id="clearBtn" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition">
+                Clear
+            </button>
+        </div>
+
+        <div id="searchResults" class="max-h-60 overflow-y-auto border border-gray-200 rounded p-2 text-gray-700">
+            <p class="text-center text-gray-500 italic">Type in the search area to search the student</p>
+        </div>
+
+        <button id="closeModalBtn" 
+                class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl font-bold">&times;</button>
+    </div>
+</div>
+
+
+
+<div id="excelPreviewModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
+    <div class="bg-white min-h-[60vh] max-h-[80vh] w-full max-w-5xl p-6 relative overflow-y-auto rounded-2xl shadow-2xl border border-gray-200 ring-1 ring-blue-100">
+
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-2xl font-bold text-gray-800">📋 Uploaded Student List</h3>
+            <div class="flex items-center space-x-2">
+                <button id="saveStudentListBtn"
+                        {% if enrolled|length > 0 %}
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-1.5 px-4 rounded-lg shadow-sm transition-all"
+                        {% else %}
+                            class="bg-gray-300 text-gray-500 font-medium py-1.5 px-4 rounded-lg shadow-sm cursor-not-allowed"
+                            disabled
+                        {% endif %}>
+                    Save
+                </button>
+                <button id="closeExcelModalBtn" 
+                        class="text-gray-500 hover:text-red-600 text-2xl transition-transform transform hover:scale-110 font-bold">
+                    &times;
+                </button>
+            </div>
+        </div>
+
+        {% if enrolled|length > 0 %}
+            <h2 class="font-bold text-lg mt-2 text-blue-600 border-b-2 border-blue-500 inline-block pb-1">
+                Enrolled Students
+            </h2>
+            <div class="overflow-x-auto mb-6">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Student ID</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">First Name</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Middle Name</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Last Name</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Course And Year</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for student in enrolled %}
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-2 text-sm text-gray-800">{{ student.student_id }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-800">{{ student.first_name }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-800">{{ student.middle_name }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-800">{{ student.last_name }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-800">{{ student.course }} - {{ student.year }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+
+        {% if unenrolled|length > 0 %}
+            <h2 class="font-bold text-lg mt-2 text-red-600 border-b-2 border-red-500 inline-block pb-1">
+                Unenrolled Students
+            </h2>
+            <div class="overflow-x-auto mt-2">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Student ID</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">First Name</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Middle Name</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Last Name</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Course</th>
+                            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Year</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for student in unenrolled %}
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-2 text-sm text-gray-800">{{ student.student_id }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-800">{{ student.first_name }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-800">{{ student.middle_name }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-800">{{ student.last_name }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-800">{{ student.course }}</td>
+                                <td class="px-4 py-2 text-sm text-gray-800">{{ student.year }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+
+        {% if enrolled|length == 0 and unenrolled|length == 0 %}
+            <div class="text-center py-6 text-gray-500 italic">
+                No students found in the uploaded file.
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+
+<style>
+    #handsontable-container {
+      width: 100%; /* Adjust width to your desired size */
+      height: 500px; /* Set a fixed height for visibility */
+      overflow: auto; /* Allow scrolling if content overflows */
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+  
+    /* Table Header Styling */
+    .handsontable thead th {
+      background: linear-gradient(
+        135deg,
+        #1d4d9e,
+        #14529a
+      ); /* Elegant gradient for the header */
+      color: #e4e7ec; /* Soft light gray color for text, enhancing readability */
+      font-weight: 600; /* Slightly bold for professional appearance */
+      padding: 2px; /* Balanced padding for a refined look */
+      text-align: center;
+      border-bottom: 2px solid #1f3a5d; /* Clean border at the bottom for separation */
+      font-size: 12px; /* Appropriate font size for clarity */
+      letter-spacing: 0.5px; /* Slight letter spacing for readability */
+      transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transition for hover effects */
+      white-space: nowrap; /* Allow header cells to wrap text */
+      word-wrap: break-word; /* Break words if necessary */
+    }
+  
+    /* Hover effect on header */
+    .handsontable thead th:hover {
+      background: linear-gradient(
+        135deg,
+        #14529a,
+        #0e3b6a
+      ); /* Darker shade on hover for interactive feedback */
+      border-bottom: 2px solid #0e3b6a; /* Match the bottom border color with hover effect */
+    }
+  
+    /* Row Styling */
+    .handsontable tbody tr {
+      background-color: #fff;
+      transition: background-color 0.3s ease;
+    }
+  
+    .handsontable tbody tr:hover {
+      background-color: #f1f1f1;
+    }
+  
+    /* Cell Styling */
+    .handsontable td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      background-color: #ffffff;
+      white-space: normal; /* Allow cell content to wrap */
+      word-wrap: break-word; /* Break words if necessary */
+    }
+  
+    /* Left-align the first two columns */
+    .handsontable td:nth-child(1),
+    .handsontable td:nth-child(2) {
+      text-align: left;
+    }
+  
+    /* Center-align the rest of the columns */
+    .handsontable td:nth-child(n + 3) {
+      text-align: center;
+    }
+  
+    /* Focused Cells Styling */
+    .handsontable td.htSelected {
+      border-color: #007bff;
+      background-color: #e8f1fe;
+    }
+  
+    /* Read-only Cells Styling */
+    .handsontable td[readonly] {
+      background-color: #f4f4f4;
+      color: #aaa;
+    }
+  
+    /* Context Menu Styling */
+    .handsontable .htContextMenu {
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+  
+    /* Disabled state */
+    #save-button:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    opacity: 0.8;
+    }
+
+    /* Enabled state */
+    #save-button {
+    background-color: #4caf50; /* Standard green */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    }
+
+    /* Hover state for enabled button */
+    #save-button:not(:disabled):hover {
+    background-color: #388e3c; /* Darker green */
+    }
+  
+    #save-form button:hover {
+      background-color: #45a049;
+    }
+  
+    /* Button Container Styling */
+    .button-container {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+  
+    /* Adjusted Scrollbar Style */
+    .handsontable .wtHolder::-webkit-scrollbar {
+      height: 8px;
+      width: 8px;
+    }
+  
+    .handsontable .wtHolder::-webkit-scrollbar-thumb {
+      background-color: #007bff;
+      border-radius: 4px;
+    }
+  
+    .handsontable .wtHolder::-webkit-scrollbar-thumb:hover {
+      background-color: #0056b3;
+    }
+
+    .htLeftAlign {
+        text-align: left !important;
+    }
+  </style>
+
+<script>
+    window.uploadedStudents = {{ uploaded_students|default:"null"|safe }};
+
+    const openModalBtn = document.getElementById('openModalBtn');
+    const addStudentModal = document.getElementById('addStudentModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const searchBtn = document.getElementById('searchBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+
+    const excelPreviewModal = document.getElementById('excelPreviewModal');
+    const closeExcelModalBtn = document.getElementById('closeExcelModalBtn');
+    const saveStudentListBtn = document.getElementById('saveStudentListBtn');
+
+    const studentsContainer = document.getElementById('studentsContainer');
+    let studentsList = document.getElementById('studentsList');
+    const noStudentsMsg = document.getElementById('noStudentsMsg');
+
+    const selectedSubjectCode = "{{ class.subject_code }}";
+    const selectedSubjectId = "{{ class.id }}";
+    console.log("---> ", selectedSubjectId)
+
+    const initial_data = {{ exams|safe }};
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function createStudentListItem(student) {
+        const li = document.createElement('li');
+        li.className = 'py-2';
+        li.setAttribute('data-student-id', student.id);
+        li.textContent = `(${student.student_id}) - ${student.last_name}, ${student.first_name} ${student.middle_name || ''}`;
+        return li;
+    }
+
+    openModalBtn.addEventListener('click', () => {
+        addStudentModal.classList.remove('hidden');
+        searchInput.value = '';
+        searchResults.innerHTML = '<p class="text-center text-gray-500 italic">Type in the search area to search the student</p>';
+        searchInput.focus();
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+        addStudentModal.classList.add('hidden');
+    });
+
+    clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchResults.innerHTML = '<p class="text-center text-gray-500 italic">Type in the search area to search the student</p>';
+        searchInput.focus();
+    });
+
+    searchBtn.addEventListener('click', () => {
+        const query = searchInput.value.trim();
+        if (!query) {
+            searchResults.innerHTML = '<p class="text-center text-gray-500 italic">Type in the search area to search the student</p>';
+            return;
+        }
+
+        fetch(`/class_record/search_students?q=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(data => {
+            const students = data.students;
+
+            if (!students.length) {
+                searchResults.innerHTML = '<p class="text-center text-gray-500 italic">No students found.</p>';
+                return;
+            }
+
+            searchResults.innerHTML = '';
+
+            students.forEach(student => {
+                const div = document.createElement('div');
+                div.className = 'py-1 px-2 hover:bg-gray-100 cursor-pointer rounded';
+                div.textContent = `(${student.student_id}) - ${student.last_name}, ${student.first_name} ${student.middle_name || ''}`;
+                div.dataset.studentId = student.id;
+
+                div.addEventListener('click', () => {
+                    if (studentsList) {
+                        if (studentsList.querySelector(`[data-student-id="${student.id}"]`)) {
+                            alert('Student already in the list.');
+                            return;
+                        }
+                    } else {
+                        studentsList = document.createElement('ul');
+                        studentsList.id = 'studentsList';
+                        studentsList.className = 'divide-y divide-gray-200 max-h-96 overflow-y-auto';
+                        studentsContainer.appendChild(studentsList);
+                        if (noStudentsMsg) noStudentsMsg.style.display = 'none';
+                    }
+
+                    fetch('/class_record/enroll_student/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        body: JSON.stringify({
+                            class_id: selectedSubjectId,
+                            student_id: student.student_id,
+                            subject_code: selectedSubjectCode
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Enrollment failed.');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const li = createStudentListItem(student);
+                        studentsList.appendChild(li);
+                        addStudentModal.classList.add('hidden');
+                        window.location.reload();
+                    })
+                    .catch(error => {
+                        alert(error.message);
+                    });
+                });
+
+                searchResults.appendChild(div);
+            });
+        })
+        .catch(() => {
+            searchResults.innerHTML = '<p class="text-center text-red-500 italic">Error searching students.</p>';
+        });
+
+    });
+
+    const hasEnrolledStudents = {{ enrolled|length|default:0 }} > 0;
+    const hasUnenrolledStudents = {{ unenrolled|length|default:0 }} > 0;
+
+    if (hasEnrolledStudents || hasUnenrolledStudents) {
+        excelPreviewModal.classList.remove('hidden');
+    }
+
+    closeExcelModalBtn.addEventListener('click', () => {
+        excelPreviewModal.classList.add('hidden');
+
+        fetch("{% url 'clear_uploaded_students_session' %}", {
+            method: 'POST',
+            headers: {'X-CSRFToken': '{{ csrf_token }}'},
+        });
+    });
+
+    saveStudentListBtn.addEventListener('click', () => {
+        const enrolledCount = {{ enrolled|length|default:0 }};
+        const unenrolledCount = {{ unenrolled|length|default:0 }};
+        
+        if (enrolledCount === 0) {
+            alert('No students to save.');
+            return;
+        }
+
+        saveStudentListBtn.disabled = true;
+        saveStudentListBtn.textContent = 'Saving...';
+
+        const studentsToSave = [
+            ...(window.uploadedStudents.enrolled || []),
+            ...(window.uploadedStudents.unenrolled || [])
+        ];
+
+        fetch("{% url 'save_uploaded_students_to_class' class.id %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify({students: studentsToSave})
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert('Students saved successfully!');
+                window.location.reload();
+            } else {
+                alert('Error saving students: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(() => alert('Network error saving students.'))
+        .finally(() => {
+            saveStudentListBtn.disabled = false;
+            saveStudentListBtn.textContent = 'Save';
+        });
+    });
+
+    const container = document.getElementById('handsontable-container');
+    const userRole = "{{ role }}";
+
+    const hot = new Handsontable(container, {
+        data:  initial_data,
+        nestedHeaders: [
+        [
+            { label: '', colspan: 2 },
+            { label: 'Quizzes', colspan: 5 },
+            { label: 'Assignments', colspan: 5 },
+            { label: 'Seatworks', colspan: 5 },
+            { label: 'Laboratory Works', colspan: 5 },
+            { label: 'PE', colspan: 1 },
+            { label: 'ME', colspan: 1 },
+            { label: 'PFE', colspan: 1 },
+            { label: 'FE', colspan: 1 },
+            { label: 'MG', colspan: 1 },
+            { label: 'FG', colspan: 1 },
+            { label: 'Remarks', colspan: 1 }
+        ],
+        [
+            { label: '', colspan: 2 },
+            { label: '1', colspan: 1 }, { label: '2', colspan: 1 }, { label: '3', colspan: 1 }, { label: '4', colspan: 1 }, { label: '5', colspan: 1 },
+            { label: '1', colspan: 1 }, { label: '2', colspan: 1 }, { label: '3', colspan: 1 }, { label: '4', colspan: 1 }, { label: '5', colspan: 1 },
+            { label: '1', colspan: 1 }, { label: '2', colspan: 1 }, { label: '3', colspan: 1 }, { label: '4', colspan: 1 }, { label: '5', colspan: 1 },
+            { label: '1', colspan: 1 }, { label: '2', colspan: 1 }, { label: '3', colspan: 1 }, { label: '4', colspan: 1 }, { label: '5', colspan: 1 },
+            null, null, null, null, 
+            null, null, null
+        ],
+        ['ID Number','Student Name', 
+        'Quiz 1', 'Quiz 2', 'Quiz 3', 'Quiz 4', 'Quiz 5',
+        'Assign 1', 'Assign 2', 'Assign 3', 'Assign 4', 'Assign 5',
+        'SW 1', 'SW 2', 'SW 3', 'SW 4', 'SW 5',
+        'Lab 1', 'Lab 2', 'Lab 3', 'Lab 4', 'Lab 5',
+        ' ', ' ', ' ', ' ', 
+        ' ', ' ', ' ']
+        ],
+        licenseKey: 'non-commercial-and-evaluation',
+        cells: (row, col) => {
+            const cell = {};
+            if (col === 0 || col === 1) {
+                cell.className = 'htLeftAlign'; // Apply left alignment
+            }
+
+            if (userRole === 'faculty') {
+                if (col === 0 || col === 1) {
+                    cell.readOnly = true;
+                }
+            } else {
+                cell.readOnly = true;
+            }
+            
+            return cell;
+        },
+        colWidths: (index) => {
+            if (index === 0) return 120;
+            if (index === 1) return 250;
+            return 100;
+          },
+        width: '100%',
+        rowHeaders: true,
+        colHeaders: true,
+        manualColumnFreeze: true,
+        contextMenu: {
+        items: {
+            freezeColumn: {
+            name: 'Freeze this column',
+            disabled: function () {
+                const selectedColumn = this.getSelectedRangeLast()?.from?.col;
+                return selectedColumn !== 0; // Allow freeze only for the first column
+            }
+            },
+            unfreezeColumn: {
+            name: 'Unfreeze this column',
+            disabled: function () {
+                const selectedColumn = this.getSelectedRangeLast()?.from?.col;
+                return selectedColumn !== 0; // Allow unfreeze only for the first column
+            }
+            },
+            separator: Handsontable.plugins.ContextMenu.SEPARATOR,
+            copy: { name: 'Copy' },
+            paste: { name: 'Paste' }
+        }
+        },
+        fixedColumnsStart: 1,
+        autoWrapRow: true,
+        autoWrapCol: true,
+    });
+
+    // Compare data for changes
+    let changesMade = false;
+
+    hot.addHook('afterChange', (changes) => {
+        if (changes) {
+        changesMade = true;
+        document.getElementById('save-button').disabled = false; // Enable save button
+        document.getElementById('save-button').style.backgroundColor = 'green'; // Change to green when enabled
+        }
+    });
+
+    // Save changes on form submit
+    document.getElementById('save-form').onsubmit = function(event) {
+        event.preventDefault();
+        
+        if (!changesMade) {
+            alert('No changes made!');
+            return;
+        }
+
+        const updatedData = hot.getData();
+        const headers = hot.getColHeader();
+        
+        // Prepare the data to be sent to the server
+        const studentsData = [];
+        
+        // Skip the header row if it exists in your data
+        for (let i = 0; i < updatedData.length; i++) {
+            const row = updatedData[i];
+            console.log('rowrowrowrow::', row)
+            const student = {
+                id_number: row[0], // Assuming first column is ID
+                student_name: row[1], // Assuming second column is name
+                quizzes: {},
+                assignments: {},
+                seatworks: {},
+                laboratory_works: {},
+                pe: row[22], // Adjust indices based on your actual column positions
+                me: row[23],
+                pfe: row[24],
+                fe: row[25],
+                mg: row[26],
+                fg: row[27],
+                remarks: row[28]
+            };
+
+            // Map the scores to their respective categories
+            for (let j = 2; j < headers.length; j++) {
+                const header = headers[j].toLowerCase();
+                if (header.includes('quiz')) {
+                    student.quizzes[header] = row[j];
+                } else if (header.includes('assign')) {
+                    student.assignments[header] = row[j];
+                } else if (header.includes('sw')) {
+                    student.seatworks[header] = row[j];
+                } else if (header.includes('lab')) {
+                    student.laboratory_works[header] = row[j];
+                }
+            }
+
+            studentsData.push(student);
+        }
+
+        // Send the updated data to the server
+        fetch('{% url "save_class_records" %}', {
+            method: 'POST',
+            body: JSON.stringify({
+                class_id: selectedSubjectId,
+                students: studentsData
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Data saved successfully!');
+                changesMade = false;
+                document.getElementById('save-button').disabled = true;
+                document.getElementById('save-button').style.backgroundColor = '#ccc';
+            } else {
+                throw new Error(data.error || 'Failed to save data');
+            }
+        })
+        .catch(error => {
+            console.error('Error saving data:', error);
+            alert('Error saving data: ' + error.message);
+        });
+    };
+
+  document.getElementById('save-button').disabled = true;
+  document.getElementById('save-button').style.backgroundColor = '#ccc'; // Set initial color to grey
+</script>
+
+{% endblock %}
