@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'dashboard_student',
     'archived_classes',
     'class_join_request',
+    'faculty_seatwork',
+    'faculty_seatworkSubmission',
 
     'tailwind',
     'theme',
