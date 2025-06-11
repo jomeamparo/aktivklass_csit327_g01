@@ -44,6 +44,10 @@
             <i class="fas fa-users text-green-600"></i>
             <span>Archived Classes</span>
           </a>
+          <a href="{% url 'quizzes' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-users text-green-600"></i>
+            <span>Quizzes</span>
+          </a>
         {% endif %}
       
         {% if role == 'admin' %}
@@ -64,6 +68,7 @@
             <i class="fas fa-user text-green-600"></i>
             <span>Classes</span>
           </a>
+          
         {% endif %}
 
         <div class="border-t border-gray-200 my-4"></div>

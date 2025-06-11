@@ -1,0 +1,181 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Quiz Records | AktivKlass</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  </head>
+  <body class="min-h-screen bg-gray-100 font-sans antialiased text-gray-800">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar - Exactly matches your reference image -->
+      <aside id="sidebar" class="w-64 bg-white shadow-xl border-r border-gray-200 p-4 flex flex-col transition-all duration-300 ease-in-out">
+        <!-- Profile Section -->
+        <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 shadow-sm mb-6">
+          <img
+            src="https://thumbs.dreamstime.com/b/cartoon-angry-teacher-man-looking-55342685.jpg"
+            alt="Profile Photo"
+            class="w-14 h-14 rounded-full border-2 border-green-500 object-cover"
+          />
+          <div>
+            <h2 class="text-base font-semibold text-gray-900">{{ fullname }}</h2>
+            <p class="text-xs text-gray-500">email@example.com</p>
+          </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="flex-1">
+          <!-- Class Record Section -->
+          <div class="mb-4">
+            <h3 class="text-sm font-semibold text-gray-500 uppercase px-4">Class Record</h3>
+            <div class="mt-2 space-y-1">
+              <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-green-50 rounded-lg transition">
+                Students
+              </a>
+              <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-green-50 rounded-lg transition">
+                Class Join Request
+              </a>
+              <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-green-50 rounded-lg transition">
+                Archived Classes
+              </a>
+            </div>
+          </div>
+
+          <!-- Quizzes Section -->
+          <div class="mb-4">
+            <h3 class="text-sm font-semibold text-gray-500 uppercase px-4">Quizzes</h3>
+            <div class="mt-2 space-y-1">
+              <a href="#" class="block px-4 py-2 bg-green-100 text-green-700 font-medium rounded-lg">
+                Quiz Records
+              </a>
+            </div>
+          </div>
+
+          <!-- Settings Section -->
+          <div class="mb-4">
+            <h3 class="text-sm font-semibold text-gray-500 uppercase px-4">Settings</h3>
+            <div class="mt-2 space-y-1">
+              <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-green-50 rounded-lg transition">
+                Preferences
+              </a>
+              <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-green-50 rounded-lg transition">
+                Help & Support
+              </a>
+            </div>
+          </div>
+        </nav>
+
+        <!-- Logout -->
+        <div class="mt-auto pt-4 border-t border-gray-200">
+          <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition">
+            Logout
+          </a>
+          <p class="text-xs text-gray-400 mt-2 px-4">Sports</p>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <div id="mainContent" class="flex-1 flex flex-col bg-gray-50 transition-all duration-300 ease-in-out">
+        <!-- Header -->
+        <header class="bg-white shadow-sm p-4 flex items-center justify-between">
+          <button id="toggleSidebar" class="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
+            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+          <div class="w-full flex justify-center items-center">
+            <h1 class="text-2xl font-bold tracking-tight">
+              <span class="text-green-600">Quiz</span><span class="text-gray-800">Records</span>
+            </h1>
+          </div>
+          <div></div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="flex-1 p-6 overflow-y-auto">
+          <div class="max-w-6xl mx-auto">
+            <div class="overflow-x-auto bg-white shadow-md rounded-lg p-4">
+              <table class="min-w-full table-auto text-sm text-left text-gray-700">
+                <thead class="bg-green-100 text-green-800 font-semibold">
+                  <tr>
+                    <th class="px-4 py-2">Student Name</th>
+                    <th class="px-4 py-2">Quiz 1</th>
+                    <th class="px-4 py-2">Quiz 2</th>
+                    <th class="px-4 py-2">Quiz 3</th>
+                    <th class="px-4 py-2">Average</th>
+                  </tr>
+                </thead>
+                <tbody id="quizTableBody">
+                  <tr class="border-t">
+                    <td class="px-4 py-2 font-medium">Jam Dela Cruz</td>
+                    <td class="px-4 py-2"><input type="number" class="score-input w-16 border rounded px-2 py-1" value="65" min="0" max="100"></td>
+                    <td class="px-4 py-2"><input type="number" class="score-input w-16 border rounded px-2 py-1" value="90" min="0" max="100"></td>
+                    <td class="px-4 py-2"><input type="number" class="score-input w-16 border rounded px-2 py-1" value="95" min="0" max="100"></td>
+                    <td class="px-4 py-2 font-semibold text-center avg-cell">83.33</td>
+                  </tr>
+                  <tr class="border-t">
+                    <td class="px-4 py-2 font-medium">Mahla Santos</td>
+                    <td class="px-4 py-2"><input type="number" class="score-input w-16 border rounded px-2 py-1" value="75" min="0" max="100"></td>
+                    <td class="px-4 py-2"><input type="number" class="score-input w-16 border rounded px-2 py-1" value="80" min="0" max="100"></td>
+                    <td class="px-4 py-2"><input type="number" class="score-input w-16 border rounded px-2 py-1" value="78" min="0" max="100"></td>
+                    <td class="px-4 py-2 font-semibold text-center avg-cell">77.67</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      // Toggle sidebar
+      const toggleButton = document.getElementById("toggleSidebar");
+      const sidebar = document.getElementById("sidebar");
+      toggleButton.addEventListener("click", () => {
+        sidebar.classList.toggle("hidden");
+      });
+
+      // Calculate averages
+      function updateAverages() {
+        document.querySelectorAll("#quizTableBody tr").forEach(row => {
+          const scores = row.querySelectorAll(".score-input");
+          let total = 0;
+          let count = 0;
+          
+          scores.forEach(input => {
+            const val = parseFloat(input.value);
+            if (!isNaN(val) && val >= 0 && val <= 100) {
+              total += val;
+              count++;
+            }
+          });
+          
+          const avgCell = row.querySelector(".avg-cell");
+          if (count > 0) {
+            const average = (total / count).toFixed(2);
+            avgCell.textContent = average;
+          } else {
+            avgCell.textContent = "0.00";
+          }
+        });
+      }
+
+      // Initialize and set up event listeners
+      document.addEventListener("DOMContentLoaded", () => {
+        // Set up input event listeners for all score inputs
+        document.querySelectorAll(".score-input").forEach(input => {
+          input.addEventListener("input", updateAverages);
+          input.addEventListener("change", updateAverages);
+        });
+        
+        // Calculate initial averages
+        updateAverages();
+      });
+    </script>
+  </body>
+</html>
