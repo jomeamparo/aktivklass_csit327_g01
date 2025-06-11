@@ -1,0 +1,38 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<div class="p-6 max-w-5xl mx-auto">
+  <h1 class="text-2xl font-semibold mb-6">Edit Admin Accounts</h1>
+
+  {% for admin in admins %}
+  <div class="bg-white p-4 rounded-lg shadow mb-4">
+    <form method="post" action="{% url 'edit_admin' %}" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+      {% csrf_token %}
+      <input type="hidden" name="admin_id" value="{{ admin.id }}">
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Username</label>
+        <input type="text" name="username" value="{{ admin.username }}" class="w-full mt-1 p-2 border rounded">
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Email</label>
+        <input type="email" name="email" value="{{ admin.email }}" class="w-full mt-1 p-2 border rounded">
+      </div>
+      
+      <div class="flex items-center gap-2">
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Save</button>
+
+        <form method="post" action="{% url 'toggle_admin_status' admin.id %}">
+          {% csrf_token %}
+          <button type="submit" class="{% if admin.is_disabled %}bg-green-600{% else %}bg-red-600{% endif %} text-white px-4 py-2 rounded hover:opacity-80 transition">
+            {% if admin.is_disabled %}Activate{% else %}Disable{% endif %}
+          </button>
+        </form>
+      </div>
+    </form>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

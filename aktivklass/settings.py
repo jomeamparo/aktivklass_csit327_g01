@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'dashboard_student',
     'archived_classes',
     'class_join_request',
-
+    'edit_admin',
     'tailwind',
     'theme',
     'widget_tweaks',
