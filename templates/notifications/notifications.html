@@ -1,0 +1,331 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>{% block title %}AktivKlass Notifications{% endblock %}</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+      /* Sidebar */
+      #sidebar {
+        width: 16rem;
+        background-color: white;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border-right: 1px solid #e5e7eb;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease-in-out;
+      }
+
+      #sidebar .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        transition: background-color 0.3s ease;
+      }
+
+      #sidebar .nav-item:hover {
+        background-color: #f0fdf4;
+        color: #4caf50;
+      }
+
+      /* Header */
+      header {
+        background-color: white;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      header h1 {
+        font-size: 2rem;
+        font-weight: bold;
+      }
+
+      header button {
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+      }
+
+      header button:hover {
+        background-color: #f0fdf4;
+      }
+
+      main {
+        padding: 1.5rem;
+      }
+
+      main h1 {
+        font-size: 2rem;
+        font-weight: bold;
+      }
+
+      main .help-content {
+        margin-top: 2rem;
+      }
+
+      main .faq-item {
+        background-color: white;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+      }
+
+      /* Notification List */
+      .notification-item {
+        background-color: white;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .notification-item.unread {
+        background-color: #f0fdf4;
+        border-left: 5px solid #4caf50;
+      }
+
+      /* Filter Dropdown */
+      .filter-dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .filter-btn {
+        padding: 0.5rem 1rem;
+        background-color: #4caf50;
+        color: white;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        border: none;
+      }
+
+      .filter-btn:hover {
+        background-color: #45a049;
+      }
+
+      .filter-options {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: white;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 0.75rem;
+        margin-top: 0.5rem;
+        z-index: 10;
+      }
+
+      .filter-options button {
+        width: 100%;
+        padding: 0.75rem;
+        background-color: white;
+        border: none;
+        text-align: left;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .filter-options button:hover {
+        background-color: #f0fdf4;
+      }
+
+      .filter-dropdown.open .filter-options {
+        display: block;
+      }
+
+      /* Mobile Support */
+      @media (max-width: 768px) {
+        #sidebar {
+          display: none;
+        }
+      }
+
+      /* Change email font size */
+      #sidebar h2 {
+        font-size: 10px; /* Change font size to 10px */
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-gray-100 font-sans antialiased text-gray-800">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <aside id="sidebar" class="sidebar">
+        <!-- Profile Section -->
+        <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 shadow-sm mb-6">
+          <img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaVBqBLO5cP-SV8OJrniey5VIZLWvu7WzNpg6F5kzIEsm-PlUS"
+            alt="Profile Photo"
+            class="w-14 h-14 rounded-full border-2 border-green-500 object-cover"
+          />
+          <div>
+            <h2 class="text-base font-semibold text-gray-900" style="font-size: 10px;">LisaMarcosOnly@gmail.com</h2> 
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        {% if role == 'faculty' %}
+          <a href="{% url 'dashboard_teacher' %}" class="nav-item">
+            <i class="fas fa-user text-green-600"></i>
+            <span>Class Record</span>
+          </a>
+          <a href="{% url 'teacher_student_list' %}" class="nav-item">
+            <i class="fas fa-users text-green-600"></i>
+            <span>Students</span>
+          </a>
+          <a href="{% url 'class_join_request' %}" class="nav-item">
+            <i class="fas fa-users text-green-600"></i>
+            <span>Class Join Request</span>
+          </a>
+          <a href="{% url 'archived_classes' %}" class="nav-item">
+            <i class="fas fa-users text-green-600"></i>
+            <span>Archived Classes</span>
+          </a>
+        {% endif %}
+
+        {% if role == 'admin' %}
+          <a href="{% url 'faculty_list_view' %}" class="nav-item">
+            <i class="fas fa-user text-green-600"></i>
+            <span>Faculty</span>
+          </a>
+          <a href="{% url 'student_list_view' %}" class="nav-item">
+            <i class="fas fa-users text-green-600"></i>
+            <span>Student</span>
+          </a>
+        {% endif %}
+        
+          <a href="{% url 'dashboard_student' %}" class="nav-item">
+            <i class="fas fa-user text-green-600"></i>
+            <span>Classes</span>
+          </a>
+
+          <a href="{% url 'notifications' %}" class="nav-item">
+            <i class="fas fa-question-circle text-green-600"></i>
+            <span>Notifications</span>
+          </a>
+          
+        <div class="border-t border-gray-200 my-4"></div>
+
+        <span class="text-xs uppercase text-gray-400 px-4">Settings</span>
+        <a href="#" class="nav-item">
+          <i class="fas fa-cog text-green-600"></i>
+          <span>Preferences</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="fas fa-info-circle text-green-600"></i>
+          <span>Help & Support</span>
+        </a>
+
+        <!-- Logout -->
+        <div class="mt-auto pt-4 border-t border-gray-200">
+          <a href="{% url 'login' %}" class="nav-item text-gray-700 hover:bg-red-50 hover:text-red-600 transition">
+            <i class="fas fa-sign-out-alt text-red-600"></i>
+            <span>Logout</span>
+          </a>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <div id="mainContent" class="flex-1 flex flex-col bg-gray-50 transition-all duration-300 ease-in-out">
+        <!-- Header -->
+        <header class="bg-white shadow-sm p-4 flex items-center justify-between">
+          <button id="toggleSidebar" class="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
+            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+          <div class="w-full flex justify-center items-center mt-4">
+            <h1 class="text-3xl font-bold tracking-tight" style="font-family: 'Poppins', sans-serif;">
+                <span class="text-green-600">Aktiv</span><span class="text-gray-800">Klass</span>
+                <span class="font-medium text-gray-500">Management</span>
+            </h1>
+          </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="flex-1 p-6 overflow-y-auto">
+          <h1 class="text-3xl font-bold text-gray-900 mb-6">Notifications</h1>
+
+
+          <!-- Notification List -->
+          <div id="notificationList">
+            <div class="notification-item unread mentions">
+              <h4>New Mention</h4>
+              <p>You were mentioned in a class discussion!</p>
+            </div>
+            <div class="notification-item replies">
+              <h4>New Assignment</h4>
+              <p>Don't forget to submit your assignment by Friday.</p>
+            </div>
+            <div class="notification-item unread replies">
+              <h4>Reply to Your Post</h4>
+              <p>Your post has a new reply. Check it out!</p>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-dropdown mb-6 absolute top-4 right-4">
+      <button class="filter-btn" onclick="toggleFilter()">Filters</button>
+      <div class="filter-options">
+        <button onclick="filterNotifications('all')">All</button>
+        <button onclick="filterNotifications('mentions')">Mentions</button>
+        <button onclick="filterNotifications('replies')">Replies</button>
+        <button onclick="filterNotifications('assignments')">Assignments</button>
+        <button onclick="toggleUnread()">Unread Only</button>
+      </div>
+    </div>
+
+    <script>
+      let showUnreadOnly = false;
+
+      // Toggle unread notifications
+      function toggleUnread() {
+        showUnreadOnly = !showUnreadOnly;
+        const notifications = document.querySelectorAll('.notification-item');
+        notifications.forEach(notification => {
+          if (showUnreadOnly && !notification.classList.contains('unread')) {
+            notification.style.display = 'none';
+          } else {
+            notification.style.display = 'block';
+          }
+        });
+      }
+
+      // Filter notifications by type
+      function filterNotifications(type) {
+        const notifications = document.querySelectorAll('.notification-item');
+        notifications.forEach(notification => {
+          if (type === 'all' || notification.classList.contains(type)) {
+            notification.style.display = 'block';
+          } else {
+            notification.style.display = 'none';
+          }
+        });
+      }
+
+      // Toggle filter dropdown visibility
+      function toggleFilter() {
+        const filterDropdown = document.querySelector('.filter-dropdown');
+        filterDropdown.classList.toggle('open');
+      }
+    </script>
+  </body>
+</html>
