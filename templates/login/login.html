@@ -46,10 +46,15 @@
                 Login
             </button>
         </form>
-        <div class="flex justify-between mt-4 text-sm text-green-600">
-            <a href="#" class="hover:underline">Forgot password?</a>
-            <a href="{% url 'register' %}" class="hover:underline">Register</a>
-        </div>
+        <div class="flex justify-between items-center mt-4 text-sm">
+    <a href="{% url 'forgot_password' %}" class="text-green-600 hover:text-green-700 font-medium transition-colors duration-200">
+        Forgot password?
+    </a>
+    <a href="{% url 'register' %}" class="text-green-600 hover:text-green-700 font-medium transition-colors duration-200">
+        Register
+    </a>
+</div>
+
     </div>
 </body>
 </html>
