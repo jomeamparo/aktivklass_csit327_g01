@@ -1,9 +1,32 @@
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from core.models import Student
+from django.http import JsonResponse
+import json
 
 def admin_student_list_view(request):
     if request.method == "POST":
+        if request.headers.get('Content-Type') == 'application/json':
+            # Handle status toggle
+            try:
+                data = json.loads(request.body)
+                action = data.get('action')
+                if action == 'toggle_status':
+                    student_id = data.get('student_id')
+                    is_disabled = data.get('is_disabled')
+                    
+                    student = Student.objects.get(student_id=student_id)
+                    student.is_disabled = is_disabled
+                    student.save()
+                    
+                    return JsonResponse({'success': True})
+            except Student.DoesNotExist:
+                return JsonResponse({'error': 'Student not found'}, status=404)
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=400)
+        
+        # Handle regular form submissions
+        action = request.POST.get("action")
         student_id = request.POST.get("student_id")
         first_name = request.POST.get("first_name")
         middle_name = request.POST.get("middle_name", " ")
@@ -11,23 +34,34 @@ def admin_student_list_view(request):
         course = request.POST.get("course")
         year = request.POST.get("year")
 
-        if all([student_id, first_name, last_name, course, year]):
-            # Prevent duplicate student_id (optional)
-            if not Student.objects.filter(student_id=student_id).exists():
-                Student.objects.create(
-                    student_id=student_id,
-                    first_name=first_name,
-                    middle_name=middle_name if middle_name.strip() else " ",
-                    last_name=last_name,
-                    course=course,
-                    year=year,
-                )
-            else:
-                # Optionally, handle duplicate student_id error here (e.g. message)
-                pass
-
-        # Redirect to the same page to avoid resubmission on refresh
-        return redirect(reverse('teacher_student_list'))
+        if action == "edit":
+            try:
+                student = Student.objects.get(student_id=student_id)
+                student.first_name = first_name
+                student.middle_name = middle_name if middle_name.strip() else " "
+                student.last_name = last_name
+                student.course = course
+                student.year = year
+                student.save()
+                return JsonResponse({'success': True})
+            except Student.DoesNotExist:
+                return JsonResponse({'error': 'Student not found'}, status=404)
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=400)
+        else:  # action == "add"
+            if all([student_id, first_name, last_name, course, year]):
+                if not Student.objects.filter(student_id=student_id).exists():
+                    Student.objects.create(
+                        student_id=student_id,
+                        first_name=first_name,
+                        middle_name=middle_name if middle_name.strip() else " ",
+                        last_name=last_name,
+                        course=course,
+                        year=year,
+                    )
+                else:
+                    return JsonResponse({'error': 'Student ID already exists'}, status=400)
+            return redirect(reverse('student_list_view'))
 
     # For GET requests - list students
     students = Student.objects.all().order_by('student_id')
