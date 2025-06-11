@@ -30,4 +30,6 @@ urlpatterns = [
     path('class_record/', include('class_record.urls')),
     path('archived_classes/', include('archived_classes.urls')),
     path('class_join_request/', include('class_join_request.urls')),
+    path('faculty_settings/', include('faculty_settings.urls')),
+
 ]
