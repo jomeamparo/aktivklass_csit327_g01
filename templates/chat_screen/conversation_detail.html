@@ -1,0 +1,47 @@
+{% extends 'core/main.html' %}
+
+{% block title %}Conversation #{{ conversation.id }}{% endblock %}
+
+{% block content %}
+  <div class="container mx-auto px-4 py-8 max-w-3xl">
+    <h2 class="text-2xl font-bold text-green-800 mb-6">Conversation #{{ conversation.id }}</h2>
+
+    <div class="bg-white rounded-lg shadow-lg p-6 max-h-[500px] overflow-y-auto mb-6 flex flex-col space-y-4">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flex {% if message.sender == user %}justify-end{% else %}justify-start{% endif %}">
+            <div class="max-w-[70%] px-4 py-2 rounded-lg 
+              {% if message.sender == user %}
+                bg-green-100 text-green-900
+              {% else %}
+                bg-gray-200 text-gray-800
+              {% endif %}">
+              <p class="font-semibold text-sm mb-1">{{ message.sender.username }}</p>
+              <p>{{ message.content|linebreaksbr }}</p>
+              <p class="text-xs text-gray-500 mt-1 text-right">{{ message.timestamp|date:"M d, Y H:i" }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-gray-500 text-center">No messages yet. Start the conversation!</p>
+      {% endif %}
+    </div>
+
+    <form method="post" action="{% url 'send_message' conversation.id %}" class="flex space-x-2">
+      {% csrf_token %}
+      <textarea 
+        name="content" 
+        rows="3" 
+        required 
+        placeholder="Type your message..."
+        class="flex-grow border border-gray-300 rounded-lg p-3 resize-none focus:outline-none focus:ring-2 focus:ring-green-400"
+      ></textarea>
+      <button 
+        type="submit" 
+        class="bg-green-600 hover:bg-green-700 text-white px-6 rounded-lg font-semibold"
+      >
+        Send
+      </button>
+    </form>
+  </div>
+{% endblock %}

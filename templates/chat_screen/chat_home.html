@@ -1,0 +1,49 @@
+{% extends 'core/main.html' %}
+
+{% block title %}Chat Home{% endblock %}
+
+{% block content %}
+  <div class="container mx-auto px-4 py-8">
+    <h2 class="text-3xl font-bold text-gray-800 emboss-text mb-6">Your Conversations</h2>
+
+    {% if conversations %}
+      <ul class="divide-y divide-gray-200 max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-6 emboss-effect">
+        {% for conversation in conversations %}
+          <li class="py-4 hover:bg-green-50 rounded transition">
+            <a 
+              href="{% url 'conversation_detail' conversation.id %}" 
+              class="block text-lg font-semibold text-green-700 emboss-text"
+            >
+              Conversation #{{ conversation.id }}
+            </a>
+            <p class="text-gray-600 mt-1">
+              Participants: 
+              {% for user in conversation.participants.all %}
+                {{ user.username }}{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </p>
+            <p class="text-gray-500 text-sm mt-1">
+              Created at: {{ conversation.created_at|date:"M d, Y H:i" }}
+            </p>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-center text-gray-500 text-lg">You have no conversations yet.</p>
+    {% endif %}
+  </div>
+
+  <style>
+    .emboss-effect {
+      box-shadow:
+        inset 2px 2px 5px rgba(255, 255, 255, 0.7),
+        inset -2px -2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .emboss-text {
+      text-shadow:
+        1px 1px 0 #fff,
+        -1px -1px 0 #999;
+    }
+  </style>
+{% endblock %}

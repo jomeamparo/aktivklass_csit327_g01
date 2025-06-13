@@ -44,4 +44,5 @@ urlpatterns = [
     path('faculty_laboratory/', include('faculty_laboratory.urls')),
     path('settings/', include('settings.urls')),
     path('analytics/', include('analytics.urls')),
+    path('chat/', include('chat_screen.urls')),
 ]

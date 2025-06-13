@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'faculty_laboratory',
     'settings',
     'analytics',
+    'chat_screen',
 
     'edit_admin',
     'tailwind',
