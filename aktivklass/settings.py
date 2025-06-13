@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'faculty_seatworkSubmission',
     'class_lists',
     
+    'notifications',
 
     'edit_admin',
     'tailwind',
