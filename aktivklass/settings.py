@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'faculty_attendance',
     'help_and_support',
 
+    'edit_admin',
     'tailwind',
     'theme',
     'widget_tweaks'

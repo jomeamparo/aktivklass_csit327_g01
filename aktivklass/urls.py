@@ -34,4 +34,5 @@ urlpatterns = [
     path('help_and_support/', include('help_and_support.urls')),
        
     path('faculty_notifications/', include('notifications_faculty.urls')),
+    path('edit_admin/', include('edit_admin.urls')),
 ]
