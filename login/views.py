@@ -5,6 +5,8 @@ from django.contrib import messages
 
 def login_view(request):
     form = LoginForm(request.POST or None)
+    next_url = request.GET.get('next', None)
+    
     if request.method == 'POST':
         if form.is_valid():
             user_id = form.cleaned_data.get('email')
