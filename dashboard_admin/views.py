@@ -25,7 +25,7 @@ def dashboard_view(request):
             else:
                 pass
 
-        return redirect(reverse('faculty_list_view'))
+        return redirect(reverse('admin_faculty_list'))
 
     facultyList = Faculty.objects.all().order_by('faculty_id')
     context = {
