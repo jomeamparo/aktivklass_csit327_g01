@@ -1,0 +1,164 @@
+{% extends 'core/main.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Class Page</h2>
+    </div>
+
+    <!-- Sort Filter -->
+    <div class="flex flex-wrap items-center gap-4 mb-4">
+        <div class="flex items-center space-x-2">
+            <label for="sort" class="text-gray-700 font-medium">Sort:</label>
+            <select id="sort" name="sort"
+                class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                onchange="handleSort(this.value)">
+                <option value="">Select</option>
+                <option value="az">Name A - Z</option>
+                <option value="za">Name Z - A</option>
+                <option value="high">Total High → Low</option>
+                <option value="low">Total Low → High</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Class Info Card -->
+    <div class="relative border border-green-600 rounded-lg p-5 bg-white transition animate-float emboss-effect hover:shadow-lg mb-6">
+        <h3 class="text-xl font-semibold text-gray-900 emboss-text">Information Management 2</h3>
+        <p class="text-sm text-gray-600 mt-1">Code: CSIT327</p>
+        <p class="text-sm text-gray-600 mt-1">Description: Basic principles and practices of collecting, organizing, storing, and using information effectively within organizations.</p>
+        <p class="text-sm text-gray-600 mt-1">Schedule: MWF 12:00PM - 3:00PM</p>
+        <p class="text-sm text-gray-600 mt-1">Room: Room NGE102</p>
+        <p class="text-sm text-gray-600 mt-1">Class Code: M101A</p>
+    </div>
+
+    <!-- Student Table -->
+    <div class="overflow-auto bg-white rounded-lg shadow-md border border-gray-300">
+        <table class="min-w-full divide-y divide-gray-200 text-sm text-left text-gray-700">
+            <thead class="bg-green-100 text-gray-800">
+                <tr>
+                    <th class="px-4 py-3 font-semibold">Name</th>
+                    <th class="px-4 py-3 font-semibold">Quiz 1</th>
+                    <th class="px-4 py-3 font-semibold">Quiz 2</th>
+                    <th class="px-4 py-3 font-semibold">Project</th>
+                    <th class="px-4 py-3 font-semibold">Exam</th>
+                    <th class="px-4 py-3 font-semibold">Total</th>
+                    <th class="px-4 py-3 font-semibold">Grade</th>
+                    <th class="px-4 py-3 font-semibold">Action</th>
+                </tr>
+            </thead>
+            <tbody id="studentsBody">
+                <tr class="border-b">
+                    <td class="px-4 py-2 student-name">Ana Reyes</td>
+                    <td class="px-4 py-2">85</td>
+                    <td class="px-4 py-2">90</td>
+                    <td class="px-4 py-2">92</td>
+                    <td class="px-4 py-2">88</td>
+                    <td class="px-4 py-2 student-total font-semibold">355</td>
+                    <td class="px-4 py-2">89%</td>
+                    <td class="px-4 py-2">
+                        <button class="text-blue-500 hover:underline">Edit</button>
+                    </td>
+                </tr>
+                <tr class="border-b">
+                    <td class="px-4 py-2 student-name">Brian Santos</td>
+                    <td class="px-4 py-2">78</td>
+                    <td class="px-4 py-2">85</td>
+                    <td class="px-4 py-2">80</td>
+                    <td class="px-4 py-2">75</td>
+                    <td class="px-4 py-2 student-total font-semibold">318</td>
+                    <td class="px-4 py-2">79.5%</td>
+                    <td class="px-4 py-2">
+                        <button class="text-blue-500 hover:underline">Edit</button>
+                    </td>
+                </tr>
+                <tr class="border-b">
+                    <td class="px-4 py-2 student-name">Clyde Jumawan</td>
+                    <td class="px-4 py-2">90</td>
+                    <td class="px-4 py-2">92</td>
+                    <td class="px-4 py-2">95</td>
+                    <td class="px-4 py-2">93</td>
+                    <td class="px-4 py-2 student-total font-semibold">370</td>
+                    <td class="px-4 py-2">92.5%</td>
+                    <td class="px-4 py-2">
+                        <button class="text-blue-500 hover:underline">Edit</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- JavaScript Sorting -->
+<script>
+function getRows() {
+    return Array.from(document.querySelectorAll("#studentsBody tr"));
+}
+
+function updateTable(rows) {
+    const tbody = document.getElementById("studentsBody");
+    tbody.innerHTML = "";
+    rows.forEach(row => tbody.appendChild(row));
+}
+
+function handleSort(value) {
+    const rows = getRows();
+
+    if (value === "az") {
+        rows.sort((a, b) =>
+            a.querySelector(".student-name").textContent.localeCompare(
+                b.querySelector(".student-name").textContent
+            )
+        );
+    } else if (value === "za") {
+        rows.sort((a, b) =>
+            b.querySelector(".student-name").textContent.localeCompare(
+                a.querySelector(".student-name").textContent
+            )
+        );
+    } else if (value === "high") {
+    rows.sort((a, b) =>
+        parseInt(b.querySelector(".student-total").textContent) -
+        parseInt(a.querySelector(".student-total").textContent)
+    );
+} else if (value === "low") {
+    rows.sort((a, b) =>
+        parseInt(a.querySelector(".student-total").textContent) -
+        parseInt(b.querySelector(".student-total").textContent)
+    );
+}
+
+
+    updateTable(rows);
+}
+</script>
+
+<!-- Styles -->
+<style>
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.emboss-effect {
+  box-shadow:
+    inset 2px 2px 5px rgba(255, 255, 255, 0.7),
+    inset -2px -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.emboss-text {
+  text-shadow:
+    1px 1px 0 #fff,
+    -1px -1px 0 #999;
+}
+</style>
+{% endblock %}
