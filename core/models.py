@@ -1,6 +1,10 @@
 from django.db import models
 import random, string
 
+STATUS_CHOICES = [
+    ('ACTIVE', 'ACTIVE'),
+    ('DISABLED', 'DISABLED'),
+]
 
 def generate_random_code(length=10):
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
@@ -49,7 +53,7 @@ class Student(models.Model):
     enrolled_classes = models.ManyToManyField(Class, through='Enrollment', related_name='students')
 
     def __str__(self):
-        return f"{self.last_name}, {self.first_name} ({self.student_id})"
+        return f"{self.student_id} - {self.first_name} {self.last_name}"
     
 class ClassJoinRequest(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)  # or your Student model
@@ -63,36 +67,17 @@ class ClassJoinRequest(models.Model):
 
 
 class Faculty(models.Model):
-    faculty_id = models.CharField(max_length=50, unique=True)
-    first_name = models.CharField(max_length=50)
-    middle_name = models.CharField(max_length=50, blank=True, default="")
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=128, null=True, blank=True)
-    
-    COLLEGE_CHOICES = [
-        ('CCS', 'CCS'),
-        ('CASE', 'CASE'),
-    ]
-    college_name = models.CharField(max_length=10, choices=COLLEGE_CHOICES)
-
-    DEPARTMENT_CHOICES = [
-        ('CS', 'Computer Science'),
-        ('IT', 'Information Technology'),
-        ('Arts', 'Arts'),
-        ('Science', 'Science'),
-        ('Education', 'Education'),
-    ]
-    department_name = models.CharField(max_length=20, choices=DEPARTMENT_CHOICES)
-
-    STATUS_CHOICES = [
-        ('Fulltime', 'Fulltime'),
-        ('Parttime', 'Parttime'),
-    ]
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES)
+    faculty_id = models.CharField(max_length=20, primary_key=True)
+    first_name = models.CharField(max_length=100)
+    middle_name = models.CharField(max_length=100, blank=True, null=True)
+    last_name = models.CharField(max_length=100)
+    college_name = models.CharField(max_length=100)
+    department_name = models.CharField(max_length=100)
+    password = models.CharField(max_length=100, default='password123')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ACTIVE')
 
     def __str__(self):
-        return f"{self.last_name}, {self.first_name} {self.middle_name} ({self.faculty_id})"
+        return f"{self.faculty_id} - {self.first_name} {self.last_name}"
 
 class Enrollment(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True, blank=True)

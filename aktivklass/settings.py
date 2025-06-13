@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'settings',
     'analytics',
     'chat_screen',
+    'edit_faculty',
 
     'edit_admin',
     'tailwind',

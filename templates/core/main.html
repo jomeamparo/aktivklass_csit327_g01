@@ -72,6 +72,7 @@
           </a>
           <a href="{% url 'faculty_list_view' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
           <a href="{% url 'faculty_list_view' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
+          <a href="{% url 'admin_faculty_list' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-user text-green-600"></i>
             <span>Faculty</span>
           </a>
@@ -89,6 +90,9 @@
           <a href="{% url 'analytics' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-user text-green-600"></i>
             <span>Analytics</span>
+          <a href="{% url 'edit_faculty' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-users text-green-600"></i>
+            <span>Sample</span>
           </a>
         {% endif %}
 
