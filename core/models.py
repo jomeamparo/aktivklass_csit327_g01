@@ -38,9 +38,13 @@ class Student(models.Model):
     last_name = models.CharField(max_length=50)
     course = models.CharField(max_length=50, blank=True, null=True)
     year = models.CharField(max_length=50, blank=True, null=True)
-    is_disabled = models.BooleanField(default=False)
-
     password = models.CharField(max_length=128, null=True, blank=True)
+    
+    STATUS_CHOICES = [
+        ('ACTIVE', 'Active'),
+        ('DISABLED', 'Disabled'),
+    ]
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='ACTIVE')
     
     enrolled_classes = models.ManyToManyField(Class, through='Enrollment', related_name='students')
 

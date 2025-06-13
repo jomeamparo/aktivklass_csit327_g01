@@ -2,30 +2,9 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from core.models import Student
 from django.http import JsonResponse
-import json
 
 def admin_student_list_view(request):
     if request.method == "POST":
-        if request.headers.get('Content-Type') == 'application/json':
-            # Handle status toggle
-            try:
-                data = json.loads(request.body)
-                action = data.get('action')
-                if action == 'toggle_status':
-                    student_id = data.get('student_id')
-                    is_disabled = data.get('is_disabled')
-                    
-                    student = Student.objects.get(student_id=student_id)
-                    student.is_disabled = is_disabled
-                    student.save()
-                    
-                    return JsonResponse({'success': True})
-            except Student.DoesNotExist:
-                return JsonResponse({'error': 'Student not found'}, status=404)
-            except Exception as e:
-                return JsonResponse({'error': str(e)}, status=400)
-        
-        # Handle regular form submissions
         action = request.POST.get("action")
         student_id = request.POST.get("student_id")
         first_name = request.POST.get("first_name")
