@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'forgot_password',
     'faculty_profile',
     'faculty_attendance',
+    'help_and_support',
 
     'tailwind',
     'theme',

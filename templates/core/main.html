@@ -74,6 +74,8 @@
             <i class="fas fa-user text-green-600"></i>
             <span>Classes</span>
           </a>
+
+          
         {% endif %}
 
         <div class="border-t border-gray-200 my-4"></div>
@@ -83,7 +85,7 @@
             <i class="fas fa-cog text-green-600"></i>
             <span>Preferences</span>
           </a>
-          <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+          <a href="{% url 'help_and_support' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-info-circle text-green-600"></i>
             <span>Help & Support</span>
           </a>
