@@ -46,4 +46,5 @@ urlpatterns = [
     path('chat/', include('chat_screen.urls')),
     path('teacher_student/', include('teacher_student.urls')),
     path('help_and_support/', include('help_and_support.urls')),
+    path('quizzes/', include('quizzes.urls')),
 ]
