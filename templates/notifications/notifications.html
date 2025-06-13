@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Notification Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e8f5e9; 
+            color: #2e7d32;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .notification-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
+            width: 400px;
+            text-align: center;
+        }
+
+        .notification {
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .success {
+            background-color: #c8e6c9;
+            color: #256029;
+            border: 1px solid #81c784;
+        }
+
+        .error {
+            background-color: #ffcdd2;
+            color: #c62828;
+            border: 1px solid #e57373;
+        }
+
+        .info {
+            background-color: #b3e5fc;
+            color: #01579b;
+            border: 1px solid #4fc3f7;
+        }
+
+        .warning {
+            background-color: #fff9c4;
+            color: #f57f17;
+            border: 1px solid #fbc02d;
+        }
+    </style>
+</head>
+<body>
+    <div class="notification-container">
+        <h2>Notification</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="notification {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No new notifications.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

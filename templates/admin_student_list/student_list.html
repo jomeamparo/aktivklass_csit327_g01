@@ -84,17 +84,25 @@
                     <th class="border px-4 py-2 text-left">Last Name</th>
                     <th class="border px-4 py-2 text-left">Course</th>
                     <th class="border px-4 py-2 text-left">Year</th>
+                    <th class="border px-4 py-2 text-left">Status</th>
                 </tr>
             </thead>
             <tbody>
                 {% for student in students %}
-                <tr class="hover:bg-gray-50">
+                <tr class="hover:bg-gray-50 cursor-pointer" onclick="openEditModal('{{ student.student_id }}', '{{ student.first_name }}', '{{ student.middle_name }}', '{{ student.last_name }}', '{{ student.course }}', '{{ student.year }}')">
                     <td class="border px-4 py-2">{{ student.student_id }}</td>
                     <td class="border px-4 py-2">{{ student.first_name }}</td>
                     <td class="border px-4 py-2">{{ student.middle_name }}</td>
                     <td class="border px-4 py-2">{{ student.last_name }}</td>
                     <td class="border px-4 py-2">{{ student.course }}</td>
                     <td class="border px-4 py-2">{{ student.year }}</td>
+                    <td class="border px-4 py-2">
+                        <button 
+                            onclick="toggleStudentStatus(this, '{{ student.student_id }}')"
+                            class="status-btn {% if student.is_disabled %}bg-green-600 hover:bg-green-700{% else %}bg-red-600 hover:bg-red-700{% endif %} text-white px-3 py-1 rounded transition">
+                            {% if student.is_disabled %}Activate{% else %}Disable{% endif %}
+                        </button>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -108,6 +116,7 @@
 
     <div id="modalBackdrop" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
 
+    <!-- Add Student Modal -->
     <div id="addStudentModal" class="fixed inset-0 flex items-center justify-center hidden z-50">
         <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative">
             <h3 class="text-xl font-semibold mb-4">Add Student</h3>
@@ -169,6 +178,70 @@
             </form>
         </div>
     </div>
+
+    <!-- Edit Student Modal -->
+    <div id="editStudentModal" class="fixed inset-0 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative">
+            <h3 class="text-xl font-semibold mb-4">Edit Student</h3>
+            <form id="editStudentForm" method="post" action="{% url 'teacher_student_list' %}" onsubmit="return handleEditSubmit(event)">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="edit">
+                <div class="space-y-4">
+                    <div>
+                        <label for="edit_student_id" class="block font-medium text-gray-700">Student ID</label>
+                        <input id="edit_student_id" name="student_id" type="text" required readonly
+                               class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100" />
+                    </div>
+                    <div>
+                        <label for="edit_first_name" class="block font-medium text-gray-700">First Name</label>
+                        <input id="edit_first_name" name="first_name" type="text" required
+                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="edit_middle_name" class="block font-medium text-gray-700">Middle Name</label>
+                        <input id="edit_middle_name" name="middle_name" type="text"
+                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="edit_last_name" class="block font-medium text-gray-700">Last Name</label>
+                        <input id="edit_last_name" name="last_name" type="text" required
+                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="edit_course" class="block font-medium text-gray-700">Course</label>
+                        <select id="edit_course" name="course" required
+                                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="">Select Course</option>
+                            <option value="BSIT">BSIT</option>
+                            <option value="BSCS">BSCS</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="edit_year" class="block font-medium text-gray-700">Year</label>
+                        <select id="edit_year" name="year" required
+                                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="">Select Year</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button type="button" id="closeEditModalBtn"
+                            class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -176,6 +249,9 @@
     const closeModalBtn = document.getElementById('closeModalBtn');
     const modal = document.getElementById('addStudentModal');
     const backdrop = document.getElementById('modalBackdrop');
+    const editModal = document.getElementById('editStudentModal');
+    const closeEditModalBtn = document.getElementById('closeEditModalBtn');
+    const editStudentForm = document.getElementById('editStudentForm');
 
     openModalBtn.addEventListener('click', () => {
         modal.classList.remove('hidden');
@@ -187,10 +263,103 @@
         backdrop.classList.add('hidden');
     });
 
-    // Close modal if backdrop is clicked
-    backdrop.addEventListener('click', () => {
-        modal.classList.add('hidden');
+    closeEditModalBtn.addEventListener('click', () => {
+        editModal.classList.add('hidden');
         backdrop.classList.add('hidden');
     });
+
+    // Close modals if backdrop is clicked
+    backdrop.addEventListener('click', () => {
+        modal.classList.add('hidden');
+        editModal.classList.add('hidden');
+        backdrop.classList.add('hidden');
+    });
+
+    function openEditModal(studentId, firstName, middleName, lastName, course, year) {
+        document.getElementById('edit_student_id').value = studentId;
+        document.getElementById('edit_first_name').value = firstName;
+        document.getElementById('edit_middle_name').value = middleName;
+        document.getElementById('edit_last_name').value = lastName;
+        document.getElementById('edit_course').value = course;
+        document.getElementById('edit_year').value = year;
+        
+        editModal.classList.remove('hidden');
+        backdrop.classList.remove('hidden');
+    }
+
+    function handleEditSubmit(event) {
+        event.preventDefault();
+        
+        const formData = new FormData(editStudentForm);
+        
+        // Update the table row immediately with new data
+        const studentId = formData.get('student_id');
+        const firstName = formData.get('first_name');
+        const middleName = formData.get('middle_name');
+        const lastName = formData.get('last_name');
+        const course = formData.get('course');
+        const year = formData.get('year');
+
+        const row = document.querySelector(`tr[onclick*="${studentId}"]`);
+        if (row) {
+            const cells = row.cells;
+            cells[1].textContent = firstName;
+            cells[2].textContent = middleName;
+            cells[3].textContent = lastName;
+            cells[4].textContent = course;
+            cells[5].textContent = year;
+
+            // Update the onclick attribute with new values
+            row.setAttribute('onclick', `openEditModal('${studentId}', '${firstName}', '${middleName}', '${lastName}', '${course}', '${year}')`);
+        }
+
+        // Close the modal
+        editModal.classList.add('hidden');
+        backdrop.classList.add('hidden');
+
+        // Send the data to the server in the background
+        fetch(editStudentForm.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        });
+
+        return false;
+    }
+
+    function toggleStudentStatus(button, studentId) {
+        // Prevent the row click event from triggering
+        event.stopPropagation();
+        
+        const isDisabled = button.classList.contains('bg-green-600');
+        
+        if (isDisabled) {
+            // Activate account
+            button.classList.remove('bg-green-600', 'hover:bg-green-700');
+            button.classList.add('bg-red-600', 'hover:bg-red-700');
+            button.textContent = 'Disable';
+        } else {
+            // Disable account
+            button.classList.remove('bg-red-600', 'hover:bg-red-700');
+            button.classList.add('bg-green-600', 'hover:bg-green-700');
+            button.textContent = 'Activate';
+        }
+
+        // Send the status update to the server
+        fetch('{% url "teacher_student_list" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                action: 'toggle_status',
+                student_id: studentId,
+                is_disabled: !isDisabled
+            })
+        });
+    }
 </script>
-{% endblock %}
+{% endblock %}  q
