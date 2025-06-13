@@ -51,10 +51,11 @@ INSTALLED_APPS = [
     'archived_classes',
     'class_join_request',
     'notifications',
+    'forgot_password',
 
     'tailwind',
     'theme',
-    'widget_tweaks',
+    'widget_tweaks'
 ]
 
 TAILWIND_APP_NAME = 'theme'
@@ -103,7 +104,7 @@ DATABASES = {
         'USER': 'root',          # default user in XAMPP
         'PASSWORD': '',          # default password is empty
         'HOST': 'localhost',
-        'PORT': '3306',
+        'PORT': '3307',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION'",
         },
@@ -157,3 +158,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'minecrafterusergame@gmail.com'  # Replace with your Gmail address
+EMAIL_HOST_PASSWORD = 'lukojehfetcplftj'  # Paste the 16-character app password here
