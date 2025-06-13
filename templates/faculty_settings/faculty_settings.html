@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Preferences</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .accordion-section { border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.07); margin-bottom: 1rem; background: white; }
+        .accordion-header { cursor: pointer; transition: background 0.2s; }
+        .accordion-header:hover { background: #f3f4f6; }
+        .accordion-content { display: none; padding: 1.5rem; border-top: 1px solid #e5e7eb; }
+        .accordion-section.active .accordion-content { display: block; }
+        .toggle-switch { position: relative; display: inline-block; width: 48px; height: 24px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #4CAF50; }
+        input:checked + .slider:before { transform: translateX(24px); }
+    </style>
+</head>
+<body class="bg-gray-50">
+<div class="container mx-auto px-2 py-6 md:px-8 md:py-12">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">Preferences</h1>
+        <!-- Accordion Sections -->
+        <div id="accordion">
+            <!-- General Settings -->
+            <div class="accordion-section">
+                <div class="accordion-header flex items-center justify-between p-4" onclick="toggleAccordion(this)">
+                    <span class="font-semibold text-lg"><i class="fas fa-cog text-green-600 mr-2"></i>General Settings</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-700 mb-2">Theme</label>
+                        <div class="flex items-center gap-4">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="darkMode">
+                                <span class="slider"></span>
+                            </label>
+                            <span>Dark Mode</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Language</label>
+                        <select id="language" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                            <option value="en">English</option>
+                            <option value="fil">Filipino</option>
+                            <option value="es">Spanish</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Timezone</label>
+                        <select id="timezone" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                            <option value="Asia/Manila">Asia/Manila</option>
+                            <option value="America/New_York">America/New York</option>
+                            <option value="Europe/London">Europe/London</option>
+                            <option value="UTC">UTC</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Notifications</label>
+                        <div class="flex flex-col gap-2">
+                            <label class="flex items-center gap-2"><input type="checkbox" id="notifAssignments"> Assignments</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" id="notifAnnouncements"> Announcements</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" id="notifMessages"> Messages</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Faculty Settings -->
+            <div class="accordion-section">
+                <div class="accordion-header flex items-center justify-between p-4" onclick="toggleAccordion(this)">
+                    <span class="font-semibold text-lg"><i class="fas fa-chalkboard-teacher text-green-600 mr-2"></i>Faculty Settings</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-700 mb-2">Course Notifications</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="facultyCourseNotif">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Grading System</label>
+                        <select id="facultyGradingSystem" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                            <option value="letter">Letter Grades</option>
+                            <option value="number">Numerical Grades</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Communication</label>
+                        <div class="flex flex-col gap-2">
+                            <label class="flex items-center gap-2"><input type="checkbox" id="facultyCommEmail"> Email</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" id="facultyCommSMS"> SMS</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" id="facultyCommInApp"> In-App</label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Assignment Submission</label>
+                        <input type="text" id="facultyAllowedFileTypes" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Allowed file types (e.g., pdf, docx)">
+                        <input type="number" id="facultyMaxFileSize" class="w-full p-2 border border-gray-300 rounded-lg mt-2" placeholder="Max file size (MB)">
+                    </div>
+                </div>
+            </div>
+            <!-- Student Settings -->
+            <div class="accordion-section">
+                <div class="accordion-header flex items-center justify-between p-4" onclick="toggleAccordion(this)">
+                    <span class="font-semibold text-lg"><i class="fas fa-user-graduate text-green-600 mr-2"></i>Student Settings</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-700 mb-2">Profile Picture</label>
+                        <input type="file" id="studentProfilePic" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Display Name</label>
+                        <input type="text" id="studentDisplayName" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Contact Info</label>
+                        <input type="text" id="studentContact" class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Notifications</label>
+                        <div class="flex flex-col gap-2">
+                            <label class="flex items-center gap-2"><input type="checkbox" id="studentNotifGrades"> Grades</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" id="studentNotifDeadlines"> Deadlines</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" id="studentNotifAnnouncements"> Announcements</label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Enrollment Preferences</label>
+                        <input type="text" id="studentEnrollmentPrefs" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="e.g., auto-enroll, manual add/drop">
+                    </div>
+                </div>
+            </div>
+            <!-- Admin Settings -->
+            <div class="accordion-section">
+                <div class="accordion-header flex items-center justify-between p-4" onclick="toggleAccordion(this)">
+                    <span class="font-semibold text-lg"><i class="fas fa-user-shield text-green-600 mr-2"></i>Admin Settings</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-700 mb-2">System-wide Notifications</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="adminSystemNotif">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">User Permissions</label>
+                        <input type="text" id="adminUserPermissions" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Role-based access">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Data Management</label>
+                        <div class="flex flex-col gap-2">
+                            <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">Backup</button>
+                            <button class="bg-green-500 text-white px-4 py-2 rounded-lg">Import/Export</button>
+                            <button class="bg-yellow-500 text-white px-4 py-2 rounded-lg">Maintenance</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Security Settings -->
+            <div class="accordion-section">
+                <div class="accordion-header flex items-center justify-between p-4" onclick="toggleAccordion(this)">
+                    <span class="font-semibold text-lg"><i class="fas fa-lock text-green-600 mr-2"></i>Security Settings</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-700 mb-2">Password Strength</label>
+                        <select id="securityPasswordStrength" class="w-full p-2 border border-gray-300 rounded-lg">
+                            <option value="medium">Medium</option>
+                            <option value="strong">Strong</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Multi-factor Authentication</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="securityMFA">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Account Recovery</label>
+                        <input type="text" id="securityRecovery" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Email/SMS">
+                    </div>
+                </div>
+            </div>
+            <!-- Advanced Settings -->
+            <div class="accordion-section">
+                <div class="accordion-header flex items-center justify-between p-4" onclick="toggleAccordion(this)">
+                    <span class="font-semibold text-lg"><i class="fas fa-tools text-green-600 mr-2"></i>Advanced Settings</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-700 mb-2">Custom Branding</label>
+                        <input type="file" id="advancedBrandingLogo" class="w-full p-2 border border-gray-300 rounded-lg">
+                        <input type="color" id="advancedBrandingColor" class="w-full p-2 border border-gray-300 rounded-lg mt-2">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">Performance Preferences</label>
+                        <div class="flex flex-col gap-2">
+                            <label class="flex items-center gap-2"><input type="checkbox" id="advancedCaching"> Caching</label>
+                            <label class="flex items-center gap-2"><input type="checkbox" id="advancedLoadBalancing"> Load Balancing</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-8 flex justify-end">
+            <button onclick="savePreferences()" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition duration-200">
+                Save Preferences
+            </button>
+        </div>
+    </div>
+</div>
+<script>
+    // Accordion functionality
+    function toggleAccordion(header) {
+        const section = header.parentElement;
+        section.classList.toggle('active');
+    }
+    // Responsive: open first section by default
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('.accordion-section').classList.add('active');
+    });
+    // Preferences logic (expand as needed)
+    function savePreferences() {
+        // Collect all preferences here and save to localStorage or backend
+        alert('Preferences saved! (Implement saving logic as needed)');
+    }
+</script>
+</body>
+</html>
