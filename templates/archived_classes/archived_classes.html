@@ -6,6 +6,9 @@
 <div class="container">
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-gray-800">Archived Classes</h2>
+        <a href="{% url 'dashboard_teacher' %}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+            Back to Class
+        </a>
     </div>
 
     {% if classes %}
@@ -14,8 +17,17 @@
             <div class="relative border border-green-600 rounded-lg p-5 bg-white transition animate-float emboss-effect hover:shadow-lg">
                 <!-- Action icons -->
                 <div class="absolute top-2 right-2 flex space-x-2 z-10">
+                    <!-- Unarchive Icon -->
+                    <form action="{% url 'unarchive_class' class.id %}" method="post" onsubmit="return confirm('Restore this class to active classes?') && confirm('Are you sure you want to restore this class?');">
+                      {% csrf_token %}
+                      <button type="submit" title="Unarchive" class="mr-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-600 hover:text-yellow-800 transform rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9.75V19a2 2 0 002 2h14a2 2 0 002-2V9.75M9 12l3 3m0 0l3-3m-3 3V3" />
+                        </svg>
+                      </button>
+                    </form>
                     <!-- Delete Icon (Trash can) -->
-                    <form action="{% url 'delete_archived_class' class.id %}" method="post" onsubmit="return confirm('Delete this class?');">
+                    <form action="{% url 'delete_archived_class' class.id %}" method="post" onsubmit="return confirm('Delete this class permanently?');">
                         {% csrf_token %}
                         <button type="submit" title="Delete">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600 hover:text-red-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
