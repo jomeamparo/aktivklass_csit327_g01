@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import FacultyProfile
 from .forms import FacultyProfileForm
 
@@ -14,7 +14,13 @@ def faculty_profile_view(request):
             bio="Welcome to my profile!"
         )
 
-    form = FacultyProfileForm(instance=profile)
+    if request.method == 'POST':
+        form = FacultyProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('faculty_profile')
+    else:
+        form = FacultyProfileForm(instance=profile)
 
     context = {
         'faculty': profile,
