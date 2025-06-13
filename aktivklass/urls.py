@@ -31,14 +31,12 @@ urlpatterns = [
     path('class_record/', include('class_record.urls')),
     path('archived_classes/', include('archived_classes.urls')),
     path('class_join_request/', include('class_join_request.urls')),
-<<<<<<< HEAD
     path('faculty_seatwork/', include('faculty_seatwork.urls')),
     path('faculty_seatworkSubmission/', include('faculty_seatworkSubmission.urls')),
     path('help_and_support/', include('help_and_support.urls')),
        
     path('faculty_notifications/', include('notifications_faculty.urls')),
     path('edit_admin/', include('edit_admin.urls')),
-=======
     path('classes/', include('class_lists.urls')),
->>>>>>> 998213e (feature(Stduent): create_class_lists)
+    path('notifications/', include('notifications.urls'))
 ]

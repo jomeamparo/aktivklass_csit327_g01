@@ -50,13 +50,11 @@ INSTALLED_APPS = [
     'dashboard_student',
     'archived_classes',
     'class_join_request',
-<<<<<<< HEAD
     'faculty_seatwork',
     'faculty_seatworkSubmission',
-=======
     'class_lists',
     
->>>>>>> 998213e (feature(Stduent): create_class_lists)
+    'notifications',
 
     'edit_admin',
     'tailwind',
