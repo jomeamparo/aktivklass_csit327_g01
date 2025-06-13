@@ -50,11 +50,8 @@ INSTALLED_APPS = [
     'dashboard_student',
     'archived_classes',
     'class_join_request',
-    'notifications',
-    'forgot_password',
-    'faculty_profile',
-    'faculty_attendance',
-    'help_and_support',
+    'faculty_seatwork',
+    'faculty_seatworkSubmission',
 
     'edit_admin',
     'tailwind',
