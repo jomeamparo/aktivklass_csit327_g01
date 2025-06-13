@@ -39,4 +39,6 @@ urlpatterns = [
     path('edit_admin/', include('edit_admin.urls')),
     path('classes/', include('class_lists.urls')),
     path('notifications/', include('notifications.urls'))
+    path('faculty_settings/', include('faculty_settings.urls')),
+
 ]

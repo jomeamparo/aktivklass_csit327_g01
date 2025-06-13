@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'class_lists',
     
     'notifications',
+    'faculty_settings',
 
     'edit_admin',
     'tailwind',
