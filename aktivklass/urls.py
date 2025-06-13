@@ -33,4 +33,5 @@ urlpatterns = [
     path('class_join_request/', include('class_join_request.urls')),
     path('help_and_support/', include('help_and_support.urls')),
        
+    path('faculty_notifications/', include('notifications_faculty.urls')),
 ]
