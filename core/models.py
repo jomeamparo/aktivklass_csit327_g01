@@ -38,8 +38,13 @@ class Student(models.Model):
     last_name = models.CharField(max_length=50)
     course = models.CharField(max_length=50, blank=True, null=True)
     year = models.CharField(max_length=50, blank=True, null=True)
-
     password = models.CharField(max_length=128, null=True, blank=True)
+    
+    STATUS_CHOICES = [
+        ('ACTIVE', 'Active'),
+        ('DISABLED', 'Disabled'),
+    ]
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='ACTIVE')
     
     enrolled_classes = models.ManyToManyField(Class, through='Enrollment', related_name='students')
 
@@ -161,3 +166,14 @@ class AdminUser(models.Model):
 
     def __str__(self):
         return f"{self.last_name}, {self.first_name} ({self.employee_id})"
+    
+class Notification(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    published_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        app_label = 'notifications' 
