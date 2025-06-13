@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Class List</title>
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        /* Container for the class cards */
+        .class-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Individual class card styling */
+        .class-card {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .class-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .class-card h2 {
+            margin-top: 0;
+            color: #34495e;
+        }
+
+        .class-card p {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <h1>Class List</h1>
+    <div class="class-container">
+        {% for class in classes %}
+            <div class="class-card">
+                <h2>{{ class.name }}</h2>
+                <p><strong>Instructor:</strong> {{ class.instructor }}</p>
+                <p><strong>Schedule:</strong> {{ class.schedule }}</p>
+            </div>
+        {% empty %}
+            <p>No classes available.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
