@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'faculty_seatwork',
     'faculty_seatworkSubmission',
 
+    'edit_admin',
     'tailwind',
     'theme',
     'widget_tweaks'
