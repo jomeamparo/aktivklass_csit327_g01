@@ -1,0 +1,54 @@
+{% extends 'core/main.html' %}
+{% load static %}
+
+{% block content %}
+<div class="flex-1 overflow-y-auto p-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h1 class="text-2xl font-bold text-gray-900 mb-6">Profile Information</h1>
+            
+            <!-- Personal Information Section -->
+            <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Personal Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 text-sm">
+                    <div>
+                        <p><span class="font-medium">Full Name:</span> {{ faculty.first_name|default:"N/A" }} {{ faculty.last_name|default:"N/A" }}</p>
+                        <p><span class="font-medium">Department:</span> {{ faculty.department|default:"N/A" }}</p>
+                    </div>
+                    <div>
+                        <p><span class="font-medium">Email:</span> {{ faculty.email|default:"N/A" }}</p>
+                        <p><span class="font-medium">Bio:</span> {{ faculty.bio|default:"No bio provided."|linebreaksbr }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Sections -->
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Contact Information -->
+                <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Contact Information</h3>
+                    <div class="space-y-2 text-gray-700 text-sm">
+                        <p><i class="fas fa-envelope text-green-600 mr-2"></i> {{ faculty.email|default:"N/A" }}</p>
+                        <p><i class="fas fa-building text-green-600 mr-2"></i> {{ faculty.department|default:"N/A" }}</p>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Quick Actions</h3>
+                    <div class="space-y-2">
+                        <a href="#" class="flex items-center text-green-600 hover:text-green-700 transition">
+                            <i class="fas fa-edit mr-2"></i>
+                            <span>Edit Profile</span>
+                        </a>
+                        <a href="#" class="flex items-center text-green-600 hover:text-green-700 transition">
+                            <i class="fas fa-key mr-2"></i>
+                            <span>Change Password</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

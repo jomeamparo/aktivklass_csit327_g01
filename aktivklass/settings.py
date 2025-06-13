@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'class_join_request',
     'notifications',
     'forgot_password',
+    'faculty_profile',
 
     'tailwind',
     'theme',
