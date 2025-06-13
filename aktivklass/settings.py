@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'student_settings',
     'student_profile',
     'faculty_laboratory',
+    'settings',
 
     'edit_admin',
     'tailwind',

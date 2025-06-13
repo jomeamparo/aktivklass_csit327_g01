@@ -42,4 +42,5 @@ urlpatterns = [
 
     path('student_profile/', include ('student_profile.urls')),
     path('faculty_laboratory/', include('faculty_laboratory.urls')),
+    path('settings/', include('settings.urls')),
 ]
