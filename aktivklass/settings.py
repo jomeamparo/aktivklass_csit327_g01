@@ -53,11 +53,13 @@ INSTALLED_APPS = [
     'faculty_seatwork',
     'faculty_seatworkSubmission',
     'class_lists',
+    'faculty_attendance',
     
     'notifications',
     'faculty_settings',
     'student_settings',
     'student_profile',
+    'faculty_profile',
     'faculty_laboratory',
     'settings',
     'analytics',
@@ -120,7 +122,7 @@ DATABASES = {
         'USER': 'root',          # default user in XAMPP
         'PASSWORD': '',          # default password is empty
         'HOST': 'localhost',
-        'PORT': '3307',
+        'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION'",
         },

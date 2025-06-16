@@ -9,7 +9,11 @@
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   </head>
   <body class="min-h-screen bg-gray-100 font-sans antialiased text-gray-800">
-  <a href="{% url 'faculty_profile'%}">
+  {% if role == 'faculty' %}
+    <a href="{% url 'faculty_profile'%}">
+  {% elif role == 'student' %}
+    <a href="{% url 'student_profile'%}">
+  {% endif %}
     <div class="flex h-screen overflow-hidden">
       <!-- Sidebar -->
       <aside id="sidebar" class="w-64 bg-white shadow-lg border-r border-gray-200 p-4 flex flex-col transition-all duration-300 ease-in-out">
@@ -26,7 +30,9 @@
             <p class="text-xs text-gray-500">email@example.com</p>
           </div>
         </div>
+        {% if role == 'faculty' or role == 'student' %}
         </a>
+        {% endif %}
         <!-- Navigation -->
         {% if role == 'faculty' %}
           <a href="{% url 'dashboard_teacher' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
@@ -41,6 +47,9 @@
             <i class="fas fa-users text-green-600"></i>
             <span>Class Join Request</span>
           </a>
+
+          <!-- Faculty -->
+
           <a href="{% url 'faculty_seatwork' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
           <a href="{% url 'archived_classes' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
             <i class="fas fa-users text-green-600"></i>
@@ -48,7 +57,7 @@
           </a>
           <a href="{% url 'faculty_seatworkSubmission' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-users text-green-600"></i>
-            <span>SeatworkHistory</span>
+            <span>Seatwork History</span>
           </a>
           <a href="{% url 'faculty_attendance' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-user text-green-600"></i>
@@ -124,8 +133,8 @@
         <!-- Chats Link - Available for all users -->
         <a href="{% url 'chat_home' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
           <i class="fas fa-comments text-green-600"></i>
-          <span>Chats</span>
-        </a>
+            <span>Chats</span>
+          </a>
 
         <div class="border-t border-gray-200 my-4"></div>
           <span class="text-xs uppercase text-gray-400 px-4">Settings</span>
