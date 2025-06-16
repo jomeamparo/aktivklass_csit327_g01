@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'archived_classes',
     'class_join_request',
     'faculty_settings',
-
+         
     'tailwind',
     'theme',
     'widget_tweaks',

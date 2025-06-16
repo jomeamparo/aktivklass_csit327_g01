@@ -1,6 +1,9 @@
 from django.urls import path
-from .views import faculty_settings
+from . import views 
+
+
 
 urlpatterns = [
-    path('', faculty_settings, name='faculty_settings'),
+    path('', views.faculty_settings_view, name='faculty_settings'),
+   
 ]
