@@ -50,12 +50,10 @@ INSTALLED_APPS = [
     'dashboard_student',
     'archived_classes',
     'class_join_request',
-<<<<<<< HEAD
+    'class_lists',
     'faculty_seatwork',
     'faculty_seatworkSubmission',
-    'class_lists',
     'faculty_attendance',
-    
     'notifications',
     'faculty_settings',
     'student_settings',
@@ -68,17 +66,13 @@ INSTALLED_APPS = [
     'edit_faculty',
     'help_and_support',
     'quizzes',
-    'chat_screen',
-    'notifications',
-=======
-    'help_and_support',
->>>>>>> e85a118 (feature(help_and_support): create_help_and_support_ui)
-
     'edit_admin',
     'tailwind',
     'theme',
-    'widget_tweaks'
+    'widget_tweaks',
 ]
+
+
 
 TAILWIND_APP_NAME = 'theme'
 
@@ -131,7 +125,7 @@ DATABASES = {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION'",
         },
     }
-}
+}   
 
 
 # Password validation

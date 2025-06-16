@@ -1,9 +1,5 @@
 from django.db import models
+from core.models import Class, Student, Enrollment
 
-class Class(models.Model):
-    name = models.CharField(max_length=100)
-    instructor = models.CharField(max_length=100)
-    schedule = models.CharField(max_length=100)
-
-    def __str__(self):
-        return f"{self.name} - {self.instructor}"
+# We don't need to create new models since we're using the existing ones from core
+# This file can be empty or removed since we're using the core models

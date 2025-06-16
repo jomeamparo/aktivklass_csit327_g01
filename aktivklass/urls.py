@@ -1,21 +1,5 @@
-"""
-URL configuration for aktivklass project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,37 +11,25 @@ urlpatterns = [
     path('admin_faculty_list/', include('admin_faculty_list.urls')),
     path('admin_student_list/', include('admin_student_list.urls')),
     path('edit_faculty/', include('edit_faculty.urls')),
+    path('edit_admin/', include('edit_admin.urls')),
     path('archived_classes/', include('archived_classes.urls')),
     path('class_join_request/', include('class_join_request.urls')),
-<<<<<<< HEAD
-<<<<<<< HEAD
+    path('classes/', include('class_lists.urls')),
+    path('class-record/', include('class_record.urls')),
+    path('teacher_student/', include('teacher_student.urls')),
     path('faculty_seatwork/', include('faculty_seatwork.urls')),
     path('faculty_attendance/', include('faculty_attendance.urls')),
     path('faculty_seatworkSubmission/', include('faculty_seatworkSubmission.urls')),
-    path('help_and_support/', include('help_and_support.urls')),
-    path('faculty_notifications/', include('notifications_faculty.urls')),
-    path('edit_admin/', include('edit_admin.urls')),
-    path('classes/', include('class_lists.urls')),
-    path('notifications/', include('notifications.urls')),
+    path('faculty_profile/', include('faculty_profile.urls')),
     path('faculty_settings/', include('faculty_settings.urls')),
     path('student_settings/', include('student_settings.urls')),
-    path('faculty_profile/', include('faculty_profile.urls')),
-    path('student_profile/', include ('student_profile.urls')),
+    path('student_profile/', include('student_profile.urls')),
     path('faculty_laboratory/', include('faculty_laboratory.urls')),
-    path('settings/', include('settings.urls')),
-    path('analytics/', include('analytics.urls')),
+    path('notifications/', include('notifications.urls')),
     path('chat/', include('chat_screen.urls')),
-    path('teacher_student/', include('teacher_student.urls')),
     path('help_and_support/', include('help_and_support.urls')),
     path('quizzes/', include('quizzes.urls')),
-    path('chat/', include('chat_screen.urls')),
-    path('notifications/', include('notifications.urls'))
-=======
-    path('help_and_support/', include('help_and_support.urls')),
-       
->>>>>>> e85a118 (feature(help_and_support): create_help_and_support_ui)
-=======
-    path('notifications/', include('notifications.urls')),
+    path('settings/', include('settings.urls')),
+    path('analytics/', include('analytics.urls')),
     path('forgot_password/', include('forgot_password.urls')),
->>>>>>> 920b6ea (feature(faculty): Change_password_functionality)
 ]

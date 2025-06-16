@@ -2,7 +2,6 @@
 
 from django.db import migrations, models
 
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -13,6 +12,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='student',
             name='status',
-            field=models.CharField(choices=[('ACTIVE', 'Active'), ('DISABLED', 'Disabled')], default='ACTIVE', max_length=10),
+            field=models.CharField(
+                choices=[('ACTIVE', 'Active'), ('DISABLED', 'Disabled')],
+                default='ACTIVE',
+                max_length=10
+            ),
+          field=models.CharField(choices=[('ACTIVE', 'Active'), ('DISABLED', 'Disabled')], default='ACTIVE', max_length=10), 
         ),
     ]
