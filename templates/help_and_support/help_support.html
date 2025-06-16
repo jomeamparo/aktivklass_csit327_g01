@@ -1,0 +1,229 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>{% block title %}AktivKlass Help & Support{% endblock %}</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+      /* Custom hover effect for FAQ items */
+      .faq-item {
+        transition: all 0.3s ease-in-out;
+      }
+
+      .faq-item:hover {
+        transform: translateY(-5px); /* Moves the item up */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Adds shadow */
+      }
+
+      .faq-item.darken {
+        opacity: 0.5; /* Darken the other questions */
+      }
+
+      /* Ensure the hovered item maintains full opacity */
+      .faq-item.active {
+        opacity: 1;
+      }
+
+      /* Sidebar Styles for Toggling */
+      #sidebar {
+        transition: transform 0.3s ease-in-out;
+        transform: translateX(0); /* Initially visible */
+      }
+
+      #sidebar.hidden {
+        transform: translateX(-100%); /* Slide it out to the left */
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-gray-100 font-sans antialiased text-gray-800">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <aside id="sidebar" class="w-64 bg-white shadow-xl border-r border-gray-200 p-4 flex flex-col transition-all duration-300 ease-in-out">
+        <!-- Profile Section -->
+        <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 shadow-sm mb-6">
+          <img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIiZDuw3IfGw4EI3xvXFcwCat2vgScNn_SiA&s"
+            alt="Profile Photo"
+            class="w-14 h-14 rounded-full border-2 border-green-500 object-cover"
+          />
+          <div>
+            <h2 class="text-base font-semibold text-gray-900">maraiaharceta@gmail.com</h2>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        {% if role == 'faculty' %}
+          <!-- Teachers Options only -->
+          <a href="{% url 'dashboard_teacher' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-user text-green-600"></i>
+            <span>Class Record</span>
+          </a>
+          <a href="{% url 'teacher_student_list' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-users text-green-600"></i>
+            <span>Students</span>
+          </a>
+          <a href="{% url 'class_join_request' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-users text-green-600"></i>
+            <span>Class Join Request</span>
+          </a>
+          <a href="{% url 'archived_classes' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-users text-green-600"></i>
+            <span>Archived Classes</span>
+          </a>
+        {% endif %}
+
+        {% if role == 'admin' %}
+          <!-- Admin Options only -->
+          <a href="{% url 'faculty_list_view' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-user text-green-600"></i>
+            <span>Faculty</span>
+          </a>
+          <a href="{% url 'student_list_view' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-users text-green-600"></i>
+            <span>Student</span>
+          </a>
+        {% endif %}
+
+        <!-- Student Options only -->
+        <a href="{% url 'dashboard_student' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+          <i class="fas fa-user text-green-600"></i>
+          <span>Classes</span>
+        </a>
+
+        <div class="border-t border-gray-200 my-4"></div>
+
+        <span class="text-xs uppercase text-gray-400 px-4">Settings</span>
+        <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+          <i class="fas fa-cog text-green-600"></i>
+          <span>Preferences</span>
+        </a>
+        <a href="{% url 'help_and_support' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+          <i class="fas fa-info-circle text-green-600"></i>
+          <span>Help & Support</span>
+        </a>
+
+        <!-- Logout -->
+        <div class="mt-auto pt-4 border-t border-gray-200">
+          <a href="{% url 'login' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 transition">
+            <i class="fas fa-sign-out-alt text-red-600"></i>
+            <span>Logout</span>
+          </a>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <div id="mainContent" class="flex-1 flex flex-col bg-gray-50 transition-all duration-300 ease-in-out">
+        <!-- Header -->
+        <header class="bg-white shadow-sm p-4 flex items-center justify-between">
+          <button id="toggleSidebar" class="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
+            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+          <div class="w-full flex justify-center items-center mt-4">
+            <h1 class="text-3xl font-bold tracking-tight" style="font-family: 'Poppins', sans-serif;">
+                <span class="text-green-600">Aktiv</span><span class="text-gray-800">Klass</span>
+                <span class="font-medium text-gray-500">Management</span>
+            </h1>
+          </div>
+          <div></div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="flex-1 p-6 overflow-y-auto">
+          <h1 class="text-3xl font-bold text-gray-900 mb-6">Help & Support</h1>
+
+          <!-- FAQ Content -->
+          <div class="help-content space-y-4">
+            <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
+              <h4 class="text-xl font-semibold text-gray-900">How to Join a Class?</h4>
+              <p class="text-gray-600">To join a class, click on the "Join Class" button in the sidebar. You will need the class code provided by your instructor.</p>
+            </div>
+            <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
+              <h4 class="text-xl font-semibold text-gray-900">How to Reset Your Password?</h4>
+              <p class="text-gray-600">If you forget your password, go to the "Settings" section, click on "Reset Password" and follow the instructions sent to your email.</p>
+            </div>
+            <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
+              <h4 class="text-xl font-semibold text-gray-900">How to Contact Support?</h4>
+              <p class="text-gray-600">If you need help, please contact support via the "Help & Support" page or email us directly at support@aktivklass.com.</p>
+            </div>
+
+            <!-- Additional FAQ Items (10 more) -->
+            <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
+              <h4 class="text-xl font-semibold text-gray-900">How to Update My Profile?</h4>
+              <p class="text-gray-600">To update your profile, go to the "Settings" section and click on "Edit Profile".</p>
+            </div>
+            <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
+              <h4 class="text-xl font-semibold text-gray-900">How to Change My Password?</h4>
+              <p class="text-gray-600">To change your password, go to "Settings" and click on "Change Password".</p>
+            </div>
+            <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
+              <h4 class="text-xl font-semibold text-gray-900">How to Add a New Class?</h4>
+              <p class="text-gray-600">To add a new class, go to the "Faculty" section and click on "Add New Class".</p>
+            </div>
+            <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
+              <h4 class="text-xl font-semibold text-gray-900">How to Assign Homework?</h4>
+              <p class="text-gray-600">To assign homework, go to the "Class Record" section and click on "Assign Homework".</p>
+            </div>
+            <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
+              <h4 class="text-xl font-semibold text-gray-900">How to Submit Homework?</h4>
+              <p class="text-gray-600">To submit homework, go to the "Class" section, select the class, and click on "Submit Homework".</p>
+            </div>
+            <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
+              <h4 class="text-xl font-semibold text-gray-900">How to View Class Schedule?</h4>
+              <p class="text-gray-600">To view your class schedule, go to the "Classes" section and select "View Schedule".</p>
+            </div>
+            <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
+              <h4 class="text-xl font-semibold text-gray-900">How to Join a Study Group?</h4>
+              <p class="text-gray-600">To join a study group, go to the "Study Groups" section and select the group you'd like to join.</p>
+            </div>
+            <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
+              <h4 class="text-xl font-semibold text-gray-900">How to Check Grades?</h4>
+              <p class="text-gray-600">To check your grades, go to the "Class Record" section and select "View Grades".</p>
+            </div>
+            <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
+              <h4 class="text-xl font-semibold text-gray-900">How to Contact a Professor?</h4>
+              <p class="text-gray-600">To contact a professor, go to the "Faculty" section, select the professor, and click on "Contact".</p>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      // Sidebar toggle logic
+      const toggleButton = document.getElementById("toggleSidebar");
+      const sidebar = document.getElementById("sidebar");
+
+      toggleButton.addEventListener("click", () => {
+        sidebar.classList.toggle("hidden");
+      });
+
+      // FAQ hover effect
+      const faqItems = document.querySelectorAll('.faq-item');
+      faqItems.forEach(item => {
+        item.addEventListener('mouseenter', () => {
+          faqItems.forEach(otherItem => {
+            if (otherItem !== item) {
+              otherItem.classList.add('darken');
+            }
+          });
+          item.classList.add('active');  // Keep the hovered item in focus
+        });
+
+        item.addEventListener('mouseleave', () => {
+          faqItems.forEach(otherItem => {
+            otherItem.classList.remove('darken');
+          });
+          item.classList.remove('active');
+        });
+      });
+    </script>
+
+  </body>
+</html>

@@ -1,6 +1,7 @@
 # Virtual environment
 venv/
 get-pip.py
+
 # Python cache and bytecode
 __pycache__/
 *.py[cod]

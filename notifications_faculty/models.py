@@ -7,12 +7,15 @@ class Notification(models.Model):
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        app_label = 'notifications_faculty'
+
     def mark_as_read(self):
         self.is_read = True
         self.save()
 
     def __str__(self):
-        return '{self.title}'
+        return f'{self.title}'
     
 # create a test notification in the shell like this
 # Notification.objects.create(

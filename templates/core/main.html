@@ -9,14 +9,14 @@
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   </head>
   <body class="min-h-screen bg-gray-100 font-sans antialiased text-gray-800">
-  
-  {% if role == 'faculty' %}
-    <a href="{% url 'faculty_profile' %}">
-  {% elif role == 'student' %}
-    <a href="{% url 'student_profile' %}">
-  {% else %}
-    <a href="#">
-  {% endif %}
+
+    {% if role == 'faculty' %}
+      <a href="{% url 'faculty_profile' %}">
+    {% elif role == 'student' %}
+      <a href="{% url 'student_profile' %}">
+    {% else %}
+      <a href="#">
+    {% endif %}
 
     <div class="flex h-screen overflow-hidden">
       <!-- Sidebar -->
@@ -33,11 +33,13 @@
             <p class="text-xs text-gray-500">email@example.com</p>
           </div>
         </div>
+
+        {% if role == 'faculty' or role == 'student' %}
         </a>
+        {% endif %}
 
         <!-- Navigation -->
         {% if role == 'faculty' %}
-          <!-- Teachers Options only -->
           <a href="{% url 'dashboard_teacher' %}" class="sidebar-link">
             <i class="fas fa-user text-green-600"></i>
             <span>Class Record</span>
@@ -74,10 +76,17 @@
             <i class="fas fa-users text-green-600"></i>
             <span>Quizzes</span>
           </a>
+          <a href="{% url 'faculty_notifications' %}" class="sidebar-link">
+            <i class="fas fa-users text-green-600"></i>
+            <span>Notifications</span>
+          </a>
+          <a href="{% url 'archived_classes' %}" class="sidebar-link">
+            <i class="fas fa-archive text-green-600"></i>
+            <span>Archived Classes</span>
+          </a>
         {% endif %}
 
         {% if role == 'admin' %}
-          <!-- Admin Options only -->
           <a href="{% url 'edit_admin' %}" class="sidebar-link">
             <i class="fas fa-user text-green-600"></i>
             <span>Admin_Verano</span>
@@ -109,7 +118,6 @@
         {% endif %}
 
         {% if role == 'student' %}
-          <!-- Student Options -->
           <a href="{% url 'dashboard_student' %}" class="sidebar-link">
             <i class="fas fa-user text-green-600"></i>
             <span>My Classes</span>
@@ -120,7 +128,6 @@
           </a>
         {% endif %}
 
-        <!-- Chats Link - Available for all users -->
         <a href="{% url 'chat_home' %}" class="sidebar-link">
           <i class="fas fa-comments text-green-600"></i>
           <span>Chats</span>
@@ -138,7 +145,6 @@
           <span>Help & Support</span>
         </a>
 
-        <!-- Logout -->
         <div class="mt-auto pt-4 border-t border-gray-200">
           <a href="{% url 'login' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 transition">
             <i class="fas fa-sign-out-alt text-red-600"></i>
