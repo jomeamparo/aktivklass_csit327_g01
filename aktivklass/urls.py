@@ -29,6 +29,7 @@ urlpatterns = [
     path('edit_faculty/', include('edit_faculty.urls')),
     path('archived_classes/', include('archived_classes.urls')),
     path('class_join_request/', include('class_join_request.urls')),
+<<<<<<< HEAD
     path('faculty_seatwork/', include('faculty_seatwork.urls')),
     path('faculty_seatworkSubmission/', include('faculty_seatworkSubmission.urls')),
     path('help_and_support/', include('help_and_support.urls')),
@@ -49,4 +50,8 @@ urlpatterns = [
     path('quizzes/', include('quizzes.urls')),
     path('chat/', include('chat_screen.urls')),
     path('notifications/', include('notifications.urls'))
+=======
+    path('help_and_support/', include('help_and_support.urls')),
+       
+>>>>>>> e85a118 (feature(help_and_support): create_help_and_support_ui)
 ]
