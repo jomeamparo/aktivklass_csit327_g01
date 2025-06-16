@@ -31,15 +31,16 @@ urlpatterns = [
     path('class_join_request/', include('class_join_request.urls')),
 <<<<<<< HEAD
     path('faculty_seatwork/', include('faculty_seatwork.urls')),
+    path('faculty_attendance/', include('faculty_attendance.urls')),
     path('faculty_seatworkSubmission/', include('faculty_seatworkSubmission.urls')),
     path('help_and_support/', include('help_and_support.urls')),
     path('faculty_notifications/', include('notifications_faculty.urls')),
     path('edit_admin/', include('edit_admin.urls')),
     path('classes/', include('class_lists.urls')),
-    path('notifications/', include('notifications.urls'))
+    path('notifications/', include('notifications.urls')),
     path('faculty_settings/', include('faculty_settings.urls')),
     path('student_settings/', include('student_settings.urls')),
-
+    path('faculty_profile/', include('faculty_profile.urls')),
     path('student_profile/', include ('student_profile.urls')),
     path('faculty_laboratory/', include('faculty_laboratory.urls')),
     path('settings/', include('settings.urls')),

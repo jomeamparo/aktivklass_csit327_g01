@@ -13,6 +13,15 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            name='AdminUser',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('username', models.CharField(max_length=150)),
+                ('email', models.EmailField(max_length=254)),
+                ('is_disabled', models.BooleanField(default=False)),
+            ],
+        ),
+        migrations.CreateModel(
             name='Post',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -28,7 +37,7 @@ class Migration(migrations.Migration):
                 ('text', models.TextField()),
                 ('author', models.CharField(max_length=100)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='analytics.post')),
+                ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='edit_admin.post')),
             ],
         ),
     ]
