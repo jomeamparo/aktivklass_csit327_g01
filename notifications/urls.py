@@ -4,8 +4,3 @@ from .views import notifications_view
 urlpatterns = [
     path('', notifications_view, name='notifications'),
 ]
-
-
-urlpatterns = [
-    path('', notifications_view, name='notifications'),
-]
