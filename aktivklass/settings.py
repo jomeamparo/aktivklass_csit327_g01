@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'dashboard_student',
     'archived_classes',
     'class_join_request',
+<<<<<<< HEAD
     'faculty_seatwork',
     'faculty_seatworkSubmission',
     'class_lists',
@@ -67,6 +68,9 @@ INSTALLED_APPS = [
     'quizzes',
     'chat_screen',
     'notifications',
+=======
+    'help_and_support',
+>>>>>>> e85a118 (feature(help_and_support): create_help_and_support_ui)
 
     'edit_admin',
     'tailwind',
