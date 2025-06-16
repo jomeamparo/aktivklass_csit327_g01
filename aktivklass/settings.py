@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'dashboard_student',
     'archived_classes',
     'class_join_request',
+<<<<<<< HEAD
     'faculty_seatwork',
     'faculty_seatworkSubmission',
     'class_lists',
@@ -65,6 +66,9 @@ INSTALLED_APPS = [
     'edit_faculty',
     'help_and_support',
     'quizzes',
+=======
+    'chat_screen',
+>>>>>>> a868bc5 (feature(chat_screen): create_chat_screen)
 
     'edit_admin',
     'tailwind',
@@ -173,9 +177,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+<<<<<<< HEAD
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'minecrafterusergame@gmail.com'  # Replace with your Gmail address
 EMAIL_HOST_PASSWORD = 'lukojehfetcplftj'  # Paste the 16-character app password here
+=======
+# Login URL configuration
+LOGIN_URL = '/'  # This points to your custom login view at the root URL
+>>>>>>> a868bc5 (feature(chat_screen): create_chat_screen)
