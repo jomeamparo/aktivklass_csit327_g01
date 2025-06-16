@@ -101,14 +101,14 @@
         {% endif %}
 
         {% if role == 'student' %}
-          <!-- Teachers Options only -->
+          <!-- Student Options -->
           <a href="{% url 'dashboard_student' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-user text-green-600"></i>
-            <span>Classes</span>
+            <span>My Classes</span>
           </a>
           <a href="{% url 'class_list' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-            <i class="fas fa-user text-green-600"></i>
-            <span>Class list</span>
+            <i class="fas fa-plus text-green-600"></i>
+            <span>Class List</span>
           </a>
         {% endif %}
         
