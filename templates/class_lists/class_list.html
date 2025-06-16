@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Available Classes</h2>
+<ul>
+    {% for cls in classes %}
+    <li>
+        <a href="{% url 'class_detail' class_id=cls.id %}">
+            {{ cls.subject.title }} - {{ cls.section }}
+        </a>
+    </li>
+    {% empty %}
+    <li>No classes available.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
