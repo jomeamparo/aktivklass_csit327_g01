@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Student List</h2>
+        <a href="{% url 'edit_student_revised:create_student' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add New Student
+        </a>
+    </div>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.student_id }}</td>
+                    <td>
+                        <a href="{% url 'edit_student_revised:edit_student' student.id %}" class="text-decoration-none">
+                            {{ student.first_name }} {{ student.last_name }}
+                        </a>
+                    </td>
+                    <td>{{ student.email }}</td>
+                    <td>
+                        <span class="badge {% if student.is_disabled %}bg-danger{% else %}bg-success{% endif %}">
+                            {% if student.is_disabled %}Disabled{% else %}Active{% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        <button 
+                            class="btn {% if student.is_disabled %}btn-success{% else %}btn-danger{% endif %} toggle-status"
+                            data-student-id="{{ student.id }}"
+                            data-csrf-token="{{ csrf_token }}">
+                            {% if student.is_disabled %}Activate{% else %}Disable{% endif %}
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleButtons = document.querySelectorAll('.toggle-status');
+    
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const studentId = this.dataset.studentId;
+            const csrfToken = this.dataset.csrfToken;
+            
+            fetch(`{% url 'edit_student_revised:toggle_student_status' 0 %}`.replace('0', studentId), {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Update button appearance
+                    this.textContent = data.button_text;
+                    this.className = `btn ${data.button_class} toggle-status`;
+                    
+                    // Update status badge
+                    const statusBadge = this.closest('tr').querySelector('.badge');
+                    statusBadge.textContent = data.is_disabled ? 'Disabled' : 'Active';
+                    statusBadge.className = `badge ${data.is_disabled ? 'bg-danger' : 'bg-success'}`;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+});
+</script>
+{% endblock %}
+{% endblock %} 
