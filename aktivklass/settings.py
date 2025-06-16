@@ -51,10 +51,14 @@ INSTALLED_APPS = [
     'archived_classes',
     'class_join_request',
     'class_lists',
+    'faculty_seatwork',
+    'faculty_seatworkSubmission',
+    'faculty_attendance',
     'notifications',
     'faculty_settings',
     'student_settings',
     'student_profile',
+    'faculty_profile',
     'faculty_laboratory',
     'settings',
     'analytics',
@@ -65,8 +69,9 @@ INSTALLED_APPS = [
     'edit_admin',
     'tailwind',
     'theme',
-    'widget_tweaks'
+    'widget_tweaks',
 ]
+
 
 TAILWIND_APP_NAME = 'theme'
 
