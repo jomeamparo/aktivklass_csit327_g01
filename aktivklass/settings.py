@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'archived_classes',
     'class_join_request',
     'notifications',
+    'faculty_attendance',
 
     'tailwind',
     'theme',
