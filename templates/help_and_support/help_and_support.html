@@ -36,6 +36,32 @@
       #sidebar.hidden {
         transform: translateX(-100%); /* Slide it out to the left */
       }
+
+      /* Collapsible FAQ content */
+      .faq-content {
+        max-height: 0; /* Initially collapsed */
+        overflow: hidden; /* Hide content when collapsed */
+        opacity: 0; /* Initially transparent */
+        padding-top: 0;
+        transition: max-height 0.6s ease-out, opacity 0.6s ease-out, padding-top 0.6s ease-out; /* Smooth animation */
+      }
+
+      .faq-item.active .faq-content {
+        max-height: 500px; /* Adjust this to fit the height of the content */
+        opacity: 1; /* Make content visible */
+        padding-top: 10px; /* Add padding for expanded content */
+      }
+
+      /* Make hover effect smoother */
+      .faq-item {
+        transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+      }
+
+      /* Add smooth scale on hover */
+      .faq-item:hover {
+        transform: scale(1.02);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
     </style>
   </head>
   <body class="min-h-screen bg-gray-100 font-sans antialiased text-gray-800">
@@ -141,54 +167,78 @@
           <!-- FAQ Content -->
           <div class="help-content space-y-4">
             <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
-              <h4 class="text-xl font-semibold text-gray-900">How to Join a Class?</h4>
-              <p class="text-gray-600">To join a class, click on the "Join Class" button in the sidebar. You will need the class code provided by your instructor.</p>
+              <h4 class="text-xl font-semibold text-gray-900 cursor-pointer">How to Join a Class?</h4>
+              <div class="faq-content">
+                <p class="text-gray-600">To join a class, click on the "Join Class" button in the sidebar. You will need the class code provided by your instructor.</p>
+              </div>
             </div>
             <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
-              <h4 class="text-xl font-semibold text-gray-900">How to Reset Your Password?</h4>
-              <p class="text-gray-600">If you forget your password, go to the "Settings" section, click on "Reset Password" and follow the instructions sent to your email.</p>
+              <h4 class="text-xl font-semibold text-gray-900 cursor-pointer">How to Reset Your Password?</h4>
+              <div class="faq-content">
+                <p class="text-gray-600">If you forget your password, go to the "Settings" section, click on "Reset Password" and follow the instructions sent to your email.</p>
+              </div>
             </div>
             <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
-              <h4 class="text-xl font-semibold text-gray-900">How to Contact Support?</h4>
-              <p class="text-gray-600">If you need help, please contact support via the "Help & Support" page or email us directly at support@aktivklass.com.</p>
+              <h4 class="text-xl font-semibold text-gray-900 cursor-pointer">How to Contact Support?</h4>
+              <div class="faq-content">
+                <p class="text-gray-600">If you need help, please contact support via the "Help & Support" page or email us directly at support@aktivklass.com.</p>
+              </div>
             </div>
 
             <!-- Additional FAQ Items (10 more) -->
             <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
-              <h4 class="text-xl font-semibold text-gray-900">How to Update My Profile?</h4>
-              <p class="text-gray-600">To update your profile, go to the "Settings" section and click on "Edit Profile".</p>
+              <h4 class="text-xl font-semibold text-gray-900 cursor-pointer">How to Update My Profile?</h4>
+              <div class="faq-content">
+                <p class="text-gray-600">To update your profile, go to the "Settings" section and click on "Edit Profile".</p>
+              </div>
             </div>
             <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
-              <h4 class="text-xl font-semibold text-gray-900">How to Change My Password?</h4>
-              <p class="text-gray-600">To change your password, go to "Settings" and click on "Change Password".</p>
+              <h4 class="text-xl font-semibold text-gray-900 cursor-pointer">How to Change My Password?</h4>
+              <div class="faq-content">
+                <p class="text-gray-600">To change your password, go to "Settings" and click on "Change Password".</p>
+              </div>
             </div>
             <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
-              <h4 class="text-xl font-semibold text-gray-900">How to Add a New Class?</h4>
-              <p class="text-gray-600">To add a new class, go to the "Faculty" section and click on "Add New Class".</p>
+              <h4 class="text-xl font-semibold text-gray-900 cursor-pointer">How to Add a New Class?</h4>
+              <div class="faq-content">
+                <p class="text-gray-600">To add a new class, go to the "Faculty" section and click on "Add New Class".</p>
+              </div>
             </div>
             <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
-              <h4 class="text-xl font-semibold text-gray-900">How to Assign Homework?</h4>
-              <p class="text-gray-600">To assign homework, go to the "Class Record" section and click on "Assign Homework".</p>
+              <h4 class="text-xl font-semibold text-gray-900 cursor-pointer">How to Assign Homework?</h4>
+              <div class="faq-content">
+                <p class="text-gray-600">To assign homework, go to the "Class Record" section and click on "Assign Homework".</p>
+              </div>
             </div>
             <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
-              <h4 class="text-xl font-semibold text-gray-900">How to Submit Homework?</h4>
-              <p class="text-gray-600">To submit homework, go to the "Class" section, select the class, and click on "Submit Homework".</p>
+              <h4 class="text-xl font-semibold text-gray-900 cursor-pointer">How to Submit Homework?</h4>
+              <div class="faq-content">
+                <p class="text-gray-600">To submit homework, go to the "Class" section, select the class, and click on "Submit Homework".</p>
+              </div>
             </div>
             <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
-              <h4 class="text-xl font-semibold text-gray-900">How to View Class Schedule?</h4>
-              <p class="text-gray-600">To view your class schedule, go to the "Classes" section and select "View Schedule".</p>
+              <h4 class="text-xl font-semibold text-gray-900 cursor-pointer">How to View Class Schedule?</h4>
+              <div class="faq-content">
+                <p class="text-gray-600">To view your class schedule, go to the "Classes" section and select "View Schedule".</p>
+              </div>
             </div>
             <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
-              <h4 class="text-xl font-semibold text-gray-900">How to Join a Study Group?</h4>
-              <p class="text-gray-600">To join a study group, go to the "Study Groups" section and select the group you'd like to join.</p>
+              <h4 class="text-xl font-semibold text-gray-900 cursor-pointer">How to Join a Study Group?</h4>
+              <div class="faq-content">
+                <p class="text-gray-600">To join a study group, go to the "Study Groups" section and select the group you'd like to join.</p>
+              </div>
             </div>
             <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
-              <h4 class="text-xl font-semibold text-gray-900">How to Check Grades?</h4>
-              <p class="text-gray-600">To check your grades, go to the "Class Record" section and select "View Grades".</p>
+              <h4 class="text-xl font-semibold text-gray-900 cursor-pointer">How to Check Grades?</h4>
+              <div class="faq-content">
+                <p class="text-gray-600">To check your grades, go to the "Class Record" section and select "View Grades".</p>
+              </div>
             </div>
             <div class="faq-item bg-white p-6 rounded-lg shadow-lg">
-              <h4 class="text-xl font-semibold text-gray-900">How to Contact a Professor?</h4>
-              <p class="text-gray-600">To contact a professor, go to the "Faculty" section, select the professor, and click on "Contact".</p>
+              <h4 class="text-xl font-semibold text-gray-900 cursor-pointer">How to Contact a Professor?</h4>
+              <div class="faq-content">
+                <p class="text-gray-600">To contact a professor, go to the "Faculty" section, select the professor, and click on "Contact".</p>
+              </div>
             </div>
           </div>
         </main>
@@ -204,9 +254,15 @@
         sidebar.classList.toggle("hidden");
       });
 
-      // FAQ hover effect
+      // FAQ collapsible logic with smooth animation
       const faqItems = document.querySelectorAll('.faq-item');
       faqItems.forEach(item => {
+        const question = item.querySelector('h4');
+        question.addEventListener('click', () => {
+          item.classList.toggle('active'); // Toggle the active state to show/hide the content
+        });
+
+        // Fade effect when hovering over each FAQ
         item.addEventListener('mouseenter', () => {
           faqItems.forEach(otherItem => {
             if (otherItem !== item) {
