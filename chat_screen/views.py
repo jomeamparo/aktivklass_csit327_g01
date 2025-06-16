@@ -1,7 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseBadRequest
-from .models import Conversation, Message
-from core.models import Student
+from core.models import Conversation, Message, Student
 
 def get_user_from_session(request):
     user_id = request.session.get('user_id')

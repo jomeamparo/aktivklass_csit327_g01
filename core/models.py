@@ -64,8 +64,6 @@ class ClassJoinRequest(models.Model):
     def __str__(self):
         return f"{self.student} -> {self.class_requested} ({self.status})"
 
-
-
 class Faculty(models.Model):
     faculty_id = models.CharField(max_length=20, primary_key=True)
     first_name = models.CharField(max_length=100)
@@ -133,8 +131,6 @@ class ActivityRecord(models.Model):
     def __str__(self):
         return f"{self.enrollment.student} - {self.activity_type} {self.activity_name}: {self.score}/{self.perfect_score}"
 
-
-
 class AdminUser(models.Model):
     employee_id = models.CharField(
         max_length=20,
@@ -162,3 +158,23 @@ class Notification(models.Model):
 
     class Meta:
         app_label = 'notifications' 
+
+class Conversation(models.Model):
+    participants = models.ManyToManyField(Student, related_name='conversations')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Conversation ({self.id})"
+
+class Message(models.Model):
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='messages')
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['timestamp']
+
+    def __str__(self):
+        return f"From {self.sender} at {self.timestamp}"
