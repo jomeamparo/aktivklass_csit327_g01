@@ -30,6 +30,7 @@ urlpatterns = [
     path('archived_classes/', include('archived_classes.urls')),
     path('class_join_request/', include('class_join_request.urls')),
 <<<<<<< HEAD
+<<<<<<< HEAD
     path('faculty_seatwork/', include('faculty_seatwork.urls')),
     path('faculty_attendance/', include('faculty_attendance.urls')),
     path('faculty_seatworkSubmission/', include('faculty_seatworkSubmission.urls')),
@@ -55,4 +56,8 @@ urlpatterns = [
     path('help_and_support/', include('help_and_support.urls')),
        
 >>>>>>> e85a118 (feature(help_and_support): create_help_and_support_ui)
+=======
+    path('notifications/', include('notifications.urls')),
+    path('forgot_password/', include('forgot_password.urls')),
+>>>>>>> 920b6ea (feature(faculty): Change_password_functionality)
 ]
