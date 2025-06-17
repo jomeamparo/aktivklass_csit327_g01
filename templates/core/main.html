@@ -23,7 +23,8 @@
       <aside id="sidebar" class="w-64 bg-white shadow-xl border-r border-gray-200 p-4 flex flex-col transition-all duration-300 ease-in-out">
         <!-- Profile Section -->
         <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 shadow-sm mb-6">
-          <img
+          
+            <img
             src="https://thumbs.dreamstime.com/b/cartoon-angry-teacher-man-looking-55342685.jpg"
             alt="Profile Photo"
             class="w-14 h-14 rounded-full border-2 border-green-500 object-cover"
@@ -33,7 +34,7 @@
             <p class="text-xs text-gray-500">email@example.com</p>
           </div>
         </div>
-
+        </a>
         <!-- Navigation -->
         {% if role == 'faculty' %}
           <a href="{% url 'dashboard_teacher' %}" class="sidebar-link">
@@ -80,6 +81,10 @@
             <i class="fas fa-archive text-green-600"></i>
             <span>Archived Classes</span>
           </a>
+          <a href="{% url 'faculty_attendance' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-user text-green-600"></i>
+            <span>Attendance</span>
+          </a>
         {% endif %}
 
         {% if role == 'admin' %}
@@ -119,6 +124,8 @@
             <i class="fas fa-plus text-green-600"></i>
             <span>Class List</span>
           </a>
+
+          
         {% endif %}
 
         <a href="{% url 'chat_home' %}" class="sidebar-link">
@@ -128,10 +135,10 @@
 
         <div class="border-t border-gray-200 my-4"></div>
 
-          <span class="text-xs uppercase text-gray-400 px-4">Settings</span>
-          <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-            <i class="fas fa-cog text-green-600"></i>
-            <span>Preferences</span>
+          <span class="text-xs uppercase text-gray-400 px-4">Others</span>
+          <a href="{% url 'student_settings' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-user text-green-600"></i>
+            <span>Settings</span>
           </a>
           <a href="{% url 'help_and_support' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-info-circle text-green-600"></i>

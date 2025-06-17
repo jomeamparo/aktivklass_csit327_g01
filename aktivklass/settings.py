@@ -78,10 +78,16 @@ INSTALLED_APPS = [
     'notifications',
     'forgot_password',
     'help_and_support',
+    'student_settings',
+    'notifications',
+    'forgot_password',
+    'faculty_profile',
+    'faculty_attendance',
+    'help_and_support',
 
     'tailwind',
     'theme',
-    'widget_tweaks',
+    'widget_tweaks'
 ]
 
 
@@ -193,5 +199,3 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'minecrafterusergame@gmail.com'  # Replace with your Gmail address
 EMAIL_HOST_PASSWORD = 'lukojehfetcplftj'  # Paste the 16-character app password here
-# Login URL configuration
-LOGIN_URL = '/'  # This points to your custom login view at the root URL
