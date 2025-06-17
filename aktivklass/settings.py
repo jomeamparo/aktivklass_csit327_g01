@@ -67,6 +67,12 @@ INSTALLED_APPS = [
     'help_and_support',
     'quizzes',
     'edit_admin',
+ 
+    'edit_faculty',
+
+    'notifications',
+    'forgot_password',
+
     'tailwind',
     'theme',
     'widget_tweaks',
