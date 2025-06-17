@@ -63,6 +63,8 @@ class Migration(migrations.Migration):
             name='Student',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('college_name', models.CharField(max_length=100)),
+                ('department_name', models.CharField(max_length=100)),
                 ('student_id', models.CharField(default='default', max_length=20, unique=True)),
                 ('first_name', models.CharField(max_length=50)),
                 ('middle_name', models.CharField(default=' ', max_length=50)),
