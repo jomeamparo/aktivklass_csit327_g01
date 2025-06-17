@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
-from .models import Notification
+from core.models import Notification
 
 def faculty_notifications_dashboard(request):
     unread = Notification.objects.filter(is_read=False).order_by('-created_at')

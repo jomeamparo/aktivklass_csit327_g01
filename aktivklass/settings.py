@@ -66,24 +66,12 @@ INSTALLED_APPS = [
     'edit_faculty',
     'help_and_support',
     'quizzes',
-    'faculty_seatwork',
-    'faculty_seatworkSubmission',
-    'class_lists',
     
     'edit_admin',
  
-    'edit_faculty',
     'notifications_faculty',
 
-    'notifications',
     'forgot_password',
-    'help_and_support',
-    'student_settings',
-    'notifications',
-    'forgot_password',
-    'faculty_profile',
-    'faculty_attendance',
-    'help_and_support',
     'attendance_student',
 
 
@@ -141,7 +129,7 @@ DATABASES = {
         'USER': 'root',          # default user in XAMPP
         'PASSWORD': '',          # default password is empty
         'HOST': 'localhost',
-        'PORT': '3307',
+        'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION'",
         },

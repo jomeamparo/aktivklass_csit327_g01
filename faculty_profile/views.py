@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import FacultyProfile
+from core.models import FacultyProfile
 from .forms import FacultyProfileForm
 
 def faculty_profile_view(request):

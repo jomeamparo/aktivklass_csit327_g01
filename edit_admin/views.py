@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import AdminUser
+from core.models import AdminUser
 from django.views.decorators.http import require_POST
 
 # GET - to display the edit_admin.html with list

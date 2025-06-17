@@ -1,5 +1,7 @@
 from django.db import models
 import random, string
+import uuid
+from django.apps import AppConfig
 
 # Utility for generating unique class codes
 def generate_random_code(length=10):
@@ -61,6 +63,7 @@ class Faculty(models.Model):
     department_name = models.CharField(max_length=100)
     password = models.CharField(max_length=100, default='password123')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ACTIVE')
+    email = models.EmailField(unique=True, default='default@example.com')
 
     def __str__(self):
         return f"{self.faculty_id} - {self.first_name} {self.last_name}"
@@ -119,13 +122,11 @@ class ActivityRecord(models.Model):
 class Notification(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
-    published_date = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
-
-    class Meta:
-        app_label = 'notifications'
 
 class Conversation(models.Model):
     participants = models.ManyToManyField(Student, related_name='conversations')
@@ -178,3 +179,53 @@ class Grade(models.Model):
     score = models.FloatField()
     feedback = models.TextField(blank=True, null=True)
     date_graded = models.DateField(auto_now_add=True)
+
+class PasswordResetToken(models.Model):
+    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE)
+    token = models.UUIDField(default=uuid.uuid4, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_used = models.BooleanField(default=False)
+
+
+class Post(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    published_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    text = models.TextField()
+    author = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.author} on {self.post.title}'
+
+class FacultyProfileAdmin(models.Model):
+    list_display = ('first_name', 'last_name', 'department', 'email')
+    search_fields = ('first_name', 'last_name', 'email')
+    list_filter = ('department',)
+class FacultyProfile(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    department = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    bio = models.TextField(blank=True)
+
+    class Meta:
+        app_label = 'faculty_profile'
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
+class EditAdminConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'edit_admin'
+
+class FacultyProfileConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'faculty_profile'
+
