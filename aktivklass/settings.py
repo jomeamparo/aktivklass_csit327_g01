@@ -70,10 +70,10 @@ INSTALLED_APPS = [
     'faculty_seatworkSubmission',
     'class_lists',
     
-
     'edit_admin',
  
     'edit_faculty',
+    'notifications_faculty',
 
     'notifications',
     'forgot_password',

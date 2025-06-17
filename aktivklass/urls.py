@@ -39,6 +39,7 @@ urlpatterns = [
     path('classes/', include('class_lists.urls')),
 
     path('help_and_support/', include('help_and_support.urls')),
+    path('faculty_attendance/', include('faculty_attendance.urls')),
 
     path('password_reset/', auth_views.PasswordResetView.as_view(template_name='forgot_password/password_reset_form.html'), name='password_reset'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='forgot_password/password_reset_done.html'), name='password_reset_done'),
