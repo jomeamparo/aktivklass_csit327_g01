@@ -5,8 +5,9 @@
 
 {% block content %}
 <div class="container mx-auto p-4 sm:p-6 lg:p-8">
-    <div class="flex justify-center items-center mb-8 space-x-2">
-        <h2 class="text-3xl font-extrabold text-gray-900"><i class="fas fa-user-circle mr-2 text-blue-600"></i>Student Profile</h2>
+    <!-- Breadcrumbs - as per image -->
+    <div class="text-sm text-gray-500 mb-4">
+        Dashboard / Students / <span class="font-semibold">{{ student.first_name }} {{ student.last_name }}</span>
     </div>
 
     {% if messages %}
@@ -22,35 +23,64 @@
         </ul>
     {% endif %}
 
-    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-xl mx-auto border border-gray-200">
+    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-4xl mx-auto border border-gray-200">
 
         <div id="view-mode" class="transition-all duration-300 ease-in-out">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div class="col-span-full p-2 rounded-md hover:bg-gray-50 transition duration-150 ease-in-out">
-                    <label class="block text-gray-600 text-sm font-semibold mb-1"><i class="fas fa-id-badge mr-2 text-gray-500"></i>Student ID:</label>
-                    <p class="text-gray-800 text-lg font-medium">{{ student.student_id }}</p>
+            <div class="flex items-start mb-6">
+                <!-- Profile Image and Change Photo -->
+                <div class="flex-shrink-0 mr-6">
+                    <img
+                        src="https://www.w3schools.com/howto/img_avatar.png" {# Placeholder for profile image #}
+                        alt="Profile Photo"
+                        class="w-24 h-24 rounded-full object-cover border-2 border-gray-200 shadow-md"
+                    />
+                    <button class="mt-2 text-blue-600 hover:text-blue-800 text-sm font-medium">
+                        <i class="fas fa-camera mr-1"></i>Change Photo
+                    </button>
                 </div>
-                <div class="p-2 rounded-md hover:bg-gray-50 transition duration-150 ease-in-out">
-                    <label class="block text-gray-600 text-sm font-semibold mb-1"><i class="fas fa-user mr-2 text-gray-500"></i>First Name:</label>
-                    <p class="text-gray-800 text-lg font-medium">{{ student.first_name }}</p>
-                </div>
-                <div class="p-2 rounded-md hover:bg-gray-50 transition duration-150 ease-in-out">
-                    <label class="block text-gray-600 text-sm font-semibold mb-1"><i class="fas fa-user mr-2 text-gray-500"></i>Last Name:</label>
-                    <p class="text-gray-800 text-lg font-medium">{{ student.last_name }}</p>
-                </div>
-                <div class="col-span-full p-2 rounded-md hover:bg-gray-50 transition duration-150 ease-in-out">
-                    <label class="block text-gray-600 text-sm font-semibold mb-1"><i class="fas fa-envelope mr-2 text-gray-500"></i>Email:</label>
-                    <p class="text-gray-800 text-lg font-medium">{{ student.email }}</p>
-                </div>
-                <div class="p-2 rounded-md hover:bg-gray-50 transition duration-150 ease-in-out">
-                    <label class="block text-gray-600 text-sm font-semibold mb-1"><i class="fas fa-phone mr-2 text-gray-500"></i>Phone Number:</label>
-                    <p class="text-gray-800 text-lg font-medium">{{ student.phone_number }}</p>
-                </div>
-                <div class="p-2 rounded-md hover:bg-gray-50 transition duration-150 ease-in-out">
-                    <label class="block text-gray-600 text-sm font-semibold mb-1"><i class="fas fa-info-circle mr-2 text-gray-500"></i>Status:</label>
-                    <p class="text-lg font-semibold {% if student.status == 'Available' %}text-green-600{% elif student.status == 'Busy' %}text-yellow-600{% else %}text-red-600{% endif %}">{{ student.status }}</p>
+
+                <!-- Name, ID, and Status -->
+                <div class="flex-grow">
+                    <div class="flex items-center justify-between mb-2">
+                        <h1 class="text-3xl font-bold text-gray-900">{{ student.first_name }} {{ student.last_name }}</h1>
+                        <div class="status-badge cursor-pointer px-3 py-1 rounded-full text-xs font-semibold
+                            {% if student.status == 'Available' %}bg-green-100 text-green-700{% elif student.status == 'Busy' %}bg-yellow-100 text-yellow-700{% else %}bg-red-100 text-red-700{% endif %}"
+                            id="status-display">
+                            {{ student.status }}
+                        </div>
+                    </div>
+                    <p class="text-gray-600 text-md">Student ID: <span class="font-medium text-gray-800">{{ student.student_id }}</span></p>
+
+                    <div class="grid grid-cols-2 gap-x-12 gap-y-6 mt-6">
+                        <!-- Email -->
+                        <div>
+                            <p class="text-gray-600 text-sm flex items-center mb-1"><i class="fas fa-envelope mr-2 text-gray-500"></i>Email</p>
+                            <p class="text-gray-800 text-md font-medium">{{ student.email }}</p>
+                        </div>
+                        <!-- Phone Number -->
+                        <div>
+                            <p class="text-gray-600 text-sm flex items-center mb-1"><i class="fas fa-phone mr-2 text-gray-500"></i>Phone Number</p>
+                            <p class="text-gray-800 text-md font-medium">{% if student.phone_number %}{{ student.phone_number }}{% else %}N/A{% endif %}</p>
+                        </div>
+                        <!-- Course -->
+                        <div>
+                            <p class="text-gray-600 text-sm flex items-center mb-1"><i class="fas fa-graduation-cap mr-2 text-gray-500"></i>Course</p>
+                            <p class="text-gray-800 text-md font-medium">{% if student.course %}{{ student.course }}{% else %}N/A{% endif %}</p>
+                        </div>
+                        <!-- Current Year -->
+                        <div>
+                            <p class="text-gray-600 text-sm flex items-center mb-1"><i class="fas fa-calendar-alt mr-2 text-gray-500"></i>Current Year</p>
+                            <p class="text-gray-800 text-md font-medium">{% if student.year %}{{ student.year }}{% else %}N/A{% endif %}</p>
+                        </div>
+                        <!-- Enrollment Date -->
+                        <div class="col-span-2"> {# Taking full width for enrollment date #}
+                            <p class="text-gray-600 text-sm flex items-center mb-1"><i class="fas fa-calendar-check mr-2 text-gray-500"></i>Enrollment Date</p>
+                            <p class="text-gray-800 text-md font-medium">15 Aug 2023</p> {# Placeholder, as no field in model #}
+                        </div>
+                    </div>
                 </div>
             </div>
+
             <hr class="my-6 border-gray-200" />
             <div class="flex justify-center mt-6">
                 <button id="edit-profile-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200 ease-in-out transform hover:-translate-y-0.5">
@@ -59,8 +89,9 @@
             </div>
         </div>
 
+        {# The edit-mode form will remain largely the same, but I'll add the new status update modal/dropdown #}
         <div id="edit-mode" class="hidden transition-all duration-300 ease-in-out">
-            <form method="post" action="" class="space-y-4">
+            <form method="post" action="{% url 'student_profile' %}" class="space-y-4">
                 {% csrf_token %}
                 {% if form.non_field_errors %}
                     <div class="p-4 bg-red-100 border border-red-400 text-red-700 rounded-md" role="alert">
@@ -99,6 +130,16 @@
                         {% if form.phone_number.help_text %}<p class="text-gray-500 text-xs mt-1">{{ form.phone_number.help_text }}</p>{% endif %}
                     </div>
                     <div>
+                        <label for="id_course" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-graduation-cap mr-2 text-gray-600"></i>Course:</label>
+                        {{ form.course|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
+                        {% if form.course.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.course.errors }}</p>{% endif %}
+                    </div>
+                    <div>
+                        <label for="id_year" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-calendar-alt mr-2 text-gray-600"></i>Current Year:</label>
+                        {{ form.year|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
+                        {% if form.year.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.year.errors }}</p>{% endif %}
+                    </div>
+                    <div>
                         <label for="id_status" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-info-circle mr-2 text-gray-600"></i>Status:</label>
                         {{ form.status|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
                         {% if form.status.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.status.errors }}</p>{% endif %}
@@ -118,11 +159,39 @@
     </div>
 </div>
 
+<!-- Status Update Modal -->
+<div id="status-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Update Status</h3>
+            <div class="mt-2 px-7 py-3">
+                <form method="post" action="{% url 'update_student_status' student.student_id %}" id="status-form">
+                    {% csrf_token %}
+                    {{ status_form.status|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
+                </form>
+            </div>
+            <div class="items-center px-4 py-3">
+                <button id="confirm-status-btn" class="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition">
+                    Save Status
+                </button>
+                <button id="close-modal-btn" class="mt-3 px-4 py-2 bg-gray-300 text-gray-800 text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 transition">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     const viewMode = document.getElementById('view-mode');
     const editMode = document.getElementById('edit-mode');
     const editProfileBtn = document.getElementById('edit-profile-btn');
     const cancelEditBtn = document.getElementById('cancel-edit-btn');
+    const statusDisplay = document.getElementById('status-display');
+    const statusModal = document.getElementById('status-modal');
+    const closeStatusModalBtn = document.getElementById('close-modal-btn');
+    const confirmStatusBtn = document.getElementById('confirm-status-btn');
+    const statusForm = document.getElementById('status-form'); // The form for status update
 
     editProfileBtn.addEventListener('click', () => {
         viewMode.classList.add('hidden');
@@ -132,6 +201,21 @@
     cancelEditBtn.addEventListener('click', () => {
         editMode.classList.add('hidden');
         viewMode.classList.remove('hidden');
+    });
+
+    // Show status modal
+    statusDisplay.addEventListener('click', () => {
+        statusModal.classList.remove('hidden');
+    });
+
+    // Close status modal
+    closeStatusModalBtn.addEventListener('click', () => {
+        statusModal.classList.add('hidden');
+    });
+
+    // Submit status form
+    confirmStatusBtn.addEventListener('click', () => {
+        statusForm.submit();
     });
 </script>
 {% endblock %}
