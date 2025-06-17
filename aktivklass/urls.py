@@ -14,6 +14,7 @@ urlpatterns = [
     path('edit_admin/', include('edit_admin.urls')),
     path('archived_classes/', include('archived_classes.urls')),
     path('class_join_request/', include('class_join_request.urls')),
+<<<<<<< HEAD
     path('classes/', include('class_lists.urls')),
     path('class-record/', include('class_record.urls')),
     path('teacher_student/', include('teacher_student.urls')),
@@ -32,4 +33,7 @@ urlpatterns = [
     path('settings/', include('settings.urls')),
     path('analytics/', include('analytics.urls')),
     path('forgot_password/', include('forgot_password.urls')),
+=======
+    path('attendance_student/', include('attendance_student.urls'))
+>>>>>>> cb92d55 (attendance app)
 ]
