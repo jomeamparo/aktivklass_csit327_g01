@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'tailwind',
     'theme',
     'widget_tweaks',
+    'forgot_password',
 ]
 
 

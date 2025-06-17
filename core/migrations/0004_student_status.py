@@ -17,6 +17,5 @@ class Migration(migrations.Migration):
                 default='ACTIVE',
                 max_length=10
             ),
-          field=models.CharField(choices=[('ACTIVE', 'Active'), ('DISABLED', 'Disabled')], default='ACTIVE', max_length=10), 
         ),
     ]
