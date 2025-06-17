@@ -1,12 +1,16 @@
 from django import forms
 import re
+# from core.models import Student # Import Student model
 
 class StudentProfileForm(forms.Form):
-    student_id = forms.CharField(max_length=20, disabled=True, help_text="Student ID cannot be changed.") # Make it disabled for editing
+    student_id = forms.CharField(max_length=20, disabled=True, help_text="Student ID cannot be changed.")
     first_name = forms.CharField(max_length=100)
+    middle_name = forms.CharField(max_length=50, required=False)
     last_name = forms.CharField(max_length=100)
     email = forms.EmailField()
     phone_number = forms.CharField(max_length=15, required=False, help_text="Enter 10 to 15 digits only.")
+    course = forms.CharField(max_length=50, required=False)
+    year = forms.CharField(max_length=50, required=False)
     status = forms.ChoiceField(choices=[('Available', 'Available'), ('Busy', 'Busy'), ('Offline', 'Offline')])
 
     def clean_phone_number(self):
