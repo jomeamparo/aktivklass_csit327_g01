@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'dashboard_student',
     'archived_classes',
     'class_join_request',
-<<<<<<< HEAD
+# <<<<<<< HEAD
     'class_lists',
     'faculty_seatwork',
     'faculty_seatworkSubmission',
@@ -67,21 +67,26 @@ INSTALLED_APPS = [
     'edit_faculty',
     'help_and_support',
     'quizzes',
+    'faculty_seatwork',
+    'faculty_seatworkSubmission',
+    'class_lists',
+    
+
     'edit_admin',
-<<<<<<< HEAD
-=======
-    'attendance_student',
+# <<<<<<< HEAD
+# =======
+#     'attendance_student',
 
 
->>>>>>> cb92d55 (attendance app)
-=======
+# >>>>>>> cb92d55 (attendance app)
+# =======
  
     'edit_faculty',
 
     'notifications',
     'forgot_password',
 
->>>>>>> abe55aa (fix issues)
+# >>>>>>> abe55aa (fix issues)
     'tailwind',
     'theme',
     'widget_tweaks',

@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+# <<<<<<< HEAD
 from django.contrib import admin
 from django.urls import include, path
 
@@ -15,7 +15,7 @@ urlpatterns = [
     path('edit_admin/', include('edit_admin.urls')),
     path('archived_classes/', include('archived_classes.urls')),
     path('class_join_request/', include('class_join_request.urls')),
-<<<<<<< HEAD
+# <<<<<<< HEAD
     path('classes/', include('class_lists.urls')),
     path('class-record/', include('class_record.urls')),
     path('teacher_student/', include('teacher_student.urls')),
@@ -34,11 +34,11 @@ urlpatterns = [
     path('settings/', include('settings.urls')),
     path('analytics/', include('analytics.urls')),
     path('forgot_password/', include('forgot_password.urls')),
-=======
+# =======
     path('attendance_student/', include('attendance_student.urls'))
->>>>>>> cb92d55 (attendance app)
+# >>>>>>> cb92d55 (attendance app)
 ]
-=======
+# =======
 from django.contrib import admin
 from django.urls import include, path
 from django.contrib.auth import views as auth_views
@@ -75,9 +75,16 @@ urlpatterns = [
     path('analytics/', include('analytics.urls')),
     path('forgot_password/', include('forgot_password.urls')),
 
+    path('faculty_notifications/', include('notifications_faculty.urls')),
+    path('edit_admin/', include('edit_admin.urls')),
+    path('classes/', include('class_lists.urls')),
+
     path('password_reset/', auth_views.PasswordResetView.as_view(template_name='forgot_password/password_reset_form.html'), name='password_reset'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='forgot_password/password_reset_done.html'), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='forgot_password/password_reset_confirm.html'), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='forgot_password/password_reset_complete.html'), name='password_reset_complete')
 ]
->>>>>>> abe55aa (fix issues)
+# <<<<<<< HEAD
+# >>>>>>> abe55aa (fix issues)
+# =======
+# >>>>>>> 2b8fc63 (fix issues)
