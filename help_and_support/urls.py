@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import help_and_support_view
+from .views import help_and_support
 
 urlpatterns = [
-    path('', help_and_support_view, name='help_and_support'),
+    path('', help_and_support, name='help_and_support')
 ]
