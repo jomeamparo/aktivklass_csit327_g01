@@ -68,11 +68,20 @@ INSTALLED_APPS = [
     'help_and_support',
     'quizzes',
     'edit_admin',
+<<<<<<< HEAD
 =======
     'attendance_student',
 
 
 >>>>>>> cb92d55 (attendance app)
+=======
+ 
+    'edit_faculty',
+
+    'notifications',
+    'forgot_password',
+
+>>>>>>> abe55aa (fix issues)
     'tailwind',
     'theme',
     'widget_tweaks',

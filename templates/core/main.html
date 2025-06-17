@@ -34,10 +34,6 @@
           </div>
         </div>
 
-        {% if role == 'faculty' or role == 'student' %}
-        </a>
-        {% endif %}
-
         <!-- Navigation -->
         {% if role == 'faculty' %}
           <a href="{% url 'dashboard_teacher' %}" class="sidebar-link">
@@ -87,11 +83,8 @@
         {% endif %}
 
         {% if role == 'admin' %}
-          <a href="{% url 'edit_admin' %}" class="sidebar-link">
-            <i class="fas fa-user text-green-600"></i>
-            <span>Admin_Verano</span>
-          </a>
-          <a href="{% url 'admin_faculty_list' %}" class="sidebar-link">
+          <!-- Admin Options only -->
+          <a href="{% url 'admin_faculty_list' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-user text-green-600"></i>
             <span>Faculty</span>
           </a>
@@ -139,15 +132,15 @@
 
         <div class="border-t border-gray-200 my-4"></div>
 
-        <span class="text-xs uppercase text-gray-400 px-4">Settings</span>
-        <a href="#" class="sidebar-link">
-          <i class="fas fa-cog text-green-600"></i>
-          <span>Preferences</span>
-        </a>
-        <a href="#" class="sidebar-link">
-          <i class="fas fa-info-circle text-green-600"></i>
-          <span>Help & Support</span>
-        </a>
+          <span class="text-xs uppercase text-gray-400 px-4">Settings</span>
+          <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-cog text-green-600"></i>
+            <span>Preferences</span>
+          </a>
+          <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-info-circle text-green-600"></i>
+            <span>Help & Support</span>
+          </a>
 
         <div class="mt-auto pt-4 border-t border-gray-200">
           <a href="{% url 'login' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 transition">
