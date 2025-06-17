@@ -85,6 +85,7 @@ INSTALLED_APPS = [
 
     'notifications',
     'forgot_password',
+    'help_and_support',
 
 # >>>>>>> abe55aa (fix issues)
     'tailwind',
