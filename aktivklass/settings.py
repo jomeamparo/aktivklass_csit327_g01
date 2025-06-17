@@ -84,6 +84,8 @@ INSTALLED_APPS = [
     'faculty_profile',
     'faculty_attendance',
     'help_and_support',
+    'attendance_student',
+
 
     'tailwind',
     'theme',
