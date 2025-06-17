@@ -87,6 +87,7 @@ INSTALLED_APPS = [
     'attendance_student',
 
 
+    'edit_student',
     'tailwind',
     'theme',
     'widget_tweaks'

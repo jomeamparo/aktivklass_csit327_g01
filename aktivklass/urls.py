@@ -13,6 +13,7 @@ urlpatterns = [
     path('admin_student_list/', include('admin_student_list.urls')),
     path('edit_faculty/', include('edit_faculty.urls')),
     path('edit_admin/', include('edit_admin.urls')),
+     path('edit_student/', include('edit_student.urls')),
     path('archived_classes/', include('archived_classes.urls')),
     path('class_join_request/', include('class_join_request.urls')),
     path('classes/', include('class_lists.urls')),
@@ -40,7 +41,7 @@ urlpatterns = [
 
     path('help_and_support/', include('help_and_support.urls')),
     path('faculty_attendance/', include('faculty_attendance.urls')),
-    path('attendance_student/', include('attendance_student.urls'))
+    path('attendance_student/', include('attendance_student.urls')),
 
     path('password_reset/', auth_views.PasswordResetView.as_view(template_name='forgot_password/password_reset_form.html'), name='password_reset'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='forgot_password/password_reset_done.html'), name='password_reset_done'),
