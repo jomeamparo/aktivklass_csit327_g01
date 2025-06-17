@@ -66,6 +66,11 @@ INSTALLED_APPS = [
     'edit_faculty',
     'help_and_support',
     'quizzes',
+    'faculty_seatwork',
+    'faculty_seatworkSubmission',
+    'class_lists',
+    
+
     'edit_admin',
  
     'edit_faculty',
