@@ -3,5 +3,3 @@ from .models import Notification
 
 # Register your models here.
 admin.site.register(Notification)
-
-# Register your models here.
