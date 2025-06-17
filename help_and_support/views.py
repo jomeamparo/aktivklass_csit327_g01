@@ -1,5 +1,6 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render
 
-def help_and_support_view(request):
-    return render(request, 'help_and_support/help_and_support.html')
+def help_and_support(request):
+    return render(request, 'help_and_support/help_support.html')
+
+# Create your views here.

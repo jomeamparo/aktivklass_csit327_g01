@@ -77,6 +77,7 @@ INSTALLED_APPS = [
 
     'notifications',
     'forgot_password',
+    'help_and_support',
 
     'tailwind',
     'theme',
