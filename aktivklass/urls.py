@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,7 +29,7 @@ urlpatterns = [
     path('dashboard_student/', include('dashboard_student.urls')),
     path('admin_faculty_list/', include('admin_faculty_list.urls')),
     path('admin_student_list/', include('admin_student_list.urls')),
-    path('teacher_student_list/', include('teacher_student.urls')),
+    path('teacher_student/', include('teacher_student.urls')),
     path('class_record/', include('class_record.urls')),
     path('archived_classes/', include('archived_classes.urls')),
     path('class_join_request/', include('class_join_request.urls')),
@@ -38,4 +40,6 @@ urlpatterns = [
     path('faculty_notifications/', include('notifications_faculty.urls')),
     path('edit_admin/', include('edit_admin.urls')),
     path('classes/', include('class_lists.urls')),
-]
+    path('faculty_profile/', include('faculty_profile.urls')),
+    path('faculty_attendance/', include('faculty_attendance.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

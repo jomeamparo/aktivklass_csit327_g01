@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Faculty Attendance{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Faculty Attendance</h2>
+    
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <div class="row">
+        <!-- Today's Schedule -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Today's Schedule</h5>
+                </div>
+                <div class="card-body">
+                    {% if schedules %}
+                    <div class="list-group">
+                        {% for schedule in schedules %}
+                        <div class="list-group-item">
+                            <h6 class="mb-1">{{ schedule.class_instance.name }}</h6>
+                            <p class="mb-1">
+                                <small class="text-muted">
+                                    {{ schedule.get_day_of_week_display }} | 
+                                    {{ schedule.start_time|time:"g:i A" }} - {{ schedule.end_time|time:"g:i A" }}
+                                </small>
+                            </p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No classes scheduled for today.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mark Attendance -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Mark Attendance</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="{{ form.class_instance.id_for_label }}" class="form-label">Class</label>
+                            {{ form.class_instance }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.status.id_for_label }}" class="form-label">Status</label>
+                            {{ form.status }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.remarks.id_for_label }}" class="form-label">Remarks</label>
+                            {{ form.remarks }}
+                        </div>
+                        <button type="submit" class="btn btn-primary">Mark Attendance</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Today's Attendance Records -->
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Today's Attendance Records</h5>
+        </div>
+        <div class="card-body">
+            {% if attendance_records %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Class</th>
+                            <th>Time In</th>
+                            <th>Time Out</th>
+                            <th>Status</th>
+                            <th>Remarks</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in attendance_records %}
+                        <tr>
+                            <td>{{ record.class_instance.name }}</td>
+                            <td>{{ record.time_in|time:"g:i A" }}</td>
+                            <td>
+                                {% if record.time_out %}
+                                {{ record.time_out|time:"g:i A" }}
+                                {% else %}
+                                <a href="{% url 'mark_time_out' record.id %}" class="btn btn-sm btn-outline-primary">Mark Time Out</a>
+                                {% endif %}
+                            </td>
+                            <td>{{ record.get_status_display }}</td>
+                            <td>{{ record.remarks|default:"-" }}</td>
+                            <td>
+                                <a href="{% url 'attendance_history' %}" class="btn btn-sm btn-outline-secondary">View History</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No attendance records for today.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import FacultyProfile
+from core.models import FacultyProfile
 from .forms import FacultyProfileForm
 
 def faculty_profile_view(request):
@@ -15,7 +15,7 @@ def faculty_profile_view(request):
         )
 
     if request.method == 'POST':
-        form = FacultyProfileForm(request.POST, instance=profile)
+        form = FacultyProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
             return redirect('faculty_profile')

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'teacher_student',
     'class_record',
     'core',
+    'notifications_faculty',
     'dashboard_admin',
     'admin_faculty_list',
     'admin_student_list',
@@ -53,8 +54,8 @@ INSTALLED_APPS = [
     'faculty_seatwork',
     'faculty_seatworkSubmission',
     'class_lists',
-    
-
+    'faculty_profile',
+    'faculty_attendance',
     'edit_admin',
     'tailwind',
     'theme',
@@ -89,6 +90,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.faculty_profile',
             ],
         },
     },
@@ -107,7 +109,7 @@ DATABASES = {
         'USER': 'root',          # default user in XAMPP
         'PASSWORD': '',          # default password is empty
         'HOST': 'localhost',
-        'PORT': '3307',
+        'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION'",
         },
@@ -156,6 +158,10 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Media files (Uploaded files)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

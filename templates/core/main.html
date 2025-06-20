@@ -15,15 +15,14 @@
       <aside id="sidebar" class="w-64 bg-white shadow-xl border-r border-gray-200 p-4 flex flex-col transition-all duration-300 ease-in-out">
         <!-- Profile Section -->
         <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 shadow-sm mb-6">
-          
-            <img
-            src="https://thumbs.dreamstime.com/b/cartoon-angry-teacher-man-looking-55342685.jpg"
+          <img
+            src="{% if faculty.profile_picture %}{{ faculty.profile_picture.url }}{% else %}https://thumbs.dreamstime.com/b/cartoon-angry-teacher-man-looking-55342685.jpg{% endif %}"
             alt="Profile Photo"
             class="w-14 h-14 rounded-full border-2 border-green-500 object-cover"
           />
           <div>
-            <h2 class="text-base font-semibold text-gray-900">{{ fullname }}</h2>
-            <p class="text-xs text-gray-500">email@example.com</p>
+            <h2 class="text-base font-semibold text-gray-900">{{ faculty.first_name }} {{ faculty.last_name }}</h2>
+            <p class="text-xs text-gray-500">{{ faculty.email }}</p>
           </div>
         </div>
         </a>
@@ -50,7 +49,7 @@
             <i class="fas fa-users text-green-600"></i>
             <span>SeatworkHistory</span>
           </a>
-          <a href="{% url 'faculty_attendance' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+          <a href="{% url 'faculty_attendance:faculty_attendance' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-user text-green-600"></i>
             <span>Attendance</span>
           </a>
@@ -86,15 +85,10 @@
             <i class="fas fa-user text-green-600"></i>
             <span>Classes</span>
           </a>
-<<<<<<< HEAD
-
-          
-=======
           <a href="{% url 'class_lists' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-user text-green-600"></i>
             <span>Class list</span>
           </a>
->>>>>>> 998213e (feature(Stduent): create_class_lists)
         {% endif %}
 
         <div class="border-t border-gray-200 my-4"></div>
