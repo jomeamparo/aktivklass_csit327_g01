@@ -60,9 +60,6 @@
         <div class="container mx-auto">
           <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Attendance Records</h2>
-            <button class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition shadow-md">
-              <i class="fas fa-download mr-2"></i> Download Report
-            </button>
           </div>
 
           <div class="bg-white p-6 rounded-lg shadow-md mb-6">
@@ -81,6 +78,7 @@
             <table class="min-w-full border-collapse">
               <thead>
                 <tr class="bg-gray-100">
+                  <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm font-semibold border-b border-gray-200">ID Number</th>
                   <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm font-semibold border-b border-gray-200">First Name</th>
                   <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm font-semibold border-b border-gray-200">Last Name</th>
                   <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm font-semibold border-b border-gray-200">Date</th>
@@ -89,6 +87,7 @@
               </thead>
               <tbody>
                 <tr class="hover:bg-gray-50 transition duration-150 ease-in-out">
+                  <td class="py-3 px-4 border-b border-gray-200 text-sm text-gray-700">202312345</td>
                   <td class="py-3 px-4 border-b border-gray-200 text-sm text-gray-700">Juan</td>
                   <td class="py-3 px-4 border-b border-gray-200 text-sm text-gray-700">Dela Cruz</td>
                   <td class="py-3 px-4 border-b border-gray-200 text-sm text-gray-700">2025-06-10</td>
@@ -96,6 +95,13 @@
                 </tr>
               </tbody>
             </table>
+          </div>
+
+          <!-- Download Button Below the Table -->
+          <div class="flex justify-end mt-4">
+            <button class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition shadow-md">
+              <i class="fas fa-download mr-2"></i> Download Report
+            </button>
           </div>
         </div>
       </main>
