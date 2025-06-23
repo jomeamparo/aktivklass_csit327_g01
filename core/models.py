@@ -54,6 +54,37 @@ class Student(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.student_id})"
 
+class StudentProfile(models.Model):
+    student = models.OneToOneField(Student, on_delete=models.CASCADE, related_name='profile')
+    avatar = models.ImageField(default='default_avatar.jpg', upload_to='student_profiles/')
+    bio = models.TextField(blank=True, null=True)
+    birth_date = models.DateField(blank=True, null=True)
+    website = models.URLField(blank=True, null=True)
+    major = models.CharField(max_length=100, blank=True, null=True)
+    graduation_year = models.IntegerField(blank=True, null=True)
+
+    def profile_completion_percentage(self):
+        fields = [
+            self.bio, self.birth_date, self.website,
+            self.major, self.graduation_year
+        ]
+        completed_fields = sum(1 for field in fields if field)
+        total_fields = len(fields)
+        
+        if self.avatar and self.avatar.name != 'default_avatar.jpg':
+            completed_fields += 1
+        else:
+            pass # No need to do anything if it's the default avatar
+            
+        total_fields += 1 # Account for avatar field
+
+        if total_fields == 0:
+            return 0
+        return round((completed_fields / total_fields) * 100)
+
+    def __str__(self):
+        return f"{self.student.first_name}'s Profile"
+
 class Faculty(models.Model):
     faculty_id = models.CharField(max_length=20, primary_key=True)
     first_name = models.CharField(max_length=100)
