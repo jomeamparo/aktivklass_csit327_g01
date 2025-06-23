@@ -31,7 +31,7 @@ urlpatterns = [
     path('student_settings/', include('student_settings.urls')),
     path('student_profile/', include('student_profile.urls')),
     path('faculty_laboratory/', include('faculty_laboratory.urls')),
-    path('notifications/', include('notifications.urls')),
+    path('notifications/', include(('notifications.urls', 'notifications'), namespace='notifications')),
     path('chat/', include('chat_screen.urls')),
     path('help_and_support/', include('help_and_support.urls')),
     path('quizzes/', include('quizzes.urls')),
