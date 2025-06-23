@@ -13,6 +13,7 @@ def login_view(request):
             try:
                 faculty = Faculty.objects.get(faculty_id=user_id, password=password)
                 request.session['user_id'] = faculty.faculty_id
+                request.session['role'] = 'faculty'
                 messages.success(request, "Login successful!")
                 return redirect('dashboard_teacher')
             except Faculty.DoesNotExist:
@@ -21,6 +22,7 @@ def login_view(request):
             try:
                 admin_user = AdminUser.objects.get(employee_id=user_id, password=password)
                 request.session['user_id'] = admin_user.employee_id
+                request.session['role'] = 'admin'
                 messages.success(request, "Login successful!")
                 return redirect('dashboard_admin')
             except AdminUser.DoesNotExist:
@@ -29,6 +31,7 @@ def login_view(request):
             try:
                 student = Student.objects.get(student_id=user_id, password=password)
                 request.session['user_id'] = student.student_id
+                request.session['role'] = 'student'
                 messages.success(request, "Login successful!")
                 return redirect('dashboard_student')
             except Student.DoesNotExist:
