@@ -5,7 +5,9 @@ from django.contrib import messages
 
 def login_view(request):
     form = LoginForm(request.POST or None)
-    next_url = request.GET.get('next', None)
+    
+    # Get 'next' parameter from either GET or POST
+    next_url = request.GET.get('next') or request.POST.get('next')
     
     if request.method == 'POST':
         if form.is_valid():
@@ -16,6 +18,10 @@ def login_view(request):
                 faculty = Faculty.objects.get(faculty_id=user_id, password=password)
                 request.session['user_id'] = faculty.faculty_id
                 messages.success(request, "Login successful!")
+                
+                # Redirect to 'next' URL if provided, otherwise to dashboard
+                if next_url:
+                    return redirect(next_url)
                 return redirect('dashboard_teacher')
             except Faculty.DoesNotExist:
                 pass
@@ -24,6 +30,10 @@ def login_view(request):
                 admin_user = AdminUser.objects.get(employee_id=user_id, password=password)
                 request.session['user_id'] = admin_user.employee_id
                 messages.success(request, "Login successful!")
+                
+                # Redirect to 'next' URL if provided, otherwise to dashboard
+                if next_url:
+                    return redirect(next_url)
                 return redirect('dashboard_admin')
             except AdminUser.DoesNotExist:
                 pass
@@ -32,13 +42,17 @@ def login_view(request):
                 student = Student.objects.get(student_id=user_id, password=password)
                 request.session['user_id'] = student.student_id
                 messages.success(request, "Login successful!")
+                
+                # Redirect to 'next' URL if provided, otherwise to dashboard
+                if next_url:
+                    return redirect(next_url)
                 return redirect('dashboard_student')
             except Student.DoesNotExist:
                 pass
 
             messages.error(request, "Invalid user ID or password.")
 
-    return render(request, 'login/login.html', {'form': form})
+    return render(request, 'login/login.html', {'form': form, 'next': next_url})
 
 
 def forgot_password(request):

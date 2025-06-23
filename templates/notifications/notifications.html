@@ -1,54 +1,20 @@
-<!doctype html>
-{% load static %}
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>{% block title %}AktivKlass Notifications{% endblock %}</title>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <style>
-      /* Sidebar */
-      #sidebar {
-        width: 16rem;
-        background-color: white;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        border-right: 1px solid #e5e7eb;
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        transition: all 0.3s ease-in-out;
-      }
+{% extends 'core/main.html' %}
 
-      #sidebar .nav-item {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        transition: background-color 0.3s ease;
-      }
+{% load time_extras %}
 
-      #sidebar .nav-item:hover {
-        background-color: #f0fdf4;
-        color: #4caf50;
-      }
+{% block title %}Notifications{% endblock %}
 
-      /* Filter Dropdown */
-      .filter-dropdown {
-        position: relative;
-        display: inline-block;
-      }
+{% block content %}
 
-      .filter-btn {
-        padding: 0.5rem 1rem;
-        background-color: #4caf50;
-        color: white;
-        border-radius: 0.5rem;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        border: none;
-      }
+<div class="flex justify-between mb-6">
+    <h2 class="font-bold text-2xl text-gray-800">Notifications</h2>
+    <form method="post" action="{% url 'mark_all_notifications_as_read' %}">
+        {% csrf_token %}
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+            Mark All As Read
+        </button>
+    </form>
+</div>
 
       .filter-btn:hover {
         background-color: #45a049;
@@ -132,7 +98,7 @@
         {% endif %}
 
         {% if role == 'admin' %}
-          <a href="{% url 'faculty_list_view' %}" class="nav-item"><i class="fas fa-user text-green-600"></i><span>Faculty</span></a>
+          <a href="{% url 'admin_faculty_list' %}" class="nav-item"><i class="fas fa-user text-green-600"></i><span>Faculty</span></a>
           <a href="{% url 'student_list_view' %}" class="nav-item"><i class="fas fa-users text-green-600"></i><span>Student</span></a>
         {% endif %}
 
@@ -184,57 +150,25 @@
                 <button onclick="toggleUnread()">Unread Only</button>
               </div>
             </div>
-          </div>
-
-          <!-- Notification List -->
-          <div id="notificationList">
-            <div class="notification-item unread mentions">
-              <h4>New Mention</h4>
-              <p>You were mentioned in a class discussion!</p>
-            </div>
-            <div class="notification-item replies">
-              <h4>New Assignment</h4>
-              <p>Don't forget to submit your assignment by Friday.</p>
-            </div>
-            <div class="notification-item unread replies">
-              <h4>Reply to Your Post</h4>
-              <p>Your post has a new reply. Check it out!</p>
-            </div>
-          </div>
-        </main>
-      </div>
+        {% endfor %}
     </div>
+{% endif %}
 
-    <script>
-      let showUnreadOnly = false;
+{% if old_notifications %}
+    <h2 class="font-bold text-sm text-gray-800 mb-2">Old</h2>
+    <div class="flex flex-col gap-2">
+        {% for notification in old_notifications %}
+            <div class="w-full p-4 rounded flex flex-row justify-between items-center hover:bg-gray-50 transition-colors">
+                <div class="flex flex-col gap-2">
+                    <h3 class="font-bold">{{ notification.title }} 
+                        <span class="text-gray-300 text-xs font-medium">{{ notification.created_at|time_delta }}</span>
+                    </h3>
+                    <p class="text-gray-400 text-xs pl-2">{{ notification.message }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+</div>
 
-      function toggleUnread() {
-        showUnreadOnly = !showUnreadOnly;
-        const notifications = document.querySelectorAll('.notification-item');
-        notifications.forEach(notification => {
-          if (showUnreadOnly && !notification.classList.contains('unread')) {
-            notification.style.display = 'none';
-          } else {
-            notification.style.display = 'block';
-          }
-        });
-      }
-
-      function filterNotifications(type) {
-        const notifications = document.querySelectorAll('.notification-item');
-        notifications.forEach(notification => {
-          if (type === 'all' || notification.classList.contains(type)) {
-            notification.style.display = 'block';
-          } else {
-            notification.style.display = 'none';
-          }
-        });
-      }
-
-      function toggleFilter() {
-        const filterDropdown = document.querySelector('.filter-dropdown');
-        filterDropdown.classList.toggle('open');
-      }
-    </script>
-  </body>
-</html>
+{% endblock %}

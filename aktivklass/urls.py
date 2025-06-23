@@ -1,19 +1,24 @@
 from django.contrib import admin
 from django.urls import include, path
 from django.contrib.auth import views as auth_views
+from django.views.generic.base import RedirectView
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('login.urls')),
+    path('accounts/login/', RedirectView.as_view(url='/', query_string=True), name='accounts_login'),
     path('register/', include('register.urls')),
     path('dashboard_admin/', include('dashboard_admin.urls')),
     path('dashboard_teacher/', include('dashboard_teacher.urls')),
     path('dashboard_student/', include('dashboard_student.urls')),
     path('admin_faculty_list/', include('admin_faculty_list.urls')),
     path('admin_student_list/', include('admin_student_list.urls')),
+    path('courses_admin/', include('courses_admin.urls')),
     path('edit_faculty/', include('edit_faculty.urls')),
     path('edit_admin/', include('edit_admin.urls')),
-     path('edit_student/', include('edit_student.urls')),
+    path('edit_student/', include('edit_student.urls')),
     path('archived_classes/', include('archived_classes.urls')),
     path('class_join_request/', include('class_join_request.urls')),
     path('classes/', include('class_lists.urls')),
@@ -34,8 +39,6 @@ urlpatterns = [
     path('settings/', include('settings.urls')),
     path('analytics/', include('analytics.urls')),
     path('forgot_password/', include('forgot_password.urls')),
-
-    path('faculty_notifications/', include('notifications_faculty.urls')),
     path('edit_admin/', include('edit_admin.urls')),
     path('classes/', include('class_lists.urls')),
 
@@ -48,3 +51,6 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='forgot_password/password_reset_confirm.html'), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='forgot_password/password_reset_complete.html'), name='password_reset_complete')
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
