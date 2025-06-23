@@ -29,12 +29,10 @@ urlpatterns = [
     path('faculty_laboratory/', include('faculty_laboratory.urls')),
     path('notifications/', include('notifications.urls')),
     path('chat/', include('chat_screen.urls')),
-    path('help_and_support/', include('help_and_support.urls')),
     path('quizzes/', include('quizzes.urls')),
     path('settings/', include('settings.urls')),
     path('analytics/', include('analytics.urls')),
     path('forgot_password/', include('forgot_password.urls')),
-
     path('faculty_notifications/', include('notifications_faculty.urls')),
     path('edit_admin/', include('edit_admin.urls')),
     path('classes/', include('class_lists.urls')),
