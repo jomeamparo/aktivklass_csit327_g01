@@ -1,6 +1,10 @@
 # Virtual environment
 venv/
 get-pip.py
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9cdd82769ea6e6c66f6e8ae9d9039182c3a0a7e1
 # Python cache and bytecode
 __pycache__/
 *.py[cod]

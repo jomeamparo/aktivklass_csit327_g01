@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +31,16 @@ urlpatterns = [
     path('class_record/', include('class_record.urls')),
     path('archived_classes/', include('archived_classes.urls')),
     path('class_join_request/', include('class_join_request.urls')),
+<<<<<<< HEAD
     path('faculty_seatwork/', include('faculty_seatwork.urls')),
     path('faculty_seatworkSubmission/', include('faculty_seatworkSubmission.urls')),
+=======
+    path('notifications/', include('notifications.urls')),
+    path('forgot_password/', include('forgot_password.urls')),
+
+    path('password_reset/', auth_views.PasswordResetView.as_view(template_name='forgot_password/password_reset_form.html'), name='password_reset'),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='forgot_password/password_reset_done.html'), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='forgot_password/password_reset_confirm.html'), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='forgot_password/password_reset_complete.html'), name='password_reset_complete')
+>>>>>>> 9cdd82769ea6e6c66f6e8ae9d9039182c3a0a7e1
 ]
