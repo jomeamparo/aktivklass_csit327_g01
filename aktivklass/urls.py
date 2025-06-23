@@ -32,4 +32,6 @@ urlpatterns = [
     path('archived_classes/', include('archived_classes.urls')),
     path('class_join_request/', include('class_join_request.urls')),
     path('faculty_laboratory/', include('faculty_laboratory.urls')),
+    path('faculty_profile/', include('faculty_profile.urls')),
+    path('help_and_support/', include('help_and_support.urls')),
 ]

@@ -1,4 +1,9 @@
 from django.shortcuts import render
+from core.models import Class  # or wherever you define your Class model
+
+def dashboard(request):
+    classes = Class.objects.filter(is_archived=False)
+    return render(request, 'faculty_laboratory/dashboard.html', {'classes': classes})
 
 def compute_grade(percentage):
     if percentage >= 90:

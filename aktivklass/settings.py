@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'archived_classes',
     'class_join_request',
     'faculty_laboratory',
+    'faculty_profile',
 
     'tailwind',
     'theme',
@@ -103,7 +104,7 @@ DATABASES = {
         'USER': 'root',          # default user in XAMPP
         'PASSWORD': '',          # default password is empty
         'HOST': 'localhost',
-        'PORT': '3307',
+        'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION'",
         },
