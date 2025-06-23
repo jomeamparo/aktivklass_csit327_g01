@@ -30,16 +30,14 @@
                 {% if profile.avatar %}
                 <img src="{{ profile.avatar.url }}"
                      alt="Profile Photo"
-                     class="w-24 h-24 rounded-full border-4 object-cover shadow-md
-                     {% if student.status == 'Available' %}border-green-500{% elif student.status == 'Busy' %}border-yellow-500{% else %}border-red-500{% endif %}">
+                     class="w-24 h-24 rounded-full border-4 border-blue-500 object-cover shadow-md">
                 {% else %}
-                <div class="w-24 h-24 rounded-full border-4 flex items-center justify-center bg-gray-200 shadow-md
-                     {% if student.status == 'Available' %}border-green-500{% elif student.status == 'Busy' %}border-yellow-500{% else %}border-red-500{% endif %}">
+                <div class="w-24 h-24 rounded-full border-4 border-blue-500 flex items-center justify-center bg-gray-200 shadow-md">
                     <span class="text-2xl text-gray-500">{{ student.first_name|first }}{{ student.last_name|first }}</span>
                 </div>
                 {% endif %}
-                <span id="status-circle" class="absolute bottom-0 right-0 text-white rounded-full h-8 w-8 flex items-center justify-center text-xs font-semibold border-2 border-white cursor-pointer {% if student.status == 'Available' %}bg-green-500{% elif student.status == 'Busy' %}bg-yellow-500{% else %}bg-red-500{% endif %}">
-                    {{ student.status|first }}
+                <span class="absolute bottom-0 right-0 bg-blue-500 text-white rounded-full h-8 w-8 flex items-center justify-center text-sm font-bold border-2 border-white">
+                    <i class="fas fa-graduation-cap"></i>
                 </span>
             </div>
             <div>
@@ -47,6 +45,11 @@
                 <p class="text-gray-600">{{ student.course|default:"No Course" }}</p>
                 <p class="text-sm text-gray-500">{{ student.email }}</p>
                 <p class="text-sm text-gray-500">{{ student.phone_number|default:"No contact number" }}</p>
+                <div class="status-badge mt-2 inline-block px-3 py-1 rounded-full text-xs font-semibold cursor-pointer
+                    {% if student.status == 'Available' %}bg-green-100 text-green-700{% elif student.status == 'Busy' %}bg-yellow-100 text-yellow-700{% else %}bg-red-100 text-red-700{% endif %}"
+                    id="status-display">
+                    {{ student.status }}
+                </div>
             </div>
         </div>
     </div>
@@ -360,6 +363,7 @@
     const editProfileBtn = document.getElementById('edit-profile-btn');
     const cancelEditBtn = document.getElementById('cancel-edit-btn');
     const cancelEditBtnBottom = document.getElementById('cancel-edit-btn-bottom');
+    const statusDisplay = document.getElementById('status-display');
     const statusModal = document.getElementById('status-modal');
     const closeStatusModalBtn = document.getElementById('close-modal-btn');
     const confirmStatusBtn = document.getElementById('confirm-status-btn');
@@ -381,12 +385,11 @@
     modalBackdrop.addEventListener('click', closeEditModal);
 
     // Show status modal
-    const statusCircle = document.getElementById('status-circle');
-    statusCircle.addEventListener('click', () => {
+    statusDisplay.addEventListener('click', () => {
         statusModal.classList.remove('hidden');
     });
 
-    // Hide status modal
+    // Close status modal
     closeStatusModalBtn.addEventListener('click', () => {
         statusModal.classList.add('hidden');
     });

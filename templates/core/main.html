@@ -27,13 +27,13 @@
         <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 shadow-sm mb-6 dark:bg-gray-800 shadow-sm mb-6 text-black dark:text-white">
           
             <img
-            src="{% if avatar_url %}{{ avatar_url }}{% else %}{% static 'img/default_avatar.jpg' %}{% endif %}"
+            src="{% if avatar_url %}{{ avatar_url }}{% else %}https://thumbs.dreamstime.com/b/cartoon-angry-teacher-man-looking-55342685.jpg{% endif %}"
             alt="Profile Photo"
             class="w-14 h-14 rounded-full border-2 border-green-500 object-cover"
           />
           <div>
             <h2 class="text-base font-semibold text-gray-900 dark:text-gray-100">{{ fullname }}</h2>
-            <p class="text-xs text-gray-500 dark:text-gray-400">{{ email }}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">email@example.com</p>
           </div>
         </div>
         {% if role == 'faculty' or role == 'student' %}
@@ -57,12 +57,9 @@
           <!-- Faculty -->
 
           <a href="{% url 'faculty_seatwork' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-            <i class="fas fa-file-alt text-green-600"></i>
-            <span>Seatwork</span>
-          </a>
           <a href="{% url 'archived_classes' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
-            <i class="fas fa-archive text-green-600"></i>
-            <span>Archived Classes</span>
+            <i class="fas fa-users text-green-600"></i>
+            <span>Seatwork</span>
           </a>
           <a href="{% url 'faculty_seatworkSubmission' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-users text-green-600"></i>
@@ -84,6 +81,10 @@
             <i class="fas fa-users text-green-600"></i>
             <span>Quizzes</span>
           </a>
+          <a href="{% url 'faculty_notifications' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-users text-green-600"></i>
+            <span>Notifications</span>
+          </a>
         {% endif %}
      
         {% if role == 'admin' %}
@@ -100,11 +101,15 @@
             <i class="fas fa-users text-green-600"></i>
             <span>Student</span>
           </a>
-          <a href="{% url 'admin_notif:admin_notif' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+<<<<<<< HEAD
+          <a href="{% url 'notifications' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+=======
+          <a href="{% url 'admin_notif:admin_notif' %}" class="sidebar-link">
+>>>>>>> eeee642 (feature(): feature/admin_notif/create_notif_ui)
             <i class="fas fa-user text-green-600"></i>
             <span>Notifications</span>
           </a>
-          <a href="{% url 'admin_settings' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+          <a href="{% url 'admin_settings' %}" class="sidebar-link">
             <i class="fas fa-user text-green-600"></i>
             <span>Settings</span>
           </a>
@@ -119,6 +124,8 @@
             <i class="fas fa-user text-green-600"></i>
             <span>Classes</span>
           </a>
+
+          
           <a href="{% url 'class_list' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-user text-green-600"></i>
             <span>Class list</span>
@@ -127,19 +134,24 @@
             <i class="fas fa-user text-green-600"></i>
             <span>Notifications</span>
           </a>
-          <a href="{% url 'chat_home' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+
+          <a href="{% url 'notifications' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-user text-green-600"></i>
+            <span>Notification</span>
+          </a>
+          <a href="{% url 'chat_home' %}" class="sidebar-link">
             <i class="fas fa-comments text-green-600"></i>
             <span>Chats</span>
-          </a>
-          <a href="{% url 'student_settings' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-            <i class="fas fa-cog text-green-600"></i>
-            <span>Settings</span>
           </a>
         {% endif %}
 
         <div class="border-t border-gray-200 my-4"></div>
 
           <span class="text-xs uppercase text-gray-400 px-4">Others</span>
+          <!--<a href="{% url 'student_settings' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-user text-green-600"></i>
+            <span>Settings</span>
+          </a>-->
           <a href="{% url 'help_and_support' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-info-circle text-green-600"></i>
             <span>Help & Support</span>
