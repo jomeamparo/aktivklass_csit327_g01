@@ -95,8 +95,8 @@
                         <button 
                             data-faculty-id="{{ faculty.faculty_id }}"
                             onclick="toggleFacultyStatus(this.dataset.facultyId); event.stopPropagation();"
-                            class="px-4 py-2 rounded transition-colors {% if faculty.status == 'DISABLED' %}bg-green-500 hover:bg-green-600{% else %}bg-red-500 hover:bg-red-600{% endif %} text-white">
-                            {% if faculty.status == 'DISABLED' %}Activate{% else %}Disable{% endif %}
+                            class="px-4 py-2 rounded transition-colors {% if faculty.status == 'ACTIVE' %}bg-green-500 hover:bg-green-600{% else %}bg-red-500 hover:bg-red-600{% endif %} text-white">
+                            {% if faculty.status == 'ACTIVE' %}ACTIVE{% else %}DISABLED{% endif %}
                         </button>
                     </td>
                 </tr>
@@ -272,6 +272,7 @@
 
     function toggleFacultyStatus(facultyId) {
         if (confirm('Are you sure you want to change this faculty\'s status?')) {
+            const button = document.querySelector(`button[data-faculty-id='${facultyId}']`);
             fetch(`/toggle_faculty_status/${facultyId}/`, {
                 method: 'POST',
                 headers: {
@@ -281,7 +282,15 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    location.reload();
+                    if (data.status === 'ACTIVE') {
+                        button.classList.remove('bg-red-500', 'hover:bg-red-600');
+                        button.classList.add('bg-green-500', 'hover:bg-green-600');
+                        button.textContent = 'ACTIVE';
+                    } else {
+                        button.classList.remove('bg-green-500', 'hover:bg-green-600');
+                        button.classList.add('bg-red-500', 'hover:bg-red-600');
+                        button.textContent = 'DISABLED';
+                    }
                 } else {
                     alert('Failed to update faculty status');
                 }
