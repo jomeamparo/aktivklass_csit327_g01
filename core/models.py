@@ -138,6 +138,47 @@ class Conversation(models.Model):
 
     def __str__(self):
         return f"Conversation ({self.id})"
+    
+    @classmethod
+    def get_or_create_conversation(cls, student1, student2):
+        """Get existing conversation between two students or create a new one"""
+        if student1.id == student2.id:
+            raise ValueError("Cannot create conversation with self")
+        
+        # Find existing conversation with exactly these two participants
+        existing = cls.objects.filter(
+            participants=student1
+        ).filter(
+            participants=student2
+        ).annotate(
+            participant_count=models.Count('participants')
+        ).filter(
+            participant_count=2
+        ).first()
+        
+        if existing:
+            return existing
+        
+        # Create new conversation
+        conversation = cls.objects.create()
+        conversation.participants.add(student1, student2)
+        return conversation
+    
+    def get_other_participant(self, current_student):
+        """Get the other participant in a one-on-one conversation"""
+        return self.participants.exclude(id=current_student.id).first()
+    
+    def get_last_message(self):
+        """Get the most recent message in this conversation"""
+        return self.messages.last()
+    
+    def get_unread_count_for_user(self, user):
+        """Get count of unread messages for a specific user"""
+        return self.messages.filter(
+            is_read=False
+        ).exclude(
+            sender=user
+        ).count()
 
 class Message(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')

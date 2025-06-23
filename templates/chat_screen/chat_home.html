@@ -6,48 +6,74 @@
 <div class="flex h-[80vh] w-full max-w-5xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
   <!-- Sidebar: Chat List -->
   <div class="w-1/3 bg-gray-100 p-4 flex flex-col border-r">
-    <div class="mb-4">
-      <input type="text" placeholder="Search chats..." class="w-full px-3 py-2 rounded border focus:outline-none focus:ring-2 focus:ring-green-400" />
+    <!-- Search and New Chat Section -->
+    <div class="mb-4 space-y-3">
+      <div class="flex gap-2">
+        <a href="{% url 'search_students' %}" class="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg text-center hover:bg-green-700 transition">
+          <i class="fas fa-search mr-2"></i>Search Students
+        </a>
+      </div>
     </div>
+    
     <h2 class="text-xl font-bold text-gray-800 mb-2">Your Conversations</h2>
     <div class="flex-1 overflow-y-auto">
       {% if conversations %}
         <ul class="divide-y divide-gray-200">
-          {% for conversation in conversations %}
-            <li class="py-3 hover:bg-green-50 rounded transition">
+          {% for conv_data in conversations %}
+            <li class="py-3 hover:bg-green-50 rounded transition cursor-pointer">
               <a 
-                href="{% url 'conversation_detail' conversation.id %}" 
-                class="block text-base font-semibold text-green-700"
+                href="{% url 'conversation_detail' conv_data.conversation.id %}" 
+                class="block"
               >
-                Conversation #{{ conversation.id }}
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-base font-semibold text-green-700">
+                    {{ conv_data.other_participant.first_name }} {{ conv_data.other_participant.last_name }}
+                  </span>
+                  {% if conv_data.unread_count > 0 %}
+                    <span class="bg-red-500 text-white text-xs rounded-full px-2 py-1">
+                      {{ conv_data.unread_count }}
+                    </span>
+                  {% endif %}
+                </div>
+                {% if conv_data.last_message %}
+                  <p class="text-gray-600 text-sm truncate">
+                    <span class="font-medium">{{ conv_data.last_message.sender.first_name }}:</span>
+                    {{ conv_data.last_message.content|truncatechars:50 }}
+                  </p>
+                  <p class="text-gray-400 text-xs mt-1">
+                    {{ conv_data.last_message.timestamp|date:"M d, H:i" }}
+                  </p>
+                {% else %}
+                  <p class="text-gray-500 text-sm italic">No messages yet</p>
+                {% endif %}
               </a>
-              <p class="text-gray-600 text-sm">
-                Participants: 
-                {% for user in conversation.participants.all %}
-                  {{ user.username }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-              </p>
             </li>
           {% endfor %}
         </ul>
       {% else %}
-        <p class="text-center text-gray-500 text-lg">You have no conversations yet.</p>
+        <div class="text-center py-8">
+          <i class="fas fa-comments text-4xl text-gray-300 mb-4"></i>
+          <p class="text-gray-500 text-lg">No conversations yet.</p>
+          <p class="text-gray-400 text-sm mt-2">Search for students to start chatting!</p>
+          <a href="{% url 'search_students' %}" class="inline-block mt-4 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
+            Start a Conversation
+          </a>
+        </div>
       {% endif %}
     </div>
   </div>
 
   <!-- Main Chat Area -->
   <div class="w-2/3 flex flex-col">
-    <div class="flex-1 p-6 flex flex-col justify-between">
-      <!-- Placeholder for messages -->
-      <div class="flex-1 overflow-y-auto mb-4">
-        <div class="text-gray-400 text-center mt-20">Select a conversation to view messages.</div>
+    <div class="flex-1 p-6 flex flex-col justify-center items-center">
+      <div class="text-center">
+        <i class="fas fa-comments text-6xl text-gray-300 mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-600 mb-2">Welcome to Chat</h3>
+        <p class="text-gray-500 mb-6">Select a conversation from the sidebar or search for students to start chatting.</p>
+        <a href="{% url 'search_students' %}" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition">
+          <i class="fas fa-search mr-2"></i>Find Students to Chat With
+        </a>
       </div>
-      <!-- Message input area -->
-      <form class="flex gap-2">
-        <input type="text" placeholder="Type your message..." class="flex-1 px-3 py-2 rounded border focus:outline-none focus:ring-2 focus:ring-green-400" disabled />
-        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded disabled:opacity-50" disabled>Send</button>
-      </form>
     </div>
   </div>
 </div>

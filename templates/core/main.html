@@ -132,13 +132,11 @@
             <i class="fas fa-user text-green-600"></i>
             <span>Notification</span>
           </a>
-        {% endif %}
-        
-        <!-- Chats Link - Available for all users -->
-        <a href="{% url 'chat_home' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-          <i class="fas fa-comments text-green-600"></i>
+          <a href="{% url 'chat_home' %}" class="sidebar-link">
+            <i class="fas fa-comments text-green-600"></i>
             <span>Chats</span>
           </a>
+        {% endif %}
 
         <div class="border-t border-gray-200 my-4"></div>
           <span class="text-xs uppercase text-gray-400 px-4">Settings</span>

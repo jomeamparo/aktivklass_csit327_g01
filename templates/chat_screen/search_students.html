@@ -1,0 +1,108 @@
+{% extends 'core/main.html' %}
+
+{% block title %}Search Students{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+  <div class="bg-white rounded-lg shadow-lg p-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-bold text-gray-800">Search Students</h1>
+      <a href="{% url 'chat_home' %}" class="text-green-600 hover:text-green-700">
+        <i class="fas fa-arrow-left mr-2"></i>Back to Chats
+      </a>
+    </div>
+
+    <!-- Search Form -->
+    <form method="GET" class="mb-6">
+      <div class="flex gap-4">
+        <div class="flex-1">
+          <input 
+            type="text" 
+            name="q" 
+            value="{{ query }}" 
+            placeholder="Search by name, student ID, or email..." 
+            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent"
+          />
+        </div>
+        <button type="submit" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition">
+          <i class="fas fa-search mr-2"></i>Search
+        </button>
+      </div>
+    </form>
+
+    <!-- Search Results -->
+    {% if query %}
+      {% if students %}
+        <div class="space-y-4">
+          <h2 class="text-lg font-semibold text-gray-700">Search Results for "{{ query }}"</h2>
+          <div class="grid gap-4">
+            {% for student in students %}
+              <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                      <span class="text-green-600 font-semibold text-lg">
+                        {{ student.first_name|first }}{{ student.last_name|first }}
+                      </span>
+                    </div>
+                    <div>
+                      <h3 class="font-semibold text-gray-800">
+                        {{ student.first_name }} {{ student.last_name }}
+                      </h3>
+                      <p class="text-gray-600 text-sm">{{ student.student_id }}</p>
+                      <p class="text-gray-500 text-sm">{{ student.email }}</p>
+                      {% if student.course %}
+                        <p class="text-gray-500 text-sm">{{ student.course }} - Year {{ student.year }}</p>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <a 
+                    href="{% url 'start_conversation' student.student_id %}" 
+                    class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+                  >
+                    <i class="fas fa-comment mr-2"></i>Start Chat
+                  </a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% else %}
+        <div class="text-center py-12">
+          <i class="fas fa-search text-4xl text-gray-300 mb-4"></i>
+          <h3 class="text-lg font-semibold text-gray-600 mb-2">No students found</h3>
+          <p class="text-gray-500">Try searching with a different term.</p>
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="text-center py-12">
+        <i class="fas fa-search text-4xl text-gray-300 mb-4"></i>
+        <h3 class="text-lg font-semibold text-gray-600 mb-2">Search for Students</h3>
+        <p class="text-gray-500 mb-6">Enter a name, student ID, or email to find students to chat with.</p>
+        <div class="text-sm text-gray-400">
+          <p>You can search by:</p>
+          <ul class="mt-2 space-y-1">
+            <li>• Student's first or last name</li>
+            <li>• Student ID</li>
+            <li>• Email address</li>
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .emboss-effect {
+    box-shadow:
+      inset 2px 2px 5px rgba(255, 255, 255, 0.7),
+      inset -2px -2px 5px rgba(0, 0, 0, 0.1);
+  }
+  .emboss-text {
+    text-shadow:
+      1px 1px 0 #fff,
+      -1px -1px 0 #999;
+  }
+</style>
+{% endblock %} 
