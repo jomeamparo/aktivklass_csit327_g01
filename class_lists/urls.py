@@ -1,9 +1,8 @@
-# urls.py
-
 from django.urls import path
-from .views import class_list_view, join_class_view
+from . import views  # ✅ make sure you import views
 
 urlpatterns = [
-    path('', class_list_view, name='class_list'),
-    path('join/<int:class_id>/', join_class_view, name='join_class_view'),
+    path('', views.class_list_view, name='class_list'),
+    path('join/<int:class_id>/', views.join_class_view, name='join_class_view'),
+    path('archive/<int:class_id>/', views.archive_class_view, name='archive_class'),  # ✅ Add this here
 ]

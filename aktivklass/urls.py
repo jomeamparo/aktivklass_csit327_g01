@@ -40,7 +40,9 @@ urlpatterns = [
     path('analytics/', include('analytics.urls')),
     path('forgot_password/', include('forgot_password.urls')),
     path('edit_admin/', include('edit_admin.urls')),
+
     path('classes/', include('class_lists.urls')),
+    
 
     path('help_and_support/', include('help_and_support.urls')),
     path('faculty_attendance/', include('faculty_attendance.urls')),

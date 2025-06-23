@@ -12,7 +12,8 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for class in classes %}
                 <div class="relative">
-                    <form method="post" action="{% url 'join_class_view' class.id %}" class="block">
+                    <!-- Join Class Form -->
+                    <form method="post" action="{% url 'join_class_view' class.id %}" class="block mb-2">
                         {% csrf_token %}
                         <div class="border border-green-600 rounded-lg p-5 bg-white cursor-pointer transition animate-float emboss-effect hover:shadow-lg">
                             <h3 class="text-xl font-semibold text-gray-900 emboss-text">{{ class.subject_name }}</h3>
@@ -25,6 +26,14 @@
                                 Request to Join
                             </button>
                         </div>
+                    </form>
+
+                    <!-- Archive Class Form -->
+                    <form method="post" action="{% url 'archive_class' class.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="w-full mt-1 bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-600 transition">
+                            Archive this Class
+                        </button>
                     </form>
                 </div>
             {% endfor %}
@@ -62,4 +71,4 @@
     -1px -1px 0 #999;
 }
 </style>
-{% endblock %} 
+{% endblock %}

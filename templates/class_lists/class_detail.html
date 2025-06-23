@@ -1,0 +1,26 @@
+{% extends 'core/main.html' %}
+
+{% block title %}Class Detail{% endblock %}
+
+{% block content %}
+<div class="container mx-auto p-6">
+    <div class="bg-white shadow rounded-lg p-6">
+        <h2 class="text-2xl font-bold mb-4 text-gray-800">{{ class.subject_name }} ({{ class.subject_code }})</h2>
+        <p class="text-gray-700 mb-2"><strong>Description:</strong> {{ class.description }}</p>
+        <p class="text-gray-700 mb-2"><strong>Schedule:</strong> {{ class.schedule }}</p>
+        <p class="text-gray-700 mb-2"><strong>Room:</strong> {{ class.room }}</p>
+        <p class="text-gray-700 mb-4"><strong>Class Code:</strong> {{ class.class_code }}</p>
+
+        {% if not class.is_archived %}
+            <form method="post" action="{% url 'archive_class' class.id %}">
+                {% csrf_token %}
+                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded">
+                    Archive Class
+                </button>
+            </form>
+        {% else %}
+            <p class="text-red-500 font-semibold">This class is archived.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

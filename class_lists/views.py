@@ -2,10 +2,20 @@ from django.shortcuts import render, get_object_or_404, redirect
 from core.models import Class, Student, Enrollment, ClassJoinRequest
 from django.contrib import messages
 
+# class_lists/views.py
+
 def class_list_view(request):
-    # Get all non-archived classes
+    student_id = request.session.get('user_id')
+    student = None
+
+    if student_id:
+        student = get_object_or_404(Student, student_id=student_id)
+
     classes = Class.objects.filter(is_archived=False)
+    
     return render(request, 'class_lists/class_list.html', {'classes': classes})
+
+
 
 def class_detail_view(request, class_id):
     selected_class = get_object_or_404(Class, id=class_id)
@@ -42,3 +52,15 @@ def join_class_view(request, class_id):
         return redirect('dashboard_student')
     
     return redirect('class_list')
+
+# class_lists/views.py
+from django.shortcuts import redirect
+
+def archive_class_view(request, class_id):
+    if request.method == 'POST':
+        selected_class = get_object_or_404(Class, id=class_id)
+        selected_class.is_archived = True
+        selected_class.save()
+        messages.success(request, f"{selected_class.subject_name} has been archived.")
+    return redirect('class_list')
+
