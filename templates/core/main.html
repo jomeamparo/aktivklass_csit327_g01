@@ -5,26 +5,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>{% block title %}ActivKlass Management System{% endblock %}</title>
+    <title>{% block title %}AktivKlass Management System{% endblock %}</title>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   </head>
   <body class="min-h-screen bg-gray-100 font-sans antialiased text-gray-800">
-
-    {% if role == 'faculty' %}
-      <a href="{% url 'faculty_profile' %}">
-    {% elif role == 'student' %}
-      <a href="{% url 'student_profile' %}">
-    {% else %}
-      <a href="#">
-    {% endif %}
-
+  {% if role == 'faculty' %}
+    <a href="{% url 'faculty_profile'%}">
+  {% elif role == 'student' %}
+    <a href="{% url 'student_profile'%}">
+  {% endif %}
     <div class="flex h-screen overflow-hidden">
       <!-- Sidebar -->
-      <aside id="sidebar" class="w-64 bg-white shadow-xl border-r border-gray-200 p-4 flex flex-col transition-all duration-300 ease-in-out">
+      <aside id="sidebar" class="w-64 bg-white shadow-lg border-r border-gray-200 p-4 flex flex-col transition-all duration-300 ease-in-out">
         <!-- Profile Section -->
         <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 shadow-sm mb-6">
-          
-            <img
+          <img
             src="https://thumbs.dreamstime.com/b/cartoon-angry-teacher-man-looking-55342685.jpg"
             alt="Profile Photo"
             class="w-14 h-14 rounded-full border-2 border-green-500 object-cover"
@@ -34,100 +29,103 @@
             <p class="text-xs text-gray-500">email@example.com</p>
           </div>
         </div>
+        {% if role == 'faculty' or role == 'student' %}
         </a>
+        {% endif %}
         <!-- Navigation -->
         {% if role == 'faculty' %}
-          <a href="{% url 'dashboard_teacher' %}" class="sidebar-link">
+          <a href="{% url 'dashboard_teacher' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
             <i class="fas fa-user text-green-600"></i>
             <span>Class Record</span>
           </a>
-          <a href="{% url 'teacher_student_list' %}" class="sidebar-link">
+          <a href="{% url 'teacher_student_list' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
             <i class="fas fa-users text-green-600"></i>
             <span>Students</span>
           </a>
-          <a href="{% url 'class_join_request' %}" class="sidebar-link">
+          <a href="{% url 'class_join_request' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
             <i class="fas fa-users text-green-600"></i>
             <span>Class Join Request</span>
           </a>
-          <a href="{% url 'faculty_seatwork' %}" class="sidebar-link">
+
+          <!-- Faculty -->
+
+          <a href="{% url 'faculty_seatwork' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+          <a href="{% url 'archived_classes' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
             <i class="fas fa-users text-green-600"></i>
             <span>Seatwork</span>
           </a>
-          <a href="{% url 'faculty_seatworkSubmission' %}" class="sidebar-link">
+          <a href="{% url 'faculty_seatworkSubmission' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-users text-green-600"></i>
             <span>Seatwork History</span>
-          </a>
-          <a href="{% url 'faculty_attendance' %}" class="sidebar-link">
-            <i class="fas fa-user text-green-600"></i>
-            <span>Attendance</span>
-          </a>
-          <a href="{% url 'faculty_laboratory' %}" class="sidebar-link">
-            <i class="fas fa-user text-green-600"></i>
-            <span>Class Page</span>
-          </a>
-          <a href="{% url 'faculty_notifications' %}" class="sidebar-link">
-            <i class="fas fa-users text-green-600"></i>
-            <span>Notifications</span>
-          </a>
-          <a href="{% url 'quizzes' %}" class="sidebar-link">
-            <i class="fas fa-users text-green-600"></i>
-            <span>Quizzes</span>
-          </a>
-          <a href="{% url 'faculty_notifications' %}" class="sidebar-link">
-            <i class="fas fa-users text-green-600"></i>
-            <span>Notifications</span>
-          </a>
-          <a href="{% url 'archived_classes' %}" class="sidebar-link">
-            <i class="fas fa-archive text-green-600"></i>
-            <span>Archived Classes</span>
           </a>
           <a href="{% url 'faculty_attendance' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-user text-green-600"></i>
             <span>Attendance</span>
           </a>
+          <a href="{% url 'faculty_laboratory' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-user text-green-600"></i>
+            <span>Class Page</span>
+          </a>
+          <a href="{% url 'faculty_notifications' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-users text-green-600"></i>
+            <span>Notifications</span>
+          </a>
+          <a href="{% url 'quizzes' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-users text-green-600"></i>
+            <span>Quizzes</span>
+          </a>
+          <a href="{% url 'faculty_notifications' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-users text-green-600"></i>
+            <span>Notifications</span>
+          </a>
         {% endif %}
-
+     
         {% if role == 'admin' %}
           <!-- Admin Options only -->
+           <a href="{% url 'edit_admin' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-user text-green-600"></i>
+            <span>Admin_Verano</span>
+          </a>
           <a href="{% url 'admin_faculty_list' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-user text-green-600"></i>
             <span>Faculty</span>
           </a>
-          <a href="{% url 'student_list_view' %}" class="sidebar-link">
+          <a href="{% url 'student_list_view' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
             <i class="fas fa-users text-green-600"></i>
             <span>Student</span>
           </a>
-          <a href="{% url 'notifications' %}" class="sidebar-link">
+          <a href="{% url 'courses_admin' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-graduation-cap text-green-600"></i>
+            <span>Course Management</span>
+          </a>
+          <a href="{% url 'notifications' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-user text-green-600"></i>
             <span>Notifications</span>
           </a>
-          <a href="{% url 'settings' %}" class="sidebar-link">
+          <a href="{% url 'settings' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-user text-green-600"></i>
             <span>Settings</span>
           </a>
-          <a href="{% url 'analytics' %}" class="sidebar-link">
+          <a href="{% url 'analytics' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-user text-green-600"></i>
             <span>Analytics</span>
           </a>
-          <a href="{% url 'edit_faculty' %}" class="sidebar-link">
-            <i class="fas fa-users text-green-600"></i>
-            <span>Sample</span>
-          </a>
         {% endif %}
 
-        {% if role == 'student' or role == 'guest' %}
-          <!-- Student & Guest Navigation -->
-          <a href="{% url 'dashboard_student' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+        {% if role == 'student' %}
+          <a href="{% url 'dashboard_student' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
             <i class="fas fa-user text-green-600"></i>
-            <span>My Classes</span>
+            <span>Classes</span>
           </a>
-          <a href="{% url 'class_list' %}" class="sidebar-link">
-            <i class="fas fa-plus text-green-600"></i>
-            <span>Class List</span>
-          </a>
-          <a href="{% url 'attendance_student' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+
+          
+          <a href="{% url 'class_lists' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-user text-green-600"></i>
-            <span>Attendance</span>
+            <span>Class list</span>
+          </a>
+          <a href="{% url 'notifications' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-user text-green-600"></i>
+            <span>Notifications</span>
           </a>
 
           <a href="{% url 'notifications' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
@@ -135,26 +133,29 @@
             <span>Notification</span>
           </a>
         {% endif %}
-
-        <a href="{% url 'chat_home' %}" class="sidebar-link">
+        
+        <!-- Chats Link - Available for all users -->
+        <a href="{% url 'chat_home' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
           <i class="fas fa-comments text-green-600"></i>
-          <span>Chats</span>
-        </a>
+            <span>Chats</span>
+          </a>
 
         <div class="border-t border-gray-200 my-4"></div>
-
-          <span class="text-xs uppercase text-gray-400 px-4">Others</span>
-          <a href="{% url 'student_settings' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-            <i class="fas fa-user text-green-600"></i>
+          <span class="text-xs uppercase text-gray-400 px-4">Settings</span>
+          <a href="{% url 'faculty_settings' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
+            <i class="fas fa-cogs text-green-600"></i>
             <span>Settings</span>
           </a>
-          <a href="{% url 'help_and_support' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+          <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-info-circle text-green-600"></i>
             <span>Help & Support</span>
           </a>
 
+          
+
+        <!-- Logout -->
         <div class="mt-auto pt-4 border-t border-gray-200">
-          <a href="{% url 'login' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 transition">
+          <a href="{% url 'login' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 transition duration-200">
             <i class="fas fa-sign-out-alt text-red-600"></i>
             <span>Logout</span>
           </a>
@@ -174,8 +175,8 @@
           </button>
           <div class="w-full flex justify-center items-center mt-4">
             <h1 class="text-3xl font-bold tracking-tight" style="font-family: 'Poppins', sans-serif;">
-              <span class="text-green-600">Aktiv</span><span class="text-gray-800">Klass</span>
-              <span class="font-medium text-gray-500">Management</span>
+                <span class="text-green-600">Aktiv</span><span class="text-gray-800">Klass</span>
+                <span class="font-medium text-gray-500">Management</span>
             </h1>
           </div>
           <div></div>
@@ -191,31 +192,27 @@
     <script>
       const toggleButton = document.getElementById("toggleSidebar");
       const sidebar = document.getElementById("sidebar");
+      const mainContent = document.getElementById("mainContent");
+      
       toggleButton.addEventListener("click", () => {
         sidebar.classList.toggle("hidden");
+        mainContent.classList.toggle("ml-64");
+      });
+
+      // Apply preferences on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        const preferences = JSON.parse(localStorage.getItem('preferences') || '{}');
+        
+        // Apply dark mode if enabled
+        if (preferences.darkMode) {
+          document.body.classList.add('dark-mode');
+        }
+
+        // Apply compact view if enabled
+        if (preferences.compactView) {
+          document.body.classList.add('compact-view');
+        }
       });
     </script>
-
-    <style>
-      .scrollbar-thin::-webkit-scrollbar {
-        width: 6px;
-      }
-      .scrollbar-thin::-webkit-scrollbar-thumb {
-        background-color: #10b981;
-        border-radius: 9999px;
-      }
-      .sidebar-link {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        transition: all 0.2s;
-      }
-      .sidebar-link:hover {
-        background-color: #f0fdf4;
-        color: #047857;
-      }
-    </style>
   </body>
 </html>
