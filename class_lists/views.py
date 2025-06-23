@@ -7,13 +7,19 @@ from django.contrib import messages
 def class_list_view(request):
     student_id = request.session.get('user_id')
     student = None
+    role = request.session.get('role', 'guest')  # Default to guest if missing
 
     if student_id:
         student = get_object_or_404(Student, student_id=student_id)
 
     classes = Class.objects.filter(is_archived=False)
-    
-    return render(request, 'class_lists/class_list.html', {'classes': classes})
+
+    return render(request, 'class_lists/class_list.html', {
+        'classes': classes,
+        'student': student,
+        'role': role  # Add this line
+    })
+
 
 
 

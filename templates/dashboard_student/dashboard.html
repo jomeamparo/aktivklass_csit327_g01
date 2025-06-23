@@ -98,12 +98,13 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
     
         const formData = new FormData(form);
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     
         try {
             const response = await fetch(form.action, {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                    'X-CSRFToken': csrfToken,
                 },
                 body: formData,
             });
@@ -118,6 +119,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (response.ok) {
                     modal.classList.add('hidden');
                     alert("Request to join the class has been submitted successfully.");
+                    // Reload the page to show updated class list
+                    window.location.reload();
                 } else {
                     console.error('Error response:', data);
                     alert(data.error || text);  // Fallback to raw text if no error property
@@ -126,6 +129,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 // If not JSON, use the raw text
                 if (response.ok) {
                     console.log('SUCCESS (non-JSON)', text);
+                    modal.classList.add('hidden');
+                    alert("Request to join the class has been submitted successfully.");
+                    // Reload the page to show updated class list
+                    window.location.reload();
                 } else {
                     console.error('Error response (non-JSON):', text);
                     alert(text);

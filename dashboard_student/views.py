@@ -6,15 +6,22 @@ from core.models import Class, ClassJoinRequest, Enrollment, Student
 def dashboard_view(request):
     student_id = request.session.get('user_id')
     student = get_object_or_404(Student, student_id=student_id)
-    enrolled_classes = student.enrolled_classes.all()
-    print(student)
-    print(enrolled_classes)
+
+    # Get enrolled classes from Enrollment table
+    enrollments = Enrollment.objects.filter(
+        student=student
+    ).select_related('enrolled_class')
+
+    enrolled_classes = [enrollment.enrolled_class for enrollment in enrollments]
+
     context = {
-        'role': 'student', 
+        'role': 'student',
         'classes': enrolled_classes,
         'student': student,
-        }
+        'fullname': f"{student.first_name} {student.last_name}",
+    }
     return render(request, 'dashboard_student/dashboard.html', context)
+
 
 def leave_class(request, class_id):
     class_instance = get_object_or_404(Class, id=class_id)

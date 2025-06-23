@@ -43,6 +43,18 @@ def approve_join_request(request, request_id):
     join_request = get_object_or_404(ClassJoinRequest, id=request_id)
     join_request.status = 'approved'
     join_request.save()
+    
+    # Get the current faculty who is approving the request
+    faculty_id = request.session.get('user_id')
+    faculty = Faculty.objects.get(faculty_id=faculty_id)
+    
+    # Create enrollment record for the student
+    Enrollment.objects.create(
+        student=join_request.student,
+        enrolled_class=join_request.class_requested,
+        faculty=faculty
+    )
+    
     messages.success(request, "Join request approved.")
     return redirect(request.META.get('HTTP_REFERER', 'dashboard_faculty'))
 

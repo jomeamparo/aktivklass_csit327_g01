@@ -20,7 +20,8 @@ def chat_home(request):
     conversations = Conversation.objects.filter(participants=user).order_by('-created_at')
     return render(request, 'chat_screen/chat_home.html', {
         'conversations': conversations,
-        'role': 'student'
+        'role': 'student',
+        'fullname': f"{user.first_name} {user.last_name}"
     })
 
 def conversation_detail(request, conversation_id):
@@ -33,7 +34,8 @@ def conversation_detail(request, conversation_id):
     return render(request, 'chat_screen/conversation_detail.html', {
         'conversation': conversation,
         'messages': messages,
-        'role': 'student'
+        'role': 'student',
+        'fullname': f"{user.first_name} {user.last_name}"
     })
 
 def send_message(request, conversation_id):
