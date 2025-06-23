@@ -198,6 +198,8 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+    # Temporary comment to trigger migration
+
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     text = models.TextField()
