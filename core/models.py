@@ -154,6 +154,7 @@ class AdminUser(models.Model):
     middle_name = models.CharField(max_length=50, default=" ")
     last_name = models.CharField(max_length=50)
     password = models.CharField(max_length=128, null=True, blank=True)
+    email = models.EmailField(unique=True)
 
     def __str__(self):
         return f"{self.last_name}, {self.first_name} ({self.employee_id})"
@@ -181,7 +182,9 @@ class Grade(models.Model):
     date_graded = models.DateField(auto_now_add=True)
 
 class PasswordResetToken(models.Model):
-    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE)
+    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, null=True, blank=True)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True, blank=True)
+    admin_user = models.ForeignKey(AdminUser, on_delete=models.CASCADE, null=True, blank=True)
     token = models.UUIDField(default=uuid.uuid4, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_used = models.BooleanField(default=False)
@@ -208,6 +211,7 @@ class FacultyProfileAdmin(models.Model):
     list_display = ('first_name', 'last_name', 'department', 'email')
     search_fields = ('first_name', 'last_name', 'email')
     list_filter = ('department',)
+    
 class FacultyProfile(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
