@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.urls import path, include
+from core.views import faculty_attendance_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,4 +34,7 @@ urlpatterns = [
     path('class_join_request/', include('class_join_request.urls')),
     path('notifications/', include('notifications.urls')),
     path('faculty_attendance/', include('faculty_attendance.urls')),
+
+       path('faculty_attendance/', faculty_attendance_view, name='faculty_attendance'),
+ 
 ]
