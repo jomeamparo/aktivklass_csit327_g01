@@ -274,3 +274,356 @@ class FacultyProfileConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'faculty_profile'
 
+from django.db import models
+import random, string
+import uuid
+from django.apps import AppConfig
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from PIL import Image
+import os
+
+# Utility for generating unique class codes
+def generate_random_code(length=10):
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
+
+STATUS_CHOICES = [
+    ('ACTIVE', 'ACTIVE'),
+    ('DISABLED', 'DISABLED'),
+]
+
+STUDENT_STATUS_CHOICES = [
+    ('Available', 'Available'),
+    ('Busy', 'Busy'),
+    ('Offline', 'Offline'),
+]
+
+class Class(models.Model):
+    subject_name = models.CharField(max_length=100)
+    subject_code = models.CharField(max_length=20)
+    description = models.TextField()
+    schedule = models.CharField(max_length=100)
+    room = models.CharField(max_length=50)
+    class_code = models.CharField(max_length=10, unique=True, blank=True, null=True)
+    is_archived = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if not self.class_code:
+            new_code = generate_random_code()
+            while Class.objects.filter(class_code=new_code).exists():
+                new_code = generate_random_code()
+            self.class_code = new_code
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.subject_name} ({self.subject_code})"
+
+class Student(models.Model):
+    student_id = models.CharField(max_length=20, unique=True, null=False, blank=False)
+    first_name = models.CharField(max_length=100)
+    middle_name = models.CharField(max_length=50, default=" ")
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True, default='default@example.com')
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    course = models.CharField(max_length=50, blank=True, null=True)
+    year = models.CharField(max_length=50, blank=True, null=True)
+    password = models.CharField(max_length=128, null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STUDENT_STATUS_CHOICES, default='Available')
+    enrolled_classes = models.ManyToManyField(Class, through='Enrollment', related_name='students')
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} ({self.student_id})"
+
+class Faculty(models.Model):
+    faculty_id = models.CharField(max_length=20, primary_key=True)
+    first_name = models.CharField(max_length=100)
+    middle_name = models.CharField(max_length=100, blank=True, null=True)
+    last_name = models.CharField(max_length=100)
+    college_name = models.CharField(max_length=100)
+    department_name = models.CharField(max_length=100)
+    password = models.CharField(max_length=100, default='password123')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ACTIVE')
+    email = models.EmailField(unique=True, default='default@example.com')
+
+    def __str__(self):
+        return f"{self.faculty_id} - {self.first_name} {self.last_name}"
+
+class ClassJoinRequest(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    class_requested = models.ForeignKey(Class, on_delete=models.CASCADE)
+    requested_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, default="pending")  # pending, approved, rejected
+
+    def __str__(self):
+        return f"{self.student} -> {self.class_requested} ({self.status})"
+
+class Enrollment(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True, blank=True)
+    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, null=True, blank=True)
+    enrolled_class = models.ForeignKey(Class, on_delete=models.CASCADE)
+    date_enrolled = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        if self.student:
+            return f"Student {self.student} enrolled in {self.enrolled_class}"
+        elif self.faculty:
+            return f"Faculty {self.faculty} assigned to {self.enrolled_class}"
+        else:
+            return f"Enrollment record for unknown person in {self.enrolled_class}"
+
+class ActivityRecord(models.Model):
+    enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE, related_name='activity_records')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True, blank=True, related_name='activity_records')
+    date = models.DateField()
+
+    ACTIVITY_TYPE_CHOICES = [
+        ('Quiz', 'Quiz'),
+        ('Assignment', 'Assignment'),
+        ('Seatwork', 'Seatwork'),
+        ('Laboratory', 'Laboratory'),
+        ('Prelim', 'Prelim'),
+        ('Midterm', 'Midterm'),
+        ('Pre-Final', 'Pre-Final'),
+        ('Final', 'Final'),
+    ]
+
+    activity_type = models.CharField(max_length=20, choices=ACTIVITY_TYPE_CHOICES)
+    activity_name = models.CharField(max_length=100)
+    faculty = models.ForeignKey(Faculty, on_delete=models.SET_NULL, null=True, blank=True)
+    score = models.FloatField(null=True, blank=True)
+    perfect_score = models.FloatField(null=False, blank=False, default=100)
+
+    class Meta:
+        unique_together = ('enrollment', 'activity_type', 'activity_name')
+
+    def __str__(self):
+        return f"{self.enrollment.student} - {self.activity_type} {self.activity_name}: {self.score}/{self.perfect_score}"
+
+class Notification(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    def mark_as_read(self):
+        self.is_read = True
+        self.save()
+
+    def __str__(self):
+        return self.title
+
+class Conversation(models.Model):
+    participants = models.ManyToManyField(Student, related_name='conversations')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Conversation ({self.id})"
+
+    @classmethod
+    def get_or_create_conversation(cls, student1, student2):
+        """Get existing conversation between two students or create a new one"""
+        if student1.id == student2.id:
+            raise ValueError("Cannot create conversation with self")
+
+        # Find existing conversation with exactly these two participants
+        existing = cls.objects.filter(
+            participants=student1
+        ).filter(
+            participants=student2
+        ).annotate(
+            participant_count=models.Count('participants')
+        ).filter(
+            participant_count=2
+        ).first()
+
+        if existing:
+            return existing
+
+        # Create new conversation
+        conversation = cls.objects.create()
+        conversation.participants.add(student1, student2)
+        return conversation
+
+    def get_other_participant(self, current_student):
+        """Get the other participant in a one-on-one conversation"""
+        return self.participants.exclude(id=current_student.id).first()
+
+    def get_last_message(self):
+        """Get the most recent message in this conversation"""
+        return self.messages.last()
+
+    def get_unread_count_for_user(self, user):
+        """Get count of unread messages for a specific user"""
+        return self.messages.filter(
+            is_read=False
+        ).exclude(
+            sender=user
+        ).count()
+
+class Message(models.Model):
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='messages')
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['timestamp']
+
+    def __str__(self):
+        return f"From {self.sender} at {self.timestamp}"
+
+class AdminUser(models.Model):
+    employee_id = models.CharField(max_length=20, unique=True, null=False, blank=False, default="default")
+    first_name = models.CharField(max_length=50)
+    middle_name = models.CharField(max_length=50, default=" ")
+    last_name = models.CharField(max_length=50)
+    password = models.CharField(max_length=128, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.last_name}, {self.first_name} ({self.employee_id})"
+
+class Attendance(models.Model):
+    STATUS_CHOICES = [('Present', 'Present'), ('Absent', 'Absent'), ('Late', 'Late')]
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    course = models.ForeignKey(Class, on_delete=models.CASCADE)
+    date = models.DateField()
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES)
+
+class Activity(models.Model):
+    TYPE_CHOICES = [('Quiz', 'Quiz'), ('Assignment', 'Assignment'), ('Exam', 'Exam')]
+    course = models.ForeignKey(Class, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    activity_type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+    due_date = models.DateField()
+    max_score = models.FloatField()
+
+class Grade(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
+    score = models.FloatField()
+    feedback = models.TextField(blank=True, null=True)
+    date_graded = models.DateField(auto_now_add=True)
+
+class PasswordResetToken(models.Model):
+    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE)
+    token = models.UUIDField(default=uuid.uuid4, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_used = models.BooleanField(default=False)
+
+class Post(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    published_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    text = models.TextField()
+    author = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.author} on {self.post.title}'
+
+class FacultyProfileAdmin(models.Model):
+    list_display = ('first_name', 'last_name', 'department', 'email')
+    search_fields = ('first_name', 'last_name', 'email')
+    list_filter = ('department',)
+
+class FacultyProfile(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    department = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    bio = models.TextField(blank=True)
+
+    class Meta:
+        app_label = 'faculty_profile'
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
+class EditAdminConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'edit_admin'
+
+class FacultyProfileConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'faculty_profile'
+
+class StudentProfile(models.Model):
+    """
+    StudentProfile model extends the Student model from core with additional information
+    that isn't related to authentication
+    """
+    student = models.OneToOneField(Student, on_delete=models.CASCADE, related_name='profile')
+    avatar = models.ImageField(upload_to='student_profiles', null=True, blank=True)
+    bio = models.TextField(blank=True)
+    birth_date = models.DateField(null=True, blank=True)
+    website = models.URLField(max_length=200, blank=True)
+    phone_verified = models.BooleanField(default=False)
+
+    # Academic information
+    major = models.CharField(max_length=100, blank=True)
+    graduation_year = models.IntegerField(null=True, blank=True)
+
+    # Profile completion tracking
+    last_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        app_label = 'student_profile'
+
+    def __str__(self):
+        return f"{self.student.first_name}'s Profile"
+
+    def save(self, *args, **kwargs):
+        """Override save method to resize images if they exist"""
+        super().save(*args, **kwargs)
+
+        # Resize profile image if it exists and is accessible
+        if self.avatar and hasattr(self.avatar, 'path') and os.path.isfile(self.avatar.path):
+            try:
+                img = Image.open(self.avatar.path)
+                if img.height > 300 or img.width > 300:
+                    output_size = (300, 300)
+                    img.thumbnail(output_size)
+                    img.save(self.avatar.path)
+            except Exception as e:
+                # Log the error or print it during development
+                print(f"Error processing image: {e}")
+
+    def profile_completion_percentage(self):
+        """Calculate how complete the profile is"""
+        fields = [
+            bool(self.avatar),
+            bool(self.bio),
+            bool(self.birth_date),
+            bool(self.website),
+            bool(self.major),
+            bool(self.graduation_year),
+            self.phone_verified
+        ]
+
+        filled_fields = sum(fields)
+        total_fields = len(fields)
+
+        return int((filled_fields / total_fields) * 100)
+
+# Signal handlers for StudentProfile
+@receiver(post_save, sender=Student)
+def create_student_profile(sender, instance, created, **kwargs):
+    """Create a profile when a student is created"""
+    if created:
+        StudentProfile.objects.create(student=instance)
+
+@receiver(post_save, sender=Student)
+def save_student_profile(sender, instance, **kwargs):
+    """Save the profile when the student is saved"""
+    try:
+        instance.profile.save()
+    except StudentProfile.DoesNotExist:
+        # If for some reason the profile doesn't exist, create it
+        StudentProfile.objects.create(student=instance)
