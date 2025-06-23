@@ -19,14 +19,15 @@
       <aside id="sidebar" class="w-64 bg-white shadow-lg border-r border-gray-200 p-4 flex flex-col transition-all duration-300 ease-in-out">
         <!-- Profile Section -->
         <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 shadow-sm mb-6">
-          <img
-            src="https://thumbs.dreamstime.com/b/cartoon-angry-teacher-man-looking-55342685.jpg"
+          
+            <img
+            src="{% if avatar_url %}{{ avatar_url }}{% else %}https://thumbs.dreamstime.com/b/cartoon-angry-teacher-man-looking-55342685.jpg{% endif %}"
             alt="Profile Photo"
             class="w-14 h-14 rounded-full border-2 border-green-500 object-cover"
           />
           <div>
             <h2 class="text-base font-semibold text-gray-900">{{ fullname }}</h2>
-            <p class="text-xs text-gray-500">email@example.com</p>
+            <p class="text-xs text-gray-500">{{ email }}</p>
           </div>
         </div>
         {% if role == 'faculty' or role == 'student' %}
