@@ -35,7 +35,7 @@ urlpatterns = [
     path('chat/', include('chat_screen.urls')),
     path('help_and_support/', include('help_and_support.urls')),
     path('quizzes/', include('quizzes.urls')),
-    path('settings/', include('settings.urls')),
+    path('admin_settings/', include('admin_settings.urls')),
     path('analytics/', include('analytics.urls')),
     path('forgot_password/', include('forgot_password.urls')),
     path('admin_notif/', include(('admin_notif.urls', 'admin_notif'), namespace='admin_notif')),

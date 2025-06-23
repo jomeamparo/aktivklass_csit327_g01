@@ -4,7 +4,7 @@
 <div class="container">
     {% csrf_token %}
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">
+        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
             Faculty List
         </h2>
 
@@ -26,12 +26,12 @@
         </div>
     </div>
 
-    <div class="bg-white p-4 rounded-lg shadow mb-6">
+    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow mb-6">
         <div class="flex flex-wrap justify-between items-center gap-4">
             <!-- Search Box with Button (Left) -->
             <div class="flex items-center space-x-2">
-                <label for="search" class="text-gray-700 font-medium">Search:</label>
-                <input id="search" name="search" type="text" placeholder="Enter keyword..." class="border border-gray-300 rounded-lg px-4 py-2 w-64 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                <label for="search" class="text-gray-700 dark:text-gray-300 font-medium">Search:</label>
+                <input id="search" name="search" type="text" placeholder="Enter keyword..." class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-2 w-64 focus:outline-none focus:ring-2 focus:ring-green-500" />
                 <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
                     Search
                 </button>
@@ -39,8 +39,8 @@
 
             <div class="flex flex-wrap items-center gap-4">
                 <div class="flex items-center space-x-2">
-                    <label for="sort" class="text-gray-700 font-medium">Sort:</label>
-                    <select id="sort" name="sort" class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <label for="sort" class="text-gray-700 dark:text-gray-300 font-medium">Sort:</label>
+                    <select id="sort" name="sort" class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
                         <option value="">Select</option>
                         <option value="ascending">A - Z</option>
                         <option value="descending">Z - A</option>
@@ -48,8 +48,8 @@
                 </div>
 
                 <div class="flex items-center space-x-2">
-                    <label for="college_name" class="text-gray-700 font-medium">College:</label>
-                    <select id="college_name" name="college_name" class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <label for="college_name" class="text-gray-700 dark:text-gray-300 font-medium">College:</label>
+                    <select id="college_name" name="college_name" class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
                         <option value="">All</option>
                         <option value="ccs">College of Computer Science</option>
                         <option value="case">College of Arts, Science, and Education</option>
@@ -57,8 +57,8 @@
                 </div>
 
                 <div class="flex items-center space-x-2">
-                    <label for="department_name" class="text-gray-700 font-medium">Department:</label>
-                    <select id="department_name" name="department_name" class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <label for="department_name" class="text-gray-700 dark:text-gray-300 font-medium">Department:</label>
+                    <select id="department_name" name="department_name" class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
                         <option value="">All</option>
                         <option value="it">Information Technology</option>
                         <option value="cs">Computer Science</option>
@@ -69,28 +69,28 @@
     </div>
 
     {% if facultyList %}
-    <div class="overflow-x-auto bg-white p-4 rounded-lg shadow">
-        <table class="min-w-full border border-gray-200">
-            <thead class="bg-gray-100">
+    <div class="overflow-x-auto bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+        <table class="min-w-full border border-gray-200 dark:border-gray-700">
+            <thead class="bg-gray-100 dark:bg-gray-700">
                 <tr>
-                    <th class="border px-4 py-2 text-left">ID</th>
-                    <th class="border px-4 py-2 text-left">First Name</th>
-                    <th class="border px-4 py-2 text-left">Middle Name</th>
-                    <th class="border px-4 py-2 text-left">Last Name</th>
-                    <th class="border px-4 py-2 text-left">College</th>
-                    <th class="border px-4 py-2 text-left">Department</th>
-                    <th class="border px-4 py-2 text-left">Status</th>
+                    <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">ID</th>
+                    <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">First Name</th>
+                    <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Middle Name</th>
+                    <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Last Name</th>
+                    <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">College</th>
+                    <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Department</th>
+                    <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Status</th>
                 </tr>
             </thead>
             <tbody>
                 {% for faculty in facultyList %}
-                <tr class="hover:bg-gray-50 cursor-pointer" onclick="openEditModal('{{ faculty.faculty_id }}', '{{ faculty.first_name }}', '{{ faculty.middle_name }}', '{{ faculty.last_name }}', '{{ faculty.college_name }}', '{{ faculty.department_name }}')">
-                    <td class="border px-4 py-2">{{ faculty.faculty_id }}</td>
-                    <td class="border px-4 py-2">{{ faculty.first_name }}</td>
-                    <td class="border px-4 py-2">{{ faculty.middle_name }}</td>
-                    <td class="border px-4 py-2">{{ faculty.last_name }}</td>
-                    <td class="border px-4 py-2">{{ faculty.college_name }}</td>
-                    <td class="border px-4 py-2">{{ faculty.department_name }}</td>
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" onclick="openEditModal('{{ faculty.faculty_id }}', '{{ faculty.first_name }}', '{{ faculty.middle_name }}', '{{ faculty.last_name }}', '{{ faculty.college_name }}', '{{ faculty.department_name }}')">
+                    <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ faculty.faculty_id }}</td>
+                    <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ faculty.first_name }}</td>
+                    <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ faculty.middle_name }}</td>
+                    <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ faculty.last_name }}</td>
+                    <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ faculty.college_name }}</td>
+                    <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ faculty.department_name }}</td>
                     <td class="border px-4 py-2">
                         <button 
                             data-faculty-id="{{ faculty.faculty_id }}"
@@ -105,7 +105,7 @@
         </table>
     </div>
     {% else %}
-    <div class="bg-white p-6 rounded-lg shadow text-center text-gray-500 font-medium">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-center text-gray-500 dark:text-gray-400 font-medium">
         No enrolled faculty
     </div>
     {% endif %}
@@ -113,44 +113,44 @@
     <div id="modalBackdrop" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
 
     <div id="addfacultyModal" class="fixed inset-0 flex items-center justify-center hidden z-50">
-        <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative">
-            <h3 class="text-xl font-semibold mb-4">Add Faculty</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md w-full p-6 relative">
+            <h3 class="text-xl font-semibold mb-4 dark:text-gray-100">Add Faculty</h3>
             <form method="post" action="{% url 'admin_faculty_list' %}">
                 {% csrf_token %}
-                <div class="space-y-4">
+                <div class="space-y-4 text-gray-900 dark:text-gray-100">
                     <div>
-                        <label for="faculty_id" class="block font-medium text-gray-700">Faculty ID</label>
+                        <label for="faculty_id" class="block font-medium text-gray-700 dark:text-gray-100">Faculty ID</label>
                         <input id="faculty_id" name="faculty_id" type="text" required
-                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
                     </div>
                     <div>
-                        <label for="first_name" class="block font-medium text-gray-700">First Name</label>
+                        <label for="first_name" class="block font-medium text-gray-700 dark:text-gray-100">First Name</label>
                         <input id="first_name" name="first_name" type="text" required
-                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
                     </div>
                     <div>
-                        <label for="middle_name" class="block font-medium text-gray-700">Middle Name</label>
+                        <label for="middle_name" class="block font-medium text-gray-700 dark:text-gray-100">Middle Name</label>
                         <input id="middle_name" name="middle_name" type="text"
-                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
                     </div>
                     <div>
-                        <label for="last_name" class="block font-medium text-gray-700">Last Name</label>
+                        <label for="last_name" class="block font-medium text-gray-700 dark:text-gray-100">Last Name</label>
                         <input id="last_name" name="last_name" type="text" required
-                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
                     </div>
                     <div>
-                        <label for="college_name" class="block font-medium text-gray-700">College</label>
+                        <label for="college_name" class="block font-medium text-gray-700 dark:text-gray-100">College</label>
                         <select id="college_name" name="college_name" required
-                                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
                             <option value="">Select college</option>
                             <option value="CCS">College of Computer Studies</option>
                             <option value="CASE">College of Arts, Sciences, and Education</option>
                         </select>
                     </div>
                     <div>
-                        <label for="department_name" class="block font-medium text-gray-700">Department</label>
+                        <label for="department_name" class="block font-medium text-gray-700 dark:text-gray-100">Department</label>
                         <select id="department_name" name="department_name" required
-                                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
                             <option value="">Select department</option>
                             <option value="IT">Information Technology</option>
                             <option value="CS">Computer Science</option>
@@ -160,11 +160,11 @@
 
                 <div class="mt-6 flex justify-end space-x-3">
                     <button type="button" id="closeModalBtn"
-                            class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition">
+                            class="bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 px-4 py-2 rounded hover:bg-gray-400 dark:hover:bg-gray-500 transition">
                         Cancel
                     </button>
                     <button type="submit"
-                            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 dark:hover:bg-green-800 transition">
                         Save
                     </button>
                 </div>
@@ -174,45 +174,45 @@
 
     <!-- Edit Faculty Modal -->
     <div id="editfacultyModal" class="fixed inset-0 flex items-center justify-center hidden z-50">
-        <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative">
-            <h3 class="text-xl font-semibold mb-4">Edit Faculty</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md w-full p-6 relative">
+            <h3 class="text-xl font-semibold mb-4 dark:text-gray-100">Edit Faculty</h3>
             <form method="post" action="{% url 'admin_faculty_list' %}">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="edit">
-                <div class="space-y-4">
+                <div class="space-y-4 text-gray-900 dark:text-gray-100">
                     <div>
-                        <label for="edit_faculty_id" class="block font-medium text-gray-700">Faculty ID</label>
+                        <label for="edit_faculty_id" class="block font-medium text-gray-700 dark:text-gray-100">Faculty ID</label>
                         <input id="edit_faculty_id" name="faculty_id" type="text" required readonly
-                               class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100" />
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" />
                     </div>
                     <div>
-                        <label for="edit_first_name" class="block font-medium text-gray-700">First Name</label>
+                        <label for="edit_first_name" class="block font-medium text-gray-700 dark:text-gray-100">First Name</label>
                         <input id="edit_first_name" name="first_name" type="text" required
-                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
                     </div>
                     <div>
-                        <label for="edit_middle_name" class="block font-medium text-gray-700">Middle Name</label>
+                        <label for="edit_middle_name" class="block font-medium text-gray-700 dark:text-gray-100">Middle Name</label>
                         <input id="edit_middle_name" name="middle_name" type="text"
-                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
                     </div>
                     <div>
-                        <label for="edit_last_name" class="block font-medium text-gray-700">Last Name</label>
+                        <label for="edit_last_name" class="block font-medium text-gray-700 dark:text-gray-100">Last Name</label>
                         <input id="edit_last_name" name="last_name" type="text" required
-                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
                     </div>
                     <div>
-                        <label for="edit_college_name" class="block font-medium text-gray-700">College</label>
+                        <label for="edit_college_name" class="block font-medium text-gray-700 dark:text-gray-100">College</label>
                         <select id="edit_college_name" name="college_name" required
-                                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
                             <option value="">Select college</option>
                             <option value="CCS">College of Computer Studies</option>
                             <option value="CASE">College of Arts, Sciences, and Education</option>
                         </select>
                     </div>
                     <div>
-                        <label for="edit_department_name" class="block font-medium text-gray-700">Department</label>
+                        <label for="edit_department_name" class="block font-medium text-gray-700 dark:text-gray-100">Department</label>
                         <select id="edit_department_name" name="department_name" required
-                                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
                             <option value="">Select department</option>
                             <option value="IT">Information Technology</option>
                             <option value="CS">Computer Science</option>
@@ -222,11 +222,11 @@
 
                 <div class="mt-6 flex justify-end space-x-3">
                     <button type="button" id="closeEditModalBtn"
-                            class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition">
+                            class="bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 px-4 py-2 rounded hover:bg-gray-400 dark:hover:bg-gray-500 transition">
                         Cancel
                     </button>
                     <button type="submit"
-                            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 dark:hover:bg-green-800 transition">
                         Save Changes
                     </button>
                 </div>
@@ -331,6 +331,13 @@
             messageDiv.remove();
         }, 3000);
     }
+
+    const savedTheme = localStorage.getItem("theme");
+       if (savedTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
 </script>
 
 <!-- Replace the old FontAwesome script with the new one -->

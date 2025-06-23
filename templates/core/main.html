@@ -1,24 +1,30 @@
 <!doctype html>
 {% load static %}
-<html lang="en">
+<html lang="en" class="{{ theme_class }}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>{% block title %}AktivKlass Management System{% endblock %}</title>
+    <script>tailwind.config = {darkMode: 'class'}</script>
+    <title>{% block title %}ActivKlass Management System{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   </head>
-  <body class="min-h-screen bg-gray-100 font-sans antialiased text-gray-800">
-  {% if role == 'faculty' %}
-    <a href="{% url 'faculty_profile'%}">
-  {% elif role == 'student' %}
-    <a href="{% url 'student_profile'%}">
-  {% endif %}
+  <body class="min-h-screen bg-gray-100 dark:bg-gray-900 font-sans antialiased text-gray-800 dark:text-gray-100"> <!--min-h-screen bg-gray-100 font-sans antialiased text-gray-800-->
+
+    {% if role == 'faculty' %}
+      <a href="{% url 'faculty_profile' %}">
+    {% elif role == 'student' %}
+      <a href="{% url 'student_profile' %}">
+    {% else %}
+      <a href="#">
+    {% endif %}
+
     <div class="flex h-screen overflow-hidden">
       <!-- Sidebar -->
-      <aside id="sidebar" class="w-64 bg-white shadow-lg border-r border-gray-200 p-4 flex flex-col transition-all duration-300 ease-in-out">
+      <aside id="sidebar" class="w-64 bg-white dark:bg-gray-900 shadow-xl border-r border-gray-200 dark:border-gray-700 p-4 flex flex-col transition-all duration-300 ease-in-out text-gray-900 dark:text-gray-100">
         <!-- Profile Section -->
-        <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 shadow-sm mb-6">
+        <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 shadow-sm mb-6 dark:bg-gray-800 shadow-sm mb-6 text-black dark:text-white">
           
             <img
             src="{% if avatar_url %}{{ avatar_url }}{% else %}https://thumbs.dreamstime.com/b/cartoon-angry-teacher-man-looking-55342685.jpg{% endif %}"
@@ -26,8 +32,8 @@
             class="w-14 h-14 rounded-full border-2 border-green-500 object-cover"
           />
           <div>
-            <h2 class="text-base font-semibold text-gray-900">{{ fullname }}</h2>
-            <p class="text-xs text-gray-500">{{ email }}</p>
+            <h2 class="text-base font-semibold text-gray-900 dark:text-gray-100">{{ fullname }}</h2>
+            <p class="text-xs text-gray-500 dark:text-gray-400">email@example.com</p>
           </div>
         </div>
         {% if role == 'faculty' or role == 'student' %}
@@ -103,7 +109,7 @@
             <i class="fas fa-user text-green-600"></i>
             <span>Notifications</span>
           </a>
-          <a href="{% url 'settings' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+          <a href="{% url 'admin_settings' %}" class="sidebar-link">
             <i class="fas fa-user text-green-600"></i>
             <span>Settings</span>
           </a>
@@ -133,21 +139,20 @@
             <i class="fas fa-user text-green-600"></i>
             <span>Notification</span>
           </a>
-        {% endif %}
-        
-        <!-- Chats Link - Available for all users -->
-        <a href="{% url 'chat_home' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-          <i class="fas fa-comments text-green-600"></i>
+          <a href="{% url 'chat_home' %}" class="sidebar-link">
+            <i class="fas fa-comments text-green-600"></i>
             <span>Chats</span>
           </a>
+        {% endif %}
 
         <div class="border-t border-gray-200 my-4"></div>
-          <span class="text-xs uppercase text-gray-400 px-4">Settings</span>
-          <a href="{% url 'faculty_settings' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
-            <i class="fas fa-cogs text-green-600"></i>
+
+          <span class="text-xs uppercase text-gray-400 px-4">Others</span>
+          <!--<a href="{% url 'student_settings' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-user text-green-600"></i>
             <span>Settings</span>
-          </a>
-          <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+          </a>-->
+          <a href="{% url 'help_and_support' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-info-circle text-green-600"></i>
             <span>Help & Support</span>
           </a>
@@ -164,9 +169,9 @@
       </aside>
 
       <!-- Main Content -->
-      <div id="mainContent" class="flex-1 flex flex-col bg-gray-50 transition-all duration-300 ease-in-out">
+      <div id="mainContent" class="flex-1 flex flex-col bg-gray-50 dark:bg-gray-900 transition-all duration-300 ease-in-out text-gray-900 dark:text-gray-100">
         <!-- Header -->
-        <header class="bg-white shadow-sm p-4 flex items-center justify-between">
+        <header class="bg-white dark:bg-gray-800 shadow-sm p-4 flex items-center justify-between text-gray-900 dark:text-gray-100">
           <button id="toggleSidebar" class="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
             <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="3" y1="6" x2="21" y2="6" />
@@ -176,8 +181,8 @@
           </button>
           <div class="w-full flex justify-center items-center mt-4">
             <h1 class="text-3xl font-bold tracking-tight" style="font-family: 'Poppins', sans-serif;">
-                <span class="text-green-600">Aktiv</span><span class="text-gray-800">Klass</span>
-                <span class="font-medium text-gray-500">Management</span>
+              <span class="text-green-600">Aktiv</span><span class="text-gray-800 dark:text-gray-100">Klass</span>
+              <span class="font-medium text-gray-500 dark:text-gray-400">Management</span>
             </h1>
           </div>
           <div></div>
@@ -214,6 +219,13 @@
           document.body.classList.add('compact-view');
         }
       });
+
+      const savedTheme = localStorage.getItem("theme");
+       if (savedTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
     </script>
   </body>
 </html>
