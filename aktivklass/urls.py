@@ -33,8 +33,7 @@ urlpatterns = [
     path('archived_classes/', include('archived_classes.urls')),
     path('class_join_request/', include('class_join_request.urls')),
     path('notifications/', include('notifications.urls')),
-    path('faculty_attendance/', include('faculty_attendance.urls')),
 
-       path('faculty_attendance/', faculty_attendance_view, name='faculty_attendance'),
+    path('faculty_attendance/', faculty_attendance_view, name='faculty_attendance'),
  
 ]
