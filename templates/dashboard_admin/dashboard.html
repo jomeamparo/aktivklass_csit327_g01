@@ -105,7 +105,7 @@
     <div id="addfacultyModal" class="fixed inset-0 flex items-center justify-center hidden z-50">
         <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative">
             <h3 class="text-xl font-semibold mb-4">Add Faculty</h3>
-            <form method="post" action="{% url 'faculty_list_view' %}">
+            <form method="post" action="{% url 'admin_faculty_list' %}">
                 {% csrf_token %}
                 <div class="space-y-4">
                     <div>

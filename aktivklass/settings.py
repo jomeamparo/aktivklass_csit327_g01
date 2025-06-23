@@ -56,11 +56,27 @@ INSTALLED_APPS = [
     'class_lists',
     'faculty_profile',
     'faculty_attendance',
+    'notifications',
+    'faculty_settings',
+    'student_settings',
+    'student_profile',
+    'faculty_laboratory',
+    'settings',
+    'analytics',
+    'chat_screen',
+    'edit_faculty',
+    'help_and_support',
+    'quizzes',
     'edit_admin',
+    'forgot_password',
+    'attendance_student',
+    'edit_student',
     'tailwind',
     'theme',
     'widget_tweaks'
 ]
+
+
 
 TAILWIND_APP_NAME = 'theme'
 
@@ -90,7 +106,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'core.context_processors.faculty_profile',
+                'core.context_processors.user_context_processor',
             ],
         },
     },
@@ -114,7 +130,7 @@ DATABASES = {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION'",
         },
     }
-}
+}   
 
 
 # Password validation

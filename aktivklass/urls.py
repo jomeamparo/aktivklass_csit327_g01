@@ -16,9 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,17 +29,36 @@ urlpatterns = [
     path('dashboard_student/', include('dashboard_student.urls')),
     path('admin_faculty_list/', include('admin_faculty_list.urls')),
     path('admin_student_list/', include('admin_student_list.urls')),
+    path('edit_faculty/', include('edit_faculty.urls')),
+    path('edit_admin/', include('edit_admin.urls')),
+    path('edit_student/', include('edit_student.urls')),
     path('teacher_student/', include('teacher_student.urls')),
     path('class_record/', include('class_record.urls')),
     path('archived_classes/', include('archived_classes.urls')),
     path('class_join_request/', include('class_join_request.urls')),
     path('faculty_seatwork/', include('faculty_seatwork.urls')),
     path('faculty_seatworkSubmission/', include('faculty_seatworkSubmission.urls')),
-    path('help_and_support/', include('help_and_support.urls')),
-       
-    path('faculty_notifications/', include('notifications_faculty.urls')),
-    path('edit_admin/', include('edit_admin.urls')),
-    path('classes/', include('class_lists.urls')),
-    path('faculty_profile/', include('faculty_profile.urls')),
     path('faculty_attendance/', include('faculty_attendance.urls')),
+    path('faculty_profile/', include('faculty_profile.urls')),
+    path('faculty_settings/', include('faculty_settings.urls')),
+    path('student_settings/', include('student_settings.urls')),
+    path('student_profile/', include('student_profile.urls')),
+    path('faculty_laboratory/', include('faculty_laboratory.urls')),
+    path('notifications/', include('notifications.urls')),
+    path('faculty_notifications/', include('notifications_faculty.urls')),
+    path('chat/', include('chat_screen.urls')),
+    path('help_and_support/', include('help_and_support.urls')),
+    path('quizzes/', include('quizzes.urls')),
+    path('settings/', include('settings.urls')),
+    path('analytics/', include('analytics.urls')),
+    path('forgot_password/', include('forgot_password.urls')),
+    path('attendance_student/', include('attendance_student.urls')),
+    path('classes/', include('class_lists.urls')),
+    path('core/', include('core.urls')),
+    
+    # Password reset URLs
+    path('password_reset/', auth_views.PasswordResetView.as_view(template_name='forgot_password/password_reset_form.html'), name='password_reset'),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='forgot_password/password_reset_done.html'), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='forgot_password/password_reset_confirm.html'), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='forgot_password/password_reset_complete.html'), name='password_reset_complete')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

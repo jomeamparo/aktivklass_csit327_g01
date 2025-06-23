@@ -1,0 +1,65 @@
+{% extends 'core/main.html' %}
+
+{% block title %}Available Classes{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Available Classes</h2>
+    </div>
+
+    {% if classes %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for class in classes %}
+                <div class="relative">
+                    <form method="post" action="{% url 'join_class_view' class.id %}" class="block">
+                        {% csrf_token %}
+                        <div class="border border-green-600 rounded-lg p-5 bg-white cursor-pointer transition animate-float emboss-effect hover:shadow-lg">
+                            <h3 class="text-xl font-semibold text-gray-900 emboss-text">{{ class.subject_name }}</h3>
+                            <p class="text-sm text-gray-600 mt-1">Code: {{ class.subject_code }}</p>
+                            <p class="text-sm text-gray-600 mt-1">Description: {{ class.description }}</p>
+                            <p class="text-sm text-gray-600 mt-1">Schedule: {{ class.schedule }}</p>
+                            <p class="text-sm text-gray-600 mt-1">Room: {{ class.room }}</p>
+                            <p class="text-sm text-gray-600 mt-1">Class Code: {{ class.class_code }}</p>
+                            <button type="submit" class="mt-4 w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                                Request to Join
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="flex justify-center items-center h-48">
+            <p class="text-gray-500 text-lg">No available classes.</p>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.emboss-effect {
+  box-shadow:
+    inset 2px 2px 5px rgba(255, 255, 255, 0.7),
+    inset -2px -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.emboss-text {
+  text-shadow:
+    1px 1px 0 #fff,
+    -1px -1px 0 #999;
+}
+</style>
+{% endblock %} 

@@ -1,7 +1,31 @@
 from django.shortcuts import redirect, render
 from django.urls import reverse
-from core.models import Student
+from django.contrib import messages
 from django.http import JsonResponse
+from core.models import Student
+from django.views.decorators.http import require_POST
+
+@require_POST
+def toggle_student_status(request, student_id):
+    try:
+        student = Student.objects.get(student_id=student_id)
+        student.status = 'DISABLED' if student.status == 'ACTIVE' else 'ACTIVE'
+        student.save()
+        return JsonResponse({
+            'success': True,
+            'status': student.status,
+            'message': f"Student account {'disabled' if student.status == 'DISABLED' else 'activated'} successfully!"
+        })
+    except Student.DoesNotExist:
+        return JsonResponse({
+            'success': False,
+            'message': 'Student not found.'
+        })
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'message': str(e)
+        })
 
 def admin_student_list_view(request):
     if request.method == "POST":

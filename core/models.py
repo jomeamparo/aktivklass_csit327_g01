@@ -1,10 +1,23 @@
 from django.db import models
 import random, string
 from django.db import models
+import uuid
+from django.apps import AppConfig
 
-
+# Utility for generating unique class codes
 def generate_random_code(length=10):
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
+
+STATUS_CHOICES = [
+    ('ACTIVE', 'ACTIVE'),
+    ('DISABLED', 'DISABLED'),
+]
+
+STUDENT_STATUS_CHOICES = [
+    ('Available', 'Available'),
+    ('Busy', 'Busy'),
+    ('Offline', 'Offline'),
+]
 
 class Class(models.Model):
     subject_name = models.CharField(max_length=100)
@@ -27,73 +40,43 @@ class Class(models.Model):
         return f"{self.subject_name} ({self.subject_code})"
 
 class Student(models.Model):
-    student_id = models.CharField(
-        max_length=20,
-        unique=True,
-        null=False,
-        blank=False,
-        default="default"
-    )
-    first_name = models.CharField(max_length=50)
+    student_id = models.CharField(max_length=20, unique=True, null=False, blank=False)
+    first_name = models.CharField(max_length=100)
     middle_name = models.CharField(max_length=50, default=" ")
-    last_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True, default='default@example.com')
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
     course = models.CharField(max_length=50, blank=True, null=True)
     year = models.CharField(max_length=50, blank=True, null=True)
     password = models.CharField(max_length=128, null=True, blank=True)
-    
-    STATUS_CHOICES = [
-        ('ACTIVE', 'Active'),
-        ('DISABLED', 'Disabled'),
-    ]
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='ACTIVE')
-    
+    status = models.CharField(max_length=20, choices=STUDENT_STATUS_CHOICES, default='Available')
     enrolled_classes = models.ManyToManyField(Class, through='Enrollment', related_name='students')
 
     def __str__(self):
-        return f"{self.last_name}, {self.first_name} ({self.student_id})"
-    
+        return f"{self.first_name} {self.last_name} ({self.student_id})"
+
+class Faculty(models.Model):
+    faculty_id = models.CharField(max_length=20, primary_key=True)
+    first_name = models.CharField(max_length=100)
+    middle_name = models.CharField(max_length=100, blank=True, null=True)
+    last_name = models.CharField(max_length=100)
+    college_name = models.CharField(max_length=100)
+    department_name = models.CharField(max_length=100)
+    password = models.CharField(max_length=100, default='password123')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ACTIVE')
+    email = models.EmailField(unique=True, default='default@example.com')
+
+    def __str__(self):
+        return f"{self.faculty_id} - {self.first_name} {self.last_name}"
+
 class ClassJoinRequest(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)  # or your Student model
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
     class_requested = models.ForeignKey(Class, on_delete=models.CASCADE)
     requested_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default="pending")  # pending, approved, rejected
 
     def __str__(self):
         return f"{self.student} -> {self.class_requested} ({self.status})"
-
-
-
-class Faculty(models.Model):
-    faculty_id = models.CharField(max_length=50, unique=True)
-    first_name = models.CharField(max_length=50)
-    middle_name = models.CharField(max_length=50, blank=True, default="")
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=128, null=True, blank=True)
-    
-    COLLEGE_CHOICES = [
-        ('CCS', 'CCS'),
-        ('CASE', 'CASE'),
-    ]
-    college_name = models.CharField(max_length=10, choices=COLLEGE_CHOICES)
-
-    DEPARTMENT_CHOICES = [
-        ('CS', 'Computer Science'),
-        ('IT', 'Information Technology'),
-        ('Arts', 'Arts'),
-        ('Science', 'Science'),
-        ('Education', 'Education'),
-    ]
-    department_name = models.CharField(max_length=20, choices=DEPARTMENT_CHOICES)
-
-    STATUS_CHOICES = [
-        ('Fulltime', 'Fulltime'),
-        ('Parttime', 'Parttime'),
-    ]
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES)
-
-    def __str__(self):
-        return f"{self.last_name}, {self.first_name} {self.middle_name} ({self.faculty_id})"
 
 class Enrollment(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True, blank=True)
@@ -110,19 +93,8 @@ class Enrollment(models.Model):
             return f"Enrollment record for unknown person in {self.enrolled_class}"
 
 class ActivityRecord(models.Model):
-    enrollment = models.ForeignKey(
-        Enrollment,
-        on_delete=models.CASCADE,
-        related_name='activity_records'
-    )
-    student = models.ForeignKey(
-        Student,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name='activity_records'
-    )  # ✅ New field for direct student reference
-
+    enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE, related_name='activity_records')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True, blank=True, related_name='activity_records')
     date = models.DateField()
 
     ACTIVITY_TYPE_CHOICES = [
@@ -137,11 +109,10 @@ class ActivityRecord(models.Model):
     ]
 
     activity_type = models.CharField(max_length=20, choices=ACTIVITY_TYPE_CHOICES)
-    activity_name = models.CharField(max_length=100)  # e.g., "Quiz 3", entered by user
-    
+    activity_name = models.CharField(max_length=100)
     faculty = models.ForeignKey(Faculty, on_delete=models.SET_NULL, null=True, blank=True)
     score = models.FloatField(null=True, blank=True)
-    perfect_score = models.FloatField(null=False, blank=False, default=100)  # NEW field for perfect score
+    perfect_score = models.FloatField(null=False, blank=False, default=100)
 
     class Meta:
         unique_together = ('enrollment', 'activity_type', 'activity_name')
@@ -149,26 +120,76 @@ class ActivityRecord(models.Model):
     def __str__(self):
         return f"{self.enrollment.student} - {self.activity_type} {self.activity_name}: {self.score}/{self.perfect_score}"
 
+class Notification(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.title
+
+class Conversation(models.Model):
+    participants = models.ManyToManyField(Student, related_name='conversations')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Conversation ({self.id})"
+
+class Message(models.Model):
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='messages')
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['timestamp']
+
+    def __str__(self):
+        return f"From {self.sender} at {self.timestamp}"
 
 class AdminUser(models.Model):
-    employee_id = models.CharField(
-        max_length=20,
-        unique=True,
-        null=False,
-        blank=False,
-        default="default"
-    )
+    employee_id = models.CharField(max_length=20, unique=True, null=False, blank=False, default="default")
     first_name = models.CharField(max_length=50)
     middle_name = models.CharField(max_length=50, default=" ")
     last_name = models.CharField(max_length=50)
-    
+    email = models.EmailField(unique=True, default='admin@example.com')
     password = models.CharField(max_length=128, null=True, blank=True)
 
     def __str__(self):
         return f"{self.last_name}, {self.first_name} ({self.employee_id})"
-    
-class Notification(models.Model):
+
+class Attendance(models.Model):
+    STATUS_CHOICES = [('Present', 'Present'), ('Absent', 'Absent'), ('Late', 'Late')]
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    course = models.ForeignKey(Class, on_delete=models.CASCADE)
+    date = models.DateField()
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES)
+
+class Activity(models.Model):
+    TYPE_CHOICES = [('Quiz', 'Quiz'), ('Assignment', 'Assignment'), ('Exam', 'Exam')]
+    course = models.ForeignKey(Class, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    activity_type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+    due_date = models.DateField()
+    max_score = models.FloatField()
+
+class Grade(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
+    score = models.FloatField()
+    feedback = models.TextField(blank=True, null=True)
+    date_graded = models.DateField(auto_now_add=True)
+
+class PasswordResetToken(models.Model):
+    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE)
+    token = models.UUIDField(default=uuid.uuid4, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_used = models.BooleanField(default=False)
+
+
+class Post(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
     published_date = models.DateTimeField(auto_now_add=True)
@@ -176,18 +197,20 @@ class Notification(models.Model):
     def __str__(self):
         return self.title
 
-    class Meta:
-        app_label = 'notifications'
-
-class FacultyProfile(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    department = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-    contact_number = models.CharField(max_length=11, blank=True, null=True)
-    office_location = models.CharField(max_length=200, blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
-    bio = models.TextField(blank=True)
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    text = models.TextField()
+    author = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f'{self.author} on {self.post.title}'
+
+class EditAdminConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'edit_admin'
+
+class FacultyProfileConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'faculty_profile'
+

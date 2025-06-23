@@ -1,0 +1,67 @@
+{% extends 'core/main.html' %}
+
+{% block title %}Chat Home{% endblock %}
+
+{% block content %}
+<div class="flex h-[80vh] w-full max-w-5xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+  <!-- Sidebar: Chat List -->
+  <div class="w-1/3 bg-gray-100 p-4 flex flex-col border-r">
+    <div class="mb-4">
+      <input type="text" placeholder="Search chats..." class="w-full px-3 py-2 rounded border focus:outline-none focus:ring-2 focus:ring-green-400" />
+    </div>
+    <h2 class="text-xl font-bold text-gray-800 mb-2">Your Conversations</h2>
+    <div class="flex-1 overflow-y-auto">
+      {% if conversations %}
+        <ul class="divide-y divide-gray-200">
+          {% for conversation in conversations %}
+            <li class="py-3 hover:bg-green-50 rounded transition">
+              <a 
+                href="{% url 'conversation_detail' conversation.id %}" 
+                class="block text-base font-semibold text-green-700"
+              >
+                Conversation #{{ conversation.id }}
+              </a>
+              <p class="text-gray-600 text-sm">
+                Participants: 
+                {% for user in conversation.participants.all %}
+                  {{ user.username }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+              </p>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-center text-gray-500 text-lg">You have no conversations yet.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Main Chat Area -->
+  <div class="w-2/3 flex flex-col">
+    <div class="flex-1 p-6 flex flex-col justify-between">
+      <!-- Placeholder for messages -->
+      <div class="flex-1 overflow-y-auto mb-4">
+        <div class="text-gray-400 text-center mt-20">Select a conversation to view messages.</div>
+      </div>
+      <!-- Message input area -->
+      <form class="flex gap-2">
+        <input type="text" placeholder="Type your message..." class="flex-1 px-3 py-2 rounded border focus:outline-none focus:ring-2 focus:ring-green-400" disabled />
+        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded disabled:opacity-50" disabled>Send</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .emboss-effect {
+    box-shadow:
+      inset 2px 2px 5px rgba(255, 255, 255, 0.7),
+      inset -2px -2px 5px rgba(0, 0, 0, 0.1);
+  }
+  .emboss-text {
+    text-shadow:
+      1px 1px 0 #fff,
+      -1px -1px 0 #999;
+  }
+</style>
+{% endblock %}

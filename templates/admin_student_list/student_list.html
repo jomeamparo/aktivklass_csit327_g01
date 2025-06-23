@@ -85,11 +85,12 @@
                     <th class="border px-4 py-2 text-left">Course</th>
                     <th class="border px-4 py-2 text-left">Year</th>
                     <th class="border px-4 py-2 text-left">Status</th>
+                    <th class="border px-4 py-2 text-left">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for student in students %}
-                <tr class="hover:bg-gray-50 cursor-pointer" onclick="openEditModal('{{ student.student_id }}', '{{ student.first_name }}', '{{ student.middle_name }}', '{{ student.last_name }}', '{{ student.course }}', '{{ student.year }}')">
+                <tr class="hover:bg-gray-50">
                     <td class="border px-4 py-2">{{ student.student_id }}</td>
                     <td class="border px-4 py-2">{{ student.first_name }}</td>
                     <td class="border px-4 py-2">{{ student.middle_name }}</td>
@@ -102,6 +103,15 @@
                             class="status-btn {% if student.is_disabled %}bg-green-600 hover:bg-green-700{% else %}bg-red-600 hover:bg-red-700{% endif %} text-white px-3 py-1 rounded transition">
                             {% if student.is_disabled %}Activate{% else %}Disable{% endif %}
                         </button>
+                    </td>
+                    <td class="border px-4 py-2">
+                        <a href="{% url 'edit_student' student.student_id %}" 
+                           class="inline-flex items-center px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                            Edit
+                        </a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -362,4 +372,4 @@
         });
     }
 </script>
-{% endblock %}  q
+{% endblock %}

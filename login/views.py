@@ -5,6 +5,8 @@ from django.contrib import messages
 
 def login_view(request):
     form = LoginForm(request.POST or None)
+    next_url = request.GET.get('next', None)
+    
     if request.method == 'POST':
         if form.is_valid():
             user_id = form.cleaned_data.get('email')
@@ -13,6 +15,7 @@ def login_view(request):
             try:
                 faculty = Faculty.objects.get(faculty_id=user_id, password=password)
                 request.session['user_id'] = faculty.faculty_id
+                request.session['role'] = 'faculty'
                 messages.success(request, "Login successful!")
                 return redirect('dashboard_teacher')
             except Faculty.DoesNotExist:
@@ -21,6 +24,7 @@ def login_view(request):
             try:
                 admin_user = AdminUser.objects.get(employee_id=user_id, password=password)
                 request.session['user_id'] = admin_user.employee_id
+                request.session['role'] = 'admin'
                 messages.success(request, "Login successful!")
                 return redirect('dashboard_admin')
             except AdminUser.DoesNotExist:
@@ -29,6 +33,7 @@ def login_view(request):
             try:
                 student = Student.objects.get(student_id=user_id, password=password)
                 request.session['user_id'] = student.student_id
+                request.session['role'] = 'student'
                 messages.success(request, "Login successful!")
                 return redirect('dashboard_student')
             except Student.DoesNotExist:
@@ -68,3 +73,9 @@ def forgot_password(request):
             return render(request, 'login/forgot_password.html')
 
     return render(request, 'login/forgot_password.html')
+
+def logout_view(request):
+    """Clear session data and redirect to login"""
+    request.session.flush()
+    messages.success(request, "You have been logged out successfully.")
+    return redirect('login')
