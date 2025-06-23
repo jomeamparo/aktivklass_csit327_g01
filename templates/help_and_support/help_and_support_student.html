@@ -1,15 +1,16 @@
 {% extends 'core/main.html' %}
-
+ 
 {% block title %}Help & Support{% endblock %}
-
+ 
 {% block content %}
 <div class="container mx-auto px-4 py-8">
+   
     <!-- Header Section -->
     <div class="text-center mb-12">
         <h1 class="text-4xl font-bold text-gray-800 mb-4">Help & Support Center</h1>
         <p class="text-lg text-gray-600 max-w-2xl mx-auto">Find answers to common questions, learn how to use AktivKlass effectively, and get in touch with our support team.</p>
     </div>
-
+ 
     <!-- Navigation Menu -->
     <div class="flex justify-center mb-12">
         <nav class="bg-white rounded-lg shadow-md p-4">
@@ -20,7 +21,7 @@
             </ul>
         </nav>
     </div>
-
+ 
     <!-- FAQ Section -->
     <section id="faq" class="mb-16">
         <div class="text-center mb-8">
@@ -41,7 +42,7 @@
                     </div>
                 </div>
             </div>
-
+ 
             <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105">
                 <div class="flex items-start">
                     <div class="flex-shrink-0">
@@ -55,7 +56,7 @@
                     </div>
                 </div>
             </div>
-
+ 
             <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105">
                 <div class="flex items-start">
                     <div class="flex-shrink-0">
@@ -69,7 +70,7 @@
                     </div>
                 </div>
             </div>
-
+ 
             <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105">
                 <div class="flex items-start">
                     <div class="flex-shrink-0">
@@ -85,7 +86,7 @@
             </div>
         </div>
     </section>
-
+ 
     <!-- Contact Support Section -->
     <section id="contact" class="mb-16">
         <div class="text-center mb-8">
@@ -103,7 +104,7 @@
                 <p class="text-gray-600 mb-4">Get in touch with our support team</p>
                 <a href="mailto:support@aktivklass.com" class="text-green-600 hover:text-green-700 font-medium">support@aktivklass.com</a>
             </div>
-
+ 
             <div class="bg-white rounded-lg shadow-lg p-6 text-center">
                 <div class="bg-green-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
                     <svg class="h-8 w-8 text-green-600 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -114,7 +115,7 @@
                 <p class="text-gray-600 mb-4">Call us during business hours</p>
                 <a href="tel:+1234567890" class="text-green-600 hover:text-green-700 font-medium">+1 (234) 567-890</a>
             </div>
-
+ 
             <div class="bg-white rounded-lg shadow-lg p-6 text-center">
                 <div class="bg-green-100 rounded-full p-4 w-16 h-16 mx-auto mb-4">
                     <svg class="h-8 w-8 text-green-600 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -127,7 +128,7 @@
             </div>
         </div>
     </section>
-
+ 
     <!-- Resources Section -->
     <section id="resources" class="mb-16">
         <div class="text-center mb-8">
@@ -184,7 +185,7 @@
         </div>
     </section>
 </div>
-
+ 
 <style>
 @keyframes float {
   0%, 100% {
@@ -194,26 +195,26 @@
     transform: translateY(-6px);
   }
 }
-
+ 
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
-
+ 
 .emboss-effect {
   box-shadow:
     inset 2px 2px 5px rgba(255, 255, 255, 0.7),
     inset -2px -2px 5px rgba(0, 0, 0, 0.1);
 }
-
+ 
 .emboss-text {
   text-shadow:
     1px 1px 0 #fff,
     -1px -1px 0 #999;
 }
-
+ 
 /* Smooth scrolling for anchor links */
 html {
   scroll-behavior: smooth;
 }
 </style>
-{% endblock %} 
+{% endblock %}
