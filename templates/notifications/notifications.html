@@ -1,240 +1,59 @@
-<!doctype html>
-{% load static %}
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>{% block title %}AktivKlass Notifications{% endblock %}</title>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <style>
-      /* Sidebar */
-      #sidebar {
-        width: 16rem;
-        background-color: white;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        border-right: 1px solid #e5e7eb;
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        transition: all 0.3s ease-in-out;
-      }
+{% extends 'core/main.html' %}
 
-      #sidebar .nav-item {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        transition: background-color 0.3s ease;
-      }
+{% load time_extras %}
 
-      #sidebar .nav-item:hover {
-        background-color: #f0fdf4;
-        color: #4caf50;
-      }
+{% block title %}Notifications{% endblock %}
 
-      /* Filter Dropdown */
-      .filter-dropdown {
-        position: relative;
-        display: inline-block;
-      }
+{% block content %}
 
-      .filter-btn {
-        padding: 0.5rem 1rem;
-        background-color: #4caf50;
-        color: white;
-        border-radius: 0.5rem;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        border: none;
-      }
+<div class="flex justify-between mb-6">
+    <h2 class="font-bold text-2xl text-gray-800">Notifications</h2>
+    <form method="post" action="{% url 'mark_all_notifications_as_read' %}">
+        {% csrf_token %}
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+            Mark All As Read
+        </button>
+    </form>
+</div>
 
-      .filter-btn:hover {
-        background-color: #45a049;
-      }
-
-      .filter-options {
-        display: none;
-        position: absolute;
-        top: 100%;
-        right: 0;
-        background-color: white;
-        border: 1px solid #ddd;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        border-radius: 0.75rem;
-        margin-top: 0.5rem;
-        z-index: 10;
-      }
-
-      .filter-options button {
-        width: 100%;
-        padding: 0.75rem;
-        background-color: white;
-        border: none;
-        text-align: left;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      }
-
-      .filter-options button:hover {
-        background-color: #f0fdf4;
-      }
-
-      .filter-dropdown.open .filter-options {
-        display: block;
-      }
-
-      .notification-item {
-        background-color: white;
-        padding: 1rem;
-        margin-bottom: 1rem;
-        border-radius: 0.75rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-
-      .notification-item.unread {
-        background-color: #f0fdf4;
-        border-left: 5px solid #4caf50;
-      }
-
-      #sidebar h2 {
-        font-size: 10px;
-      }
-
-      @media (max-width: 768px) {
-        #sidebar {
-          display: none;
-        }
-      }
-    </style>
-  </head>
-
-  <body class="min-h-screen bg-gray-100 font-sans antialiased text-gray-800">
-    <div class="flex h-screen overflow-hidden">
-      <!-- Sidebar -->
-      <aside id="sidebar" class="sidebar">
-        <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 shadow-sm mb-6">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaVBqBLO5cP-SV8OJrniey5VIZLWvu7WzNpg6F5kzIEsm-PlUS"
-               alt="Profile Photo"
-               class="w-14 h-14 rounded-full border-2 border-green-500 object-cover" />
-          <div>
-            <h2 class="text-base font-semibold text-gray-900">LisaMarcosOnly@gmail.com</h2>
-          </div>
-        </div>
-
-        <!-- Navigation -->
-        {% if role == 'faculty' %}
-          <a href="{% url 'dashboard_teacher' %}" class="nav-item"><i class="fas fa-user text-green-600"></i><span>Class Record</span></a>
-          <a href="{% url 'teacher_student_list' %}" class="nav-item"><i class="fas fa-users text-green-600"></i><span>Students</span></a>
-          <a href="{% url 'class_join_request' %}" class="nav-item"><i class="fas fa-users text-green-600"></i><span>Class Join Request</span></a>
-          <a href="{% url 'archived_classes' %}" class="nav-item"><i class="fas fa-users text-green-600"></i><span>Archived Classes</span></a>
-        {% endif %}
-
-        {% if role == 'admin' %}
-          <a href="{% url 'faculty_list_view' %}" class="nav-item"><i class="fas fa-user text-green-600"></i><span>Faculty</span></a>
-          <a href="{% url 'student_list_view' %}" class="nav-item"><i class="fas fa-users text-green-600"></i><span>Student</span></a>
-        {% endif %}
-
-        <a href="{% url 'dashboard_student' %}" class="nav-item"><i class="fas fa-user text-green-600"></i><span>Classes</span></a>
-        <a href="{% url 'notifications' %}" class="nav-item"><i class="fas fa-question-circle text-green-600"></i><span>Notifications</span></a>
-
-        <div class="border-t border-gray-200 my-4"></div>
-        <span class="text-xs uppercase text-gray-400 px-4">Settings</span>
-        <a href="#" class="nav-item"><i class="fas fa-cog text-green-600"></i><span>Preferences</span></a>
-        <a href="#" class="nav-item"><i class="fas fa-info-circle text-green-600"></i><span>Help & Support</span></a>
-
-        <div class="mt-auto pt-4 border-t border-gray-200">
-          <a href="{% url 'login' %}" class="nav-item text-gray-700 hover:bg-red-50 hover:text-red-600 transition">
-            <i class="fas fa-sign-out-alt text-red-600"></i><span>Logout</span>
-          </a>
-        </div>
-      </aside>
-
-      <!-- Main Content -->
-      <div id="mainContent" class="flex-1 flex flex-col bg-gray-50 transition-all duration-300 ease-in-out">
-        <!-- Header -->
-        <header class="bg-white shadow-sm p-4 flex items-center justify-between">
-          <button id="toggleSidebar" class="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
-          </button>
-          <div class="w-full flex justify-center items-center mt-4">
-            <h1 class="text-3xl font-bold tracking-tight" style="font-family: 'Poppins', sans-serif;">
-              <span class="text-green-600">Aktiv</span><span class="text-gray-800">Klass</span>
-              <span class="font-medium text-gray-500">Management</span>
-            </h1>
-          </div>
-        </header>
-
-        <!-- Filter -->
-        <main class="flex-1 p-6 overflow-y-auto">
-          <div class="flex items-center justify-between mb-6">
-            <h1 class="text-3xl font-bold text-gray-900">Notifications</h1>
-            <div class="filter-dropdown relative">
-              <button class="filter-btn" onclick="toggleFilter()">Filters</button>
-              <div class="filter-options absolute right-0 mt-2">
-                <button onclick="filterNotifications('all')">All</button>
-                <button onclick="filterNotifications('mentions')">Mentions</button>
-                <button onclick="filterNotifications('replies')">Replies</button>
-                <button onclick="filterNotifications('assignments')">Assignments</button>
-                <button onclick="toggleUnread()">Unread Only</button>
-              </div>
+<div class="flex flex-col p-4 bg-white rounded shadow-lg">
+    {% if new_notifications %}
+    <h2 class="font-bold text-sm text-gray-800 mb-2">New</h2>
+    <div class="flex flex-col mb-4 gap-2">
+        {% for notification in new_notifications %}
+            <div class="w-full p-4 rounded flex flex-row justify-between items-center bg-green-50 hover:bg-gray-50 transition-colors">
+                <div class="flex flex-col gap-2">
+                    <h3 class="font-bold">{{ notification.title }} 
+                        <span class="text-gray-300 text-xs font-medium">{{ notification.created_at|time_delta }}</span>
+                    </h3>
+                    <p class="text-gray-400 text-xs pl-2">{{ notification.content }}</p>
+                </div>
+                <div class="pl-4 border-l-2 border-gray-300">
+                    <form method="post" action="{% url 'mark_notification_as_read' notification.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="bg-green-600 text-white w-fit h-fit px-4 py-2 rounded shadow-md hover:bg-green-700 transition">Mark as Read</button>
+                    </form>
+                </div>
             </div>
-          </div>
-
-          <!-- Notification List -->
-          <div id="notificationList">
-            <div class="notification-item unread mentions">
-              <h4>New Mention</h4>
-              <p>You were mentioned in a class discussion!</p>
-            </div>
-            <div class="notification-item replies">
-              <h4>New Assignment</h4>
-              <p>Don't forget to submit your assignment by Friday.</p>
-            </div>
-            <div class="notification-item unread replies">
-              <h4>Reply to Your Post</h4>
-              <p>Your post has a new reply. Check it out!</p>
-            </div>
-          </div>
-        </main>
-      </div>
+        {% endfor %}
     </div>
+{% endif %}
 
-    <script>
-      let showUnreadOnly = false;
+{% if old_notifications %}
+    <h2 class="font-bold text-sm text-gray-800 mb-2">Old</h2>
+    <div class="flex flex-col gap-2">
+        {% for notification in old_notifications %}
+            <div class="w-full p-4 rounded flex flex-row justify-between items-center hover:bg-gray-50 transition-colors">
+                <div class="flex flex-col gap-2">
+                    <h3 class="font-bold">{{ notification.title }} 
+                        <span class="text-gray-300 text-xs font-medium">{{ notification.created_at|time_delta }}</span>
+                    </h3>
+                    <p class="text-gray-400 text-xs pl-2">{{ notification.message }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+</div>
 
-      function toggleUnread() {
-        showUnreadOnly = !showUnreadOnly;
-        const notifications = document.querySelectorAll('.notification-item');
-        notifications.forEach(notification => {
-          if (showUnreadOnly && !notification.classList.contains('unread')) {
-            notification.style.display = 'none';
-          } else {
-            notification.style.display = 'block';
-          }
-        });
-      }
-
-      function filterNotifications(type) {
-        const notifications = document.querySelectorAll('.notification-item');
-        notifications.forEach(notification => {
-          if (type === 'all' || notification.classList.contains(type)) {
-            notification.style.display = 'block';
-          } else {
-            notification.style.display = 'none';
-          }
-        });
-      }
-
-      function toggleFilter() {
-        const filterDropdown = document.querySelector('.filter-dropdown');
-        filterDropdown.classList.toggle('open');
-      }
-    </script>
-  </body>
-</html>
+{% endblock %}

@@ -68,8 +68,7 @@ INSTALLED_APPS = [
     'quizzes',
     
     'edit_admin',
- 
-    'notifications_faculty',
+
 
     'forgot_password',
     'attendance_student',
