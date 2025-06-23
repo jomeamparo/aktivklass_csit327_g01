@@ -30,7 +30,7 @@ class MockFacultyProfile:
 def faculty_profile_view(request):
     profile = None
     try:
-        from .models import FacultyProfile
+        from core.models import FacultyProfile
         profile = FacultyProfile.objects.first()
         if not profile:
             profile = FacultyProfile.objects.create(first_name="John", last_name="Doe", department="CS") # Simplified for example
