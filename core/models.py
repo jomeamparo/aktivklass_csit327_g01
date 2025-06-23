@@ -2,6 +2,10 @@ from django.db import models
 import random, string
 import uuid
 from django.apps import AppConfig
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from PIL import Image
+import os
 
 # Utility for generating unique class codes
 def generate_random_code(length=10):
@@ -125,10 +129,6 @@ class Notification(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
 
-    def mark_as_read(self):
-        self.is_read = True
-        self.save()
-
     def __str__(self):
         return self.title
 
@@ -232,4 +232,77 @@ class EditAdminConfig(AppConfig):
 class FacultyProfileConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'faculty_profile'
+
+class StudentProfile(models.Model):
+    """
+    StudentProfile model extends the Student model from core with additional information
+    that isn't related to authentication
+    """
+    student = models.OneToOneField(Student, on_delete=models.CASCADE, related_name='profile')
+    avatar = models.ImageField(upload_to='student_profiles', null=True, blank=True)
+    bio = models.TextField(blank=True)
+    birth_date = models.DateField(null=True, blank=True)
+    website = models.URLField(max_length=200, blank=True)
+    phone_verified = models.BooleanField(default=False)
+    
+    # Academic information
+    major = models.CharField(max_length=100, blank=True)
+    graduation_year = models.IntegerField(null=True, blank=True)
+    
+    # Profile completion tracking
+    last_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        app_label = 'student_profile'
+    
+    def __str__(self):
+        return f"{self.student.first_name}'s Profile"
+    
+    def save(self, *args, **kwargs):
+        """Override save method to resize images if they exist"""
+        super().save(*args, **kwargs)
+        
+        # Resize profile image if it exists and is accessible
+        if self.avatar and hasattr(self.avatar, 'path') and os.path.isfile(self.avatar.path):
+            try:
+                img = Image.open(self.avatar.path)
+                if img.height > 300 or img.width > 300:
+                    output_size = (300, 300)
+                    img.thumbnail(output_size)
+                    img.save(self.avatar.path)
+            except Exception as e:
+                # Log the error or print it during development
+                print(f"Error processing image: {e}")
+    
+    def profile_completion_percentage(self):
+        """Calculate how complete the profile is"""
+        fields = [
+            bool(self.avatar), 
+            bool(self.bio), 
+            bool(self.birth_date),
+            bool(self.website),
+            bool(self.major),
+            bool(self.graduation_year),
+            self.phone_verified
+        ]
+        
+        filled_fields = sum(fields)
+        total_fields = len(fields)
+        
+        return int((filled_fields / total_fields) * 100)
+
+@receiver(post_save, sender=Student)
+def create_student_profile(sender, instance, created, **kwargs):
+    """Create a profile when a student is created"""
+    if created:
+        StudentProfile.objects.create(student=instance)
+
+@receiver(post_save, sender=Student)
+def save_student_profile(sender, instance, **kwargs):
+    """Save the profile when the student is saved"""
+    try:
+        instance.profile.save()
+    except StudentProfile.DoesNotExist:
+        # If for some reason the profile doesn't exist, create it
+        StudentProfile.objects.create(student=instance)
 

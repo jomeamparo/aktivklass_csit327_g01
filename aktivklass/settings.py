@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'dashboard_admin',
     'admin_faculty_list',
     'admin_student_list',
-    'courses_admin',
     'dashboard_student',
     'archived_classes',
     'class_join_request',
@@ -69,7 +68,8 @@ INSTALLED_APPS = [
     'quizzes',
     
     'edit_admin',
-
+ 
+    'notifications_faculty',
 
     'forgot_password',
     'attendance_student',
@@ -111,6 +111,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.views.user_context_processor',
             ],
         },
     },
@@ -178,6 +179,10 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Media files (User Uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
