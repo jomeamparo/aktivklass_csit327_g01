@@ -1,5 +1,4 @@
 from django.shortcuts import render
-<<<<<<< HEAD
 from core.models import Student, Faculty, AdminUser
 
 # Create your views here.
@@ -46,7 +45,6 @@ def user_context_processor(request):
     context['role'] = 'guest'
     
     return context
-=======
 from django.http import HttpResponse
 
 # Create your views here.
@@ -77,4 +75,3 @@ def test_profile(request):
     }
     
     return HttpResponse("Session data set up for testing. <a href='/dashboard_teacher/'>Go to Dashboard</a>")
->>>>>>> ed7d208e57427a6cc856363d81d784b94fe951c2
