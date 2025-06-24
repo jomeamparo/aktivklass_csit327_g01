@@ -3,26 +3,26 @@
 {% block content %}
 <div class="container">
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">
+        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
             Analytics Dashboard
         </h2>
         <div class="flex space-x-2 ml-auto">
-            <button id="btnFaculty" type="button" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Faculty</button>
-            <button id="btnStudent" type="button" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Student</button>
-            <button id="btnUniversity" type="button" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">University</button>
+            <button id="btnFaculty" type="button" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition dark:bg-green-500 dark:hover:bg-green-400 dark:text-gray-900">Faculty</button>
+            <button id="btnStudent" type="button" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition dark:bg-green-500 dark:hover:bg-green-400 dark:text-gray-900">Student</button>
+            <button id="btnUniversity" type="button" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition dark:bg-green-500 dark:hover:bg-green-400 dark:text-gray-900">University</button>
         </div>
     </div>
-    <div class="bg-white p-4 rounded-lg shadow mb-6">
+    <div class="bg-white p-4 rounded-lg shadow mb-6 dark:bg-gray-800 dark:shadow-md">
         <div id="facultyRecords" class="analytics-section">
-            <h3 class="text-xl font-semibold mb-4">Faculty Records</h3>
+            <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Faculty Records</h3>
             <p>Display analytics for Faculty here...</p>
         </div>
         <div id="studentRecords" class="analytics-section hidden">
-            <h3 class="text-xl font-semibold mb-4">Student Records</h3>
+            <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Student Records</h3>
             <p>Display analytics for Students here...</p>
         </div>
         <div id="universityRecords" class="analytics-section hidden">
-            <h3 class="text-xl font-semibold mb-4">University Records</h3>
+            <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">University Records</h3>
             <p>Display analytics for University here...</p>
         </div>
     </div>
@@ -44,6 +44,13 @@
     btnFaculty.addEventListener('click', () => showSection(facultyRecords));
     btnStudent.addEventListener('click', () => showSection(studentRecords));
     btnUniversity.addEventListener('click', () => showSection(universityRecords));
+
+    const savedTheme = localStorage.getItem("theme");
+       if (savedTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
 </script>
 <style>
     .hidden { display: none; }

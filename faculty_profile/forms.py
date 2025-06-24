@@ -1,5 +1,5 @@
 from django import forms
-from .models import FacultyProfile
+from core.models import FacultyProfile
 
 class FacultyProfileForm(forms.ModelForm):
     class Meta:

@@ -5,8 +5,9 @@
 
 {% block content %}
 <div class="container mx-auto p-4 sm:p-6 lg:p-8">
-    <div class="flex justify-center items-center mb-8 space-x-2">
-        <h2 class="text-3xl font-extrabold text-gray-900"><i class="fas fa-user-circle mr-2 text-blue-600"></i>Student Profile</h2>
+    <!-- Breadcrumbs -->
+    <div class="text-sm text-gray-500 mb-4">
+        Dashboard / Students / <span class="font-semibold">{{ student.first_name }} {{ student.last_name }}</span>
     </div>
 
     {% if messages %}
@@ -22,45 +23,195 @@
         </ul>
     {% endif %}
 
-    <div class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl w-full max-w-xl mx-auto border border-gray-200">
+    <!-- Profile Header -->
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <div class="flex items-center space-x-6">
+            <div class="relative">
+                {% if profile.avatar %}
+                <img src="{{ profile.avatar.url }}"
+                     alt="Profile Photo"
+                     class="w-24 h-24 rounded-full border-4 object-cover shadow-md
+                     {% if student.status == 'Available' %}border-green-500{% elif student.status == 'Busy' %}border-yellow-500{% else %}border-red-500{% endif %}">
+                {% else %}
+                <div class="w-24 h-24 rounded-full border-4 flex items-center justify-center bg-gray-200 shadow-md
+                     {% if student.status == 'Available' %}border-green-500{% elif student.status == 'Busy' %}border-yellow-500{% else %}border-red-500{% endif %}">
+                    <span class="text-2xl text-gray-500">{{ student.first_name|first }}{{ student.last_name|first }}</span>
+                </div>
+                {% endif %}
+                <span id="status-circle" class="absolute bottom-0 right-0 text-white rounded-full h-8 w-8 flex items-center justify-center text-xs font-semibold border-2 border-white cursor-pointer {% if student.status == 'Available' %}bg-green-500{% elif student.status == 'Busy' %}bg-yellow-500{% else %}bg-red-500{% endif %}">
+                    {{ student.status|first }}
+                </span>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">{{ student.first_name }} {{ student.last_name }}</h1>
+                <p class="text-gray-600">{{ student.course|default:"No Course" }}</p>
+                <p class="text-sm text-gray-500">{{ student.email }}</p>
+                <p class="text-sm text-gray-500">{{ student.phone_number|default:"No contact number" }}</p>
+            </div>
+        </div>
+    </div>
 
-        <div id="view-mode" class="transition-all duration-300 ease-in-out">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div class="col-span-full p-2 rounded-md hover:bg-gray-50 transition duration-150 ease-in-out">
-                    <label class="block text-gray-600 text-sm font-semibold mb-1"><i class="fas fa-id-badge mr-2 text-gray-500"></i>Student ID:</label>
-                    <p class="text-gray-800 text-lg font-medium">{{ student.student_id }}</p>
-                </div>
-                <div class="p-2 rounded-md hover:bg-gray-50 transition duration-150 ease-in-out">
-                    <label class="block text-gray-600 text-sm font-semibold mb-1"><i class="fas fa-user mr-2 text-gray-500"></i>First Name:</label>
-                    <p class="text-gray-800 text-lg font-medium">{{ student.first_name }}</p>
-                </div>
-                <div class="p-2 rounded-md hover:bg-gray-50 transition duration-150 ease-in-out">
-                    <label class="block text-gray-600 text-sm font-semibold mb-1"><i class="fas fa-user mr-2 text-gray-500"></i>Last Name:</label>
-                    <p class="text-gray-800 text-lg font-medium">{{ student.last_name }}</p>
-                </div>
-                <div class="col-span-full p-2 rounded-md hover:bg-gray-50 transition duration-150 ease-in-out">
-                    <label class="block text-gray-600 text-sm font-semibold mb-1"><i class="fas fa-envelope mr-2 text-gray-500"></i>Email:</label>
-                    <p class="text-gray-800 text-lg font-medium">{{ student.email }}</p>
-                </div>
-                <div class="p-2 rounded-md hover:bg-gray-50 transition duration-150 ease-in-out">
-                    <label class="block text-gray-600 text-sm font-semibold mb-1"><i class="fas fa-phone mr-2 text-gray-500"></i>Phone Number:</label>
-                    <p class="text-gray-800 text-lg font-medium">{{ student.phone_number }}</p>
-                </div>
-                <div class="p-2 rounded-md hover:bg-gray-50 transition duration-150 ease-in-out">
-                    <label class="block text-gray-600 text-sm font-semibold mb-1"><i class="fas fa-info-circle mr-2 text-gray-500"></i>Status:</label>
-                    <p class="text-lg font-semibold {% if student.status == 'Available' %}text-green-600{% elif student.status == 'Busy' %}text-yellow-600{% else %}text-red-600{% endif %}">{{ student.status }}</p>
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Left Column - Personal Info -->
+        <div class="md:col-span-2 space-y-6">
+            <!-- Personal Information -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-user text-blue-600 mr-2"></i>
+                    Personal Information
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+                    <div class="space-y-3">
+                        <p><span class="font-medium">Student ID:</span> {{ student.student_id }}</p>
+                        <p><span class="font-medium">Full Name:</span> {{ student.first_name }} {{ student.middle_name }} {{ student.last_name }}</p>
+                        <p><span class="font-medium">Course:</span> {{ student.course|default:"Not specified" }}</p>
+                        <p><span class="font-medium">Birth Date:</span> {{ profile.birth_date|default:"Not specified" }}</p>
+                    </div>
+                    <div class="space-y-3">
+                        <p><span class="font-medium">Email:</span> {{ student.email }}</p>
+                        <p><span class="font-medium">Phone Number:</span> {{ student.phone_number|default:"Not specified" }}</p>
+                        <p><span class="font-medium">Year Level:</span> {{ student.year|default:"Not specified" }}</p>
+                        <p><span class="font-medium">Website:</span> {% if profile.website %}<a href="{{ profile.website }}" target="_blank" class="text-blue-600 hover:underline">{{ profile.website }}</a>{% else %}Not specified{% endif %}</p>
+                    </div>
                 </div>
             </div>
-            <hr class="my-6 border-gray-200" />
-            <div class="flex justify-center mt-6">
-                <button id="edit-profile-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200 ease-in-out transform hover:-translate-y-0.5">
-                    <i class="fas fa-edit mr-2"></i>Edit Profile
-                </button>
+
+            <!-- Academic Information -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-book text-blue-600 mr-2"></i>
+                    Academic Information
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+                    <div class="space-y-3">
+                        <p><span class="font-medium">Course/Program:</span> {{ student.course|default:"Not specified" }}</p>
+                        <p><span class="font-medium">Year Level:</span> {{ student.year|default:"Not specified" }}</p>
+                    </div>
+                    <div class="space-y-3">
+                        <p><span class="font-medium">Major:</span> {{ profile.major|default:"Not specified" }}</p>
+                        <p><span class="font-medium">Expected Graduation:</span> {{ profile.graduation_year|default:"Not specified" }}</p>
+                        <p><span class="font-medium">Classes Enrolled:</span> {{ student.enrolled_classes.all|length }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bio Information -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-info-circle text-blue-600 mr-2"></i>
+                    About Me
+                </h3>
+                <div class="text-gray-700">
+                    <p>{{ profile.bio|default:"No bio information provided."|linebreaks }}</p>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-address-card text-blue-600 mr-2"></i>
+                    Contact Information
+                </h3>
+                <div class="space-y-3 text-gray-700">
+                    <p class="flex items-center">
+                        <i class="fas fa-envelope text-blue-600 w-6"></i>
+                        {{ student.email|default:"Not specified" }}
+                    </p>
+                    <p class="flex items-center">
+                        <i class="fas fa-phone text-blue-600 w-6"></i>
+                        {{ student.phone_number|default:"Not specified" }}
+                        {% if profile.phone_verified %}
+                            <span class="ml-2 text-green-600"><i class="fas fa-check-circle"></i> Verified</span>
+                        {% else %}
+                            <span class="ml-2 text-gray-400"><i class="fas fa-circle"></i> Not verified</span>
+                        {% endif %}
+                    </p>
+                    {% if profile.website %}
+                    <p class="flex items-center">
+                        <i class="fas fa-globe text-blue-600 w-6"></i>
+                        <a href="{{ profile.website }}" target="_blank" class="text-blue-600 hover:underline">{{ profile.website }}</a>
+                    </p>
+                    {% endif %}
+                </div>
             </div>
         </div>
 
-        <div id="edit-mode" class="hidden transition-all duration-300 ease-in-out">
-            <form method="post" action="" class="space-y-4">
+        <!-- Right Column - Actions & Stats -->
+        <div class="space-y-6">
+            <!-- Quick Actions -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-bolt text-blue-600 mr-2"></i>
+                    Quick Actions
+                </h3>
+                <div class="space-y-3">
+                    <button id="edit-profile-btn" class="w-full flex items-center text-blue-600 hover:text-blue-700 transition p-2 rounded-lg hover:bg-blue-50">
+                        <i class="fas fa-edit w-6"></i>
+                        <span>Edit Profile</span>
+                    </button>
+                    <a href="#" class="flex items-center text-blue-600 hover:text-blue-700 transition p-2 rounded-lg hover:bg-blue-50">
+                        <i class="fas fa-key w-6"></i>
+                        <span>Change Password</span>
+                    </a>
+                    <a href="#" class="flex items-center text-blue-600 hover:text-blue-700 transition p-2 rounded-lg hover:bg-blue-50">
+                        <i class="fas fa-bell w-6"></i>
+                        <span>Notification Settings</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Profile Stats -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-chart-bar text-blue-600 mr-2"></i>
+                    Profile Stats
+                </h3>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-600">Profile Completion</span>
+                        <span class="text-blue-600 font-semibold">{{ completion_percentage }}%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-blue-600 h-2 rounded-full" style="width: {{ completion_percentage }}%"></div>
+                    </div>
+                    
+                    <div class="text-sm text-gray-500 mt-2">
+                        <p>Last updated: {{ profile.last_updated|date:"F d, Y" }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Academic Performance -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-graduation-cap text-blue-600 mr-2"></i>
+                    Academic Performance
+                </h3>
+                <div class="space-y-4">
+                    <p class="text-gray-700">View your academic progress, grades, and class attendance records.</p>
+                    <a href="#" class="block w-full text-center bg-blue-600 text-white rounded-lg py-2 hover:bg-blue-700 transition">
+                        View Academic Records
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div id="edit-mode" class="hidden fixed inset-0 z-50">
+    <div class="fixed inset-0 bg-black bg-opacity-50" id="modal-backdrop"></div>
+    <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl mx-auto p-6 sm:p-8 overflow-y-auto max-h-[90vh]">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-semibold">Edit Profile</h3>
+                <button id="cancel-edit-btn" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form method="post" action="{% url 'student_profile' %}" class="space-y-4" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% if form.non_field_errors %}
                     <div class="p-4 bg-red-100 border border-red-400 text-red-700 rounded-md" role="alert">
@@ -70,34 +221,97 @@
                     </div>
                 {% endif %}
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="col-span-full">
-                        <label for="id_student_id" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-id-badge mr-2 text-gray-600"></i>Student ID:</label>
-                        {{ form.student_id|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 bg-gray-100 cursor-not-allowed transition duration-150 ease-in-out"|attr:"readonly" }}
-                        {% if form.student_id.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.student_id.errors }}</p>{% endif %}
-                        {% if form.student_id.help_text %}<p class="text-gray-500 text-xs mt-1">{{ form.student_id.help_text }}</p>{% endif %}
+                <div class="border-b border-gray-200 pb-6">
+                    <h4 class="text-lg font-medium text-gray-900 mb-4">Basic Information</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="col-span-full">
+                            <label for="id_student_id" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-id-badge mr-2 text-gray-600"></i>Student ID:</label>
+                            {{ form.student_id|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 bg-gray-100 cursor-not-allowed transition duration-150 ease-in-out"|attr:"readonly" }}
+                            {% if form.student_id.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.student_id.errors }}</p>{% endif %}
+                        </div>
+                        <div>
+                            <label for="id_first_name" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-user mr-2 text-gray-600"></i>First Name:</label>
+                            {{ form.first_name|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
+                            {% if form.first_name.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.first_name.errors }}</p>{% endif %}
+                        </div>
+                        <div>
+                            <label for="id_middle_name" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-user mr-2 text-gray-600"></i>Middle Name:</label>
+                            {{ form.middle_name|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
+                            {% if form.middle_name.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.middle_name.errors }}</p>{% endif %}
+                        </div>
+                        <div>
+                            <label for="id_last_name" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-user mr-2 text-gray-600"></i>Last Name:</label>
+                            {{ form.last_name|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
+                            {% if form.last_name.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.last_name.errors }}</p>{% endif %}
+                        </div>
+                        <div class="col-span-full">
+                            <label for="id_email" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-envelope mr-2 text-gray-600"></i>Email:</label>
+                            {{ form.email|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
+                            {% if form.email.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.email.errors }}</p>{% endif %}
+                        </div>
                     </div>
-                    <div>
-                        <label for="id_first_name" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-user mr-2 text-gray-600"></i>First Name:</label>
-                        {{ form.first_name|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
-                        {% if form.first_name.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.first_name.errors }}</p>{% endif %}
+                </div>
+
+                <div class="border-b border-gray-200 py-6">
+                    <h4 class="text-lg font-medium text-gray-900 mb-4">Profile Information</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="id_avatar" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-image mr-2 text-gray-600"></i>Profile Picture:</label>
+                            {{ form.avatar|add_class:"block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
+                            {% if form.avatar.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.avatar.errors }}</p>{% endif %}
+                            <p class="text-gray-500 text-xs mt-1">Profile picture will be resized to 300x300px</p>
+                        </div>
+                        <div>
+                            <label for="id_birth_date" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-calendar mr-2 text-gray-600"></i>Birth Date:</label>
+                            {{ form.birth_date|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
+                            {% if form.birth_date.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.birth_date.errors }}</p>{% endif %}
+                        </div>
+                        <div>
+                            <label for="id_phone_number" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-phone mr-2 text-gray-600"></i>Phone Number:</label>
+                            {{ form.phone_number|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
+                            {% if form.phone_number.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.phone_number.errors }}</p>{% endif %}
+                        </div>
+                        <div>
+                            <label for="id_website" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-globe mr-2 text-gray-600"></i>Website:</label>
+                            {{ form.website|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
+                            {% if form.website.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.website.errors }}</p>{% endif %}
+                        </div>
+                        <div class="col-span-full">
+                            <label for="id_bio" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-info-circle mr-2 text-gray-600"></i>Bio:</label>
+                            {{ form.bio|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
+                            {% if form.bio.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.bio.errors }}</p>{% endif %}
+                        </div>
                     </div>
-                    <div>
-                        <label for="id_last_name" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-user mr-2 text-gray-600"></i>Last Name:</label>
-                        {{ form.last_name|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
-                        {% if form.last_name.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.last_name.errors }}</p>{% endif %}
+                </div>
+
+                <div class="border-b border-gray-200 py-6">
+                    <h4 class="text-lg font-medium text-gray-900 mb-4">Academic Information</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="id_course" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-graduation-cap mr-2 text-gray-600"></i>Course:</label>
+                            {{ form.course|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
+                            {% if form.course.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.course.errors }}</p>{% endif %}
+                        </div>
+                        <div>
+                            <label for="id_year" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-calendar-alt mr-2 text-gray-600"></i>Current Year:</label>
+                            {{ form.year|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
+                            {% if form.year.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.year.errors }}</p>{% endif %}
+                        </div>
+                        <div>
+                            <label for="id_major" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-book mr-2 text-gray-600"></i>Major:</label>
+                            {{ form.major|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
+                            {% if form.major.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.major.errors }}</p>{% endif %}
+                        </div>
+                        <div>
+                            <label for="id_graduation_year" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-calendar-check mr-2 text-gray-600"></i>Graduation Year:</label>
+                            {{ form.graduation_year|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
+                            {% if form.graduation_year.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.graduation_year.errors }}</p>{% endif %}
+                        </div>
                     </div>
-                    <div class="col-span-full">
-                        <label for="id_email" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-envelope mr-2 text-gray-600"></i>Email:</label>
-                        {{ form.email|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
-                        {% if form.email.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.email.errors }}</p>{% endif %}
-                    </div>
-                    <div>
-                        <label for="id_phone_number" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-phone mr-2 text-gray-600"></i>Phone Number:</label>
-                        {{ form.phone_number|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
-                        {% if form.phone_number.errors %}<p class="text-red-600 text-xs italic mt-1">{{ form.phone_number.errors }}</p>{% endif %}
-                        {% if form.phone_number.help_text %}<p class="text-gray-500 text-xs mt-1">{{ form.phone_number.help_text }}</p>{% endif %}
-                    </div>
+                </div>
+
+                <div class="py-6">
+                    <h4 class="text-lg font-medium text-gray-900 mb-4">Status</h4>
                     <div>
                         <label for="id_status" class="block text-gray-700 text-sm font-bold mb-1"><i class="fas fa-info-circle mr-2 text-gray-600"></i>Status:</label>
                         {{ form.status|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
@@ -106,10 +320,10 @@
                 </div>
                 
                 <div class="flex justify-end space-x-4 mt-6">
-                    <button type="button" id="cancel-edit-btn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200 ease-in-out transform hover:-translate-y-0.5">
+                    <button type="button" id="cancel-edit-btn-bottom" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200 ease-in-out transform hover:-translate-y-0.5">
                         <i class="fas fa-times-circle mr-2"></i>Cancel
                     </button>
-                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200 ease-in-out transform hover:-translate-y-0.5">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-200 ease-in-out transform hover:-translate-y-0.5">
                         <i class="fas fa-save mr-2"></i>Save Changes
                     </button>
                 </div>
@@ -118,20 +332,91 @@
     </div>
 </div>
 
+<!-- Status Update Modal -->
+<div id="status-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Update Status</h3>
+            <div class="mt-2 px-7 py-3">
+                <form method="post" action="{% url 'update_student_status' student.student_id %}" id="status-form">
+                    {% csrf_token %}
+                    {{ status_form.status|add_class:"block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out" }}
+                </form>
+            </div>
+            <div class="items-center px-4 py-3">
+                <button id="confirm-status-btn" class="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition">
+                    Save Status
+                </button>
+                <button id="close-modal-btn" class="mt-3 px-4 py-2 bg-gray-300 text-gray-800 text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 transition">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-    const viewMode = document.getElementById('view-mode');
     const editMode = document.getElementById('edit-mode');
     const editProfileBtn = document.getElementById('edit-profile-btn');
     const cancelEditBtn = document.getElementById('cancel-edit-btn');
+    const cancelEditBtnBottom = document.getElementById('cancel-edit-btn-bottom');
+    const statusModal = document.getElementById('status-modal');
+    const closeStatusModalBtn = document.getElementById('close-modal-btn');
+    const confirmStatusBtn = document.getElementById('confirm-status-btn');
+    const statusForm = document.getElementById('status-form');
+    const modalBackdrop = document.getElementById('modal-backdrop');
 
     editProfileBtn.addEventListener('click', () => {
-        viewMode.classList.add('hidden');
         editMode.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
     });
 
-    cancelEditBtn.addEventListener('click', () => {
+    function closeEditModal() {
         editMode.classList.add('hidden');
-        viewMode.classList.remove('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    cancelEditBtn.addEventListener('click', closeEditModal);
+    cancelEditBtnBottom.addEventListener('click', closeEditModal);
+    modalBackdrop.addEventListener('click', closeEditModal);
+
+    // Show status modal
+    const statusCircle = document.getElementById('status-circle');
+    statusCircle.addEventListener('click', () => {
+        statusModal.classList.remove('hidden');
     });
+
+    // Hide status modal
+    closeStatusModalBtn.addEventListener('click', () => {
+        statusModal.classList.add('hidden');
+    });
+
+    // Submit status form
+    confirmStatusBtn.addEventListener('click', () => {
+        statusForm.submit();
+    });
+    
+    // Preview uploaded image before form submission
+    const avatarInput = document.getElementById('id_avatar');
+    if (avatarInput) {
+        avatarInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const label = avatarInput.closest('div').querySelector('label');
+                    if (!label.querySelector('img')) {
+                        const preview = document.createElement('img');
+                        preview.src = e.target.result;
+                        preview.classList.add('h-10', 'w-10', 'ml-2', 'rounded-full', 'object-cover', 'inline-block');
+                        label.appendChild(preview);
+                    } else {
+                        label.querySelector('img').src = e.target.result;
+                    }
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
 </script>
 {% endblock %}

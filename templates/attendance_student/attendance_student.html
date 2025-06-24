@@ -1,0 +1,50 @@
+{% extends 'core/main.html' %}
+{% block title %}Attendance Summary{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-8 mb-8">
+    <h1 class="text-2xl font-bold mb-4 text-green-700">Attendance Summary</h1>
+    <div class="summary mb-8">
+        <table class="min-w-full border rounded-lg overflow-hidden">
+            <tr class="bg-green-100">
+                <th class="px-4 py-2">Status</th>
+                <th class="px-4 py-2">Count</th>
+            </tr>
+            <tr>
+                <td class="px-4 py-2">Present</td>
+                <td class="px-4 py-2">{{ summary.present }}</td>
+            </tr>
+            <tr>
+                <td class="px-4 py-2">Absent</td>
+                <td class="px-4 py-2">{{ summary.absent }}</td>
+            </tr>
+            <tr>
+                <td class="px-4 py-2">Late</td>
+                <td class="px-4 py-2">{{ summary.late }}</td>
+            </tr>
+        </table>
+    </div>
+    <h2 class="text-xl font-semibold mb-2 text-green-700">Recent Feedback</h2>
+    <div class="feedback">
+        {% if recent_feedback %}
+            <table class="min-w-full border rounded-lg overflow-hidden">
+                <tr class="bg-green-100">
+                    <th class="px-4 py-2">Activity</th>
+                    <th class="px-4 py-2">Score</th>
+                    <th class="px-4 py-2">Feedback</th>
+                    <th class="px-4 py-2">Date Graded</th>
+                </tr>
+                {% for grade in recent_feedback %}
+                    <tr>
+                        <td class="px-4 py-2">{{ grade.activity.title }}</td>
+                        <td class="px-4 py-2">{{ grade.score }}</td>
+                        <td class="px-4 py-2">{{ grade.feedback|default:'-' }}</td>
+                        <td class="px-4 py-2">{{ grade.date_graded }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p class="text-gray-500">No recent feedback available.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

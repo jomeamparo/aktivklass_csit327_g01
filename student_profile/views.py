@@ -1,44 +1,87 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-# from django.contrib.auth.decorators import login_required
-# from .models import Student
-from .forms import StudentProfileForm
+from core.models import Student, StudentProfile
+from .forms import StudentProfileForm, StudentStatusForm
 
-# @login_required
 def student_profile_view(request):
-    # Create a dummy student object for static display
-    student = type('Student', (object,), {})
-    student.student_id = "S001"
-    student.first_name = "John"
-    student.last_name = "Doe"
-    student.email = "john.doe@example.com"
-    student.phone_number = "1234567890"
-    student.status = "Available"
-
+    """
+    Display and handle updates for the student profile
+    """
+    # Check if user is logged in using our custom session authentication
+    if 'user_id' not in request.session:
+        # If not logged in, redirect to login page with next parameter
+        return redirect('/?next=/student_profile/')
+    
+    # Get the logged-in student from the session
+    student_id = request.session['user_id']
+    student = Student.objects.filter(student_id=student_id).first()
+    
+    if not student:
+        messages.error(request, 'Student not found.')
+        return redirect('/')
+    
+    # Make sure the student has a profile
+    try:
+        profile = student.profile
+    except StudentProfile.DoesNotExist:
+        # Create a profile without accessing the avatar immediately
+        profile = StudentProfile(student=student)
+        profile.save()
+    
+    # Process form submission
     if request.method == 'POST':
-        form = StudentProfileForm(request.POST)
+        form = StudentProfileForm(
+            request.POST, 
+            request.FILES, 
+            instance=student,
+            profile_instance=profile
+        )
         if form.is_valid():
-            # Update the dummy object with cleaned data
-            student.first_name = form.cleaned_data['first_name']
-            student.last_name = form.cleaned_data['last_name']
-            student.email = form.cleaned_data['email']
-            student.phone_number = form.cleaned_data['phone_number']
-            student.status = form.cleaned_data['status']
-
+            form.save()
             messages.success(request, 'Your profile was updated successfully!')
-            return redirect('student_profile') # Redirect to the same page
+            return redirect('student_profile')
     else:
-        form = StudentProfileForm(initial={
-            'student_id': student.student_id,
-            'first_name': student.first_name,
-            'last_name': student.last_name,
-            'email': student.email,
-            'phone_number': student.phone_number,
-            'status': student.status,
-        })
+        form = StudentProfileForm(
+            instance=student,
+            profile_instance=profile
+        )
 
+    status_form = StudentStatusForm(initial={'status': student.status})
+    
     context = {
         'student': student,
-        'form': form
+        'profile': profile,
+        'form': form,
+        'status_form': status_form,
+        'completion_percentage': profile.profile_completion_percentage(),
     }
     return render(request, 'student_profile/student_profile.html', context)
+
+def update_student_status(request, student_id):
+    """
+    Update only the status of a student
+    """
+    # Check if user is logged in using our custom session authentication
+    if 'user_id' not in request.session:
+        # If not logged in, redirect to login page with next parameter
+        return redirect(f'/?next={request.path}')
+    
+    # Get the actual student from the database
+    student = Student.objects.filter(student_id=student_id).first()
+    
+    if not student:
+        messages.error(request, 'Student not found.')
+        return redirect('student_profile')
+    
+    if request.method == 'POST':
+        form = StudentStatusForm(request.POST)
+        if form.is_valid():
+            student.status = form.cleaned_data['status']
+            student.save()
+            messages.success(request, 'Student status updated successfully!')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"Error in {field}: {error}")
+    
+    return redirect('student_profile')
