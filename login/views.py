@@ -87,3 +87,9 @@ def forgot_password(request):
             return render(request, 'login/forgot_password.html')
 
     return render(request, 'login/forgot_password.html')
+
+def logout_view(request):
+    """Clear session data and redirect to login"""
+    request.session.flush()
+    messages.success(request, "You have been logged out successfully.")
+    return redirect('login')

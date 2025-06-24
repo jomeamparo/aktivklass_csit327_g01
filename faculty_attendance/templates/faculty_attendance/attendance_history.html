@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Attendance History{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Attendance History</h2>
+    
+    <!-- Date Range Filter -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label for="start_date" class="form-label">Start Date</label>
+                    <input type="date" class="form-control" id="start_date" name="start_date" value="{{ start_date|date:'Y-m-d' }}">
+                </div>
+                <div class="col-md-4">
+                    <label for="end_date" class="form-label">End Date</label>
+                    <input type="date" class="form-control" id="end_date" name="end_date" value="{{ end_date|date:'Y-m-d' }}">
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Attendance Records -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Attendance Records</h5>
+        </div>
+        <div class="card-body">
+            {% if attendance_records %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Class</th>
+                            <th>Time In</th>
+                            <th>Time Out</th>
+                            <th>Status</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in attendance_records %}
+                        <tr>
+                            <td>{{ record.date|date:"M d, Y" }}</td>
+                            <td>{{ record.class_instance.name }}</td>
+                            <td>{{ record.time_in|time:"g:i A" }}</td>
+                            <td>{{ record.time_out|time:"g:i A"|default:"-" }}</td>
+                            <td>{{ record.get_status_display }}</td>
+                            <td>{{ record.remarks|default:"-" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No attendance records found for the selected date range.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Back Button -->
+    <div class="mt-4">
+        <a href="{% url 'faculty_attendance' %}" class="btn btn-secondary">Back to Attendance</a>
+    </div>
+</div>
+{% endblock %} 

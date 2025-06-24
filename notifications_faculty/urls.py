@@ -2,5 +2,5 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # Add URL patterns here when needed
+    path('', views.faculty_notifications_view, name='faculty_notifications'),
 ]
