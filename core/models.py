@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from django.db import models
 import random, string
 import uuid
@@ -262,7 +261,6 @@ class EditAdminConfig(AppConfig):
 class FacultyProfileConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'faculty_profile'
-=======
 from django.db import models
 import random, string
 from django.db import models
@@ -503,4 +501,3 @@ class FacultyProfile(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
->>>>>>> ed7d208e57427a6cc856363d81d784b94fe951c2

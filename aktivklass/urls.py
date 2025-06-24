@@ -36,11 +36,8 @@ urlpatterns = [
     path('edit_faculty/', include('edit_faculty.urls')),
     path('edit_admin/', include('edit_admin.urls')),
     path('edit_student/', include('edit_student.urls')),
-<<<<<<< HEAD
-=======
     path('teacher_student/', include('teacher_student.urls')),
     path('class_record/', include('class_record.urls')),
->>>>>>> ed7d208e57427a6cc856363d81d784b94fe951c2
     path('archived_classes/', include('archived_classes.urls')),
     path('class_join_request/', include('class_join_request.urls')),
     path('faculty_seatwork/', include('faculty_seatwork.urls')),
@@ -59,7 +56,6 @@ urlpatterns = [
     path('admin_settings/', include('admin_settings.urls')),
     path('analytics/', include('analytics.urls')),
     path('forgot_password/', include('forgot_password.urls')),
-<<<<<<< HEAD
     path('admin_notif/', include(('admin_notif.urls', 'admin_notif'), namespace='admin_notif')),
 
     path('faculty_notifications/', include('notifications_faculty.urls')),
@@ -68,8 +64,6 @@ urlpatterns = [
 
     path('help_and_support/', include('help_and_support.urls')),
     path('faculty_attendance/', include('faculty_attendance.urls')),
-=======
->>>>>>> ed7d208e57427a6cc856363d81d784b94fe951c2
     path('attendance_student/', include('attendance_student.urls')),
     path('classes/', include('class_lists.urls')),
     path('core/', include('core.urls')),
@@ -79,11 +73,8 @@ urlpatterns = [
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='forgot_password/password_reset_done.html'), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='forgot_password/password_reset_confirm.html'), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='forgot_password/password_reset_complete.html'), name='password_reset_complete')
-<<<<<<< HEAD
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-=======
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
->>>>>>> ed7d208e57427a6cc856363d81d784b94fe951c2

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 """
 Django settings for aktivklass project.
 
@@ -382,7 +381,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'minecrafterusergame@gmail.com'  # Replace with your Gmail address
 EMAIL_HOST_PASSWORD = 'lukojehfetcplftj'  # Paste the 16-character app password here
-=======
 """
 Django settings for aktivklass project.
 
@@ -575,4 +573,3 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'minecrafterusergame@gmail.com'  # Replace with your Gmail address
 EMAIL_HOST_PASSWORD = 'lukojehfetcplftj'  # Paste the 16-character app password here
->>>>>>> ed7d208e57427a6cc856363d81d784b94fe951c2

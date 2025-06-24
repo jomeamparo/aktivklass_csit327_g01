@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -20,224 +20,440 @@
         input:checked + .slider:before { transform: translateX(24px); }
     </style>
 </head>
-<body class="bg-gray-50">
-<div class="container mx-auto px-2 py-6 md:px-8 md:py-12">
-    <div class="max-w-4xl mx-auto">
-        <h1 class="text-3xl font-bold text-gray-800 mb-8">Preferences</h1>
-        <!-- Accordion Sections -->
-        <div id="accordion">
-            <!-- General Settings -->
-            <div class="accordion-section">
-                <div class="accordion-header flex items-center justify-between p-4" onclick="toggleAccordion(this)">
-                    <span class="font-semibold text-lg"><i class="fas fa-cog text-green-600 mr-2"></i>General Settings</span>
-                    <i class="fas fa-chevron-down"></i>
+<body class="bg-gray-50">-->
+{% extends 'core/main.html' %} 
+{% block title %}Faculty Settings{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header Section -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Settings & Preferences</h1>
+                    <p class="text-gray-600 dark:text-gray-400">Manage your account settings and preferences</p>
                 </div>
-                <div class="accordion-content grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-gray-700 mb-2">Theme</label>
-                        <div class="flex items-center gap-4">
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="darkMode">
-                                <span class="slider"></span>
-                            </label>
-                            <span>Dark Mode</span>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">Language</label>
-                        <select id="language" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
-                            <option value="en">English</option>
-                            <option value="fil">Filipino</option>
-                            <option value="es">Spanish</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">Timezone</label>
-                        <select id="timezone" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
-                            <option value="Asia/Manila">Asia/Manila</option>
-                            <option value="America/New_York">America/New York</option>
-                            <option value="Europe/London">Europe/London</option>
-                            <option value="UTC">UTC</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">Notifications</label>
-                        <div class="flex flex-col gap-2">
-                            <label class="flex items-center gap-2"><input type="checkbox" id="notifAssignments"> Assignments</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" id="notifAnnouncements"> Announcements</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" id="notifMessages"> Messages</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Faculty Settings -->
-            <div class="accordion-section">
-                <div class="accordion-header flex items-center justify-between p-4" onclick="toggleAccordion(this)">
-                    <span class="font-semibold text-lg"><i class="fas fa-chalkboard-teacher text-green-600 mr-2"></i>Faculty Settings</span>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="accordion-content grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-gray-700 mb-2">Course Notifications</label>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="facultyCourseNotif">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">Grading System</label>
-                        <select id="facultyGradingSystem" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
-                            <option value="letter">Letter Grades</option>
-                            <option value="number">Numerical Grades</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">Communication</label>
-                        <div class="flex flex-col gap-2">
-                            <label class="flex items-center gap-2"><input type="checkbox" id="facultyCommEmail"> Email</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" id="facultyCommSMS"> SMS</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" id="facultyCommInApp"> In-App</label>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">Assignment Submission</label>
-                        <input type="text" id="facultyAllowedFileTypes" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Allowed file types (e.g., pdf, docx)">
-                        <input type="number" id="facultyMaxFileSize" class="w-full p-2 border border-gray-300 rounded-lg mt-2" placeholder="Max file size (MB)">
-                    </div>
-                </div>
-            </div>
-            <!-- Student Settings -->
-            <div class="accordion-section">
-                <div class="accordion-header flex items-center justify-between p-4" onclick="toggleAccordion(this)">
-                    <span class="font-semibold text-lg"><i class="fas fa-user-graduate text-green-600 mr-2"></i>Student Settings</span>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="accordion-content grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-gray-700 mb-2">Profile Picture</label>
-                        <input type="file" id="studentProfilePic" class="w-full p-2 border border-gray-300 rounded-lg">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">Display Name</label>
-                        <input type="text" id="studentDisplayName" class="w-full p-2 border border-gray-300 rounded-lg">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">Contact Info</label>
-                        <input type="text" id="studentContact" class="w-full p-2 border border-gray-300 rounded-lg">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">Notifications</label>
-                        <div class="flex flex-col gap-2">
-                            <label class="flex items-center gap-2"><input type="checkbox" id="studentNotifGrades"> Grades</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" id="studentNotifDeadlines"> Deadlines</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" id="studentNotifAnnouncements"> Announcements</label>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">Enrollment Preferences</label>
-                        <input type="text" id="studentEnrollmentPrefs" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="e.g., auto-enroll, manual add/drop">
-                    </div>
-                </div>
-            </div>
-            <!-- Admin Settings -->
-            <div class="accordion-section">
-                <div class="accordion-header flex items-center justify-between p-4" onclick="toggleAccordion(this)">
-                    <span class="font-semibold text-lg"><i class="fas fa-user-shield text-green-600 mr-2"></i>Admin Settings</span>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="accordion-content grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-gray-700 mb-2">System-wide Notifications</label>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="adminSystemNotif">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">User Permissions</label>
-                        <input type="text" id="adminUserPermissions" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Role-based access">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">Data Management</label>
-                        <div class="flex flex-col gap-2">
-                            <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">Backup</button>
-                            <button class="bg-green-500 text-white px-4 py-2 rounded-lg">Import/Export</button>
-                            <button class="bg-yellow-500 text-white px-4 py-2 rounded-lg">Maintenance</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Security Settings -->
-            <div class="accordion-section">
-                <div class="accordion-header flex items-center justify-between p-4" onclick="toggleAccordion(this)">
-                    <span class="font-semibold text-lg"><i class="fas fa-lock text-green-600 mr-2"></i>Security Settings</span>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="accordion-content grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-gray-700 mb-2">Password Strength</label>
-                        <select id="securityPasswordStrength" class="w-full p-2 border border-gray-300 rounded-lg">
-                            <option value="medium">Medium</option>
-                            <option value="strong">Strong</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">Multi-factor Authentication</label>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="securityMFA">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">Account Recovery</label>
-                        <input type="text" id="securityRecovery" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Email/SMS">
-                    </div>
-                </div>
-            </div>
-            <!-- Advanced Settings -->
-            <div class="accordion-section">
-                <div class="accordion-header flex items-center justify-between p-4" onclick="toggleAccordion(this)">
-                    <span class="font-semibold text-lg"><i class="fas fa-tools text-green-600 mr-2"></i>Advanced Settings</span>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="accordion-content grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-gray-700 mb-2">Custom Branding</label>
-                        <input type="file" id="advancedBrandingLogo" class="w-full p-2 border border-gray-300 rounded-lg">
-                        <input type="color" id="advancedBrandingColor" class="w-full p-2 border border-gray-300 rounded-lg mt-2">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">Performance Preferences</label>
-                        <div class="flex flex-col gap-2">
-                            <label class="flex items-center gap-2"><input type="checkbox" id="advancedCaching"> Caching</label>
-                            <label class="flex items-center gap-2"><input type="checkbox" id="advancedLoadBalancing"> Load Balancing</label>
-                        </div>
+                <div class="flex items-center space-x-4">
+                    <!-- Theme Toggle -->
+                    <div class="flex items-center space-x-3 bg-white dark:bg-gray-800 rounded-lg p-3 shadow-sm border border-gray-200 dark:border-gray-700">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Theme</span>
+                        <button id="themeToggle" class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2" role="switch" aria-checked="false">
+                            <span class="sr-only">Toggle theme</span>
+                            <span id="themeToggleThumb" class="inline-block h-4 w-4 transform rounded-full bg-white transition duration-200 ease-in-out translate-x-1"></span>
+                        </button>
+                        <span id="themeLabel" class="text-sm text-gray-600 dark:text-gray-400">Light</span>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="mt-8 flex justify-end">
-            <button onclick="savePreferences()" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition duration-200">
-                Save Preferences
+
+        <!-- Settings Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column - Main Settings -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Profile Information -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                            <i class="fas fa-user-circle text-green-600 mr-3"></i>
+                            Profile Information
+                        </h2>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Full Name</label>
+                                <input type="text" id="fullName" value="{{ fullname }}" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
+                                <input type="email" id="email" value="faculty@example.com" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Department</label>
+                                <select id="department" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                                    <option value="computer-science">Computer Science</option>
+                                    <option value="engineering">Engineering</option>
+                                    <option value="business">Business</option>
+                                    <option value="arts">Arts & Humanities</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone Number</label>
+                                <input type="tel" id="phone" value="+63 912 345 6789" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notification Preferences -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                            <i class="fas fa-bell text-green-600 mr-3"></i>
+                            Notification Preferences
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">Email Notifications</h3>
+                                <div class="space-y-3">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" id="emailAssignments" checked class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                                        <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">Assignment submissions</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" id="emailAnnouncements" checked class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                                        <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">Class announcements</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" id="emailMessages" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                                        <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">Direct messages</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">In-App Notifications</h3>
+                                <div class="space-y-3">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" id="inAppAssignments" checked class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                                        <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">Assignment alerts</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" id="inAppAttendance" checked class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                                        <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">Attendance reminders</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" id="inAppSystem" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                                        <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">System updates</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Academic Settings -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                            <i class="fas fa-chalkboard-teacher text-green-600 mr-3"></i>
+                            Academic Settings
+                        </h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Grading System</label>
+                                <select id="gradingSystem" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                                    <option value="letter">Letter Grades (A-F)</option>
+                                    <option value="numerical">Numerical Grades (0-100)</option>
+                                    <option value="percentage">Percentage (%)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Default Language</label>
+                                <select id="language" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                                    <option value="en">English</option>
+                                    <option value="fil">Filipino</option>
+                                    <option value="es">Spanish</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Timezone</label>
+                                <select id="timezone" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                                    <option value="Asia/Manila">Asia/Manila (GMT+8)</option>
+                                    <option value="America/New_York">America/New York (GMT-5)</option>
+                                    <option value="Europe/London">Europe/London (GMT+0)</option>
+                                    <option value="UTC">UTC</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date Format</label>
+                                <select id="dateFormat" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                                    <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                                    <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                    <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Quick Settings -->
+            <div class="space-y-6">
+                <!-- Security Settings -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                            <i class="fas fa-shield-alt text-green-600 mr-3"></i>
+                            Security
+                        </h2>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Password Strength</label>
+                            <select id="passwordStrength" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                                <option value="medium">Medium</option>
+                                <option value="strong">Strong</option>
+                                <option value="very-strong">Very Strong</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Two-Factor Authentication</span>
+                            <button id="mfaToggle" class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 dark:bg-gray-700 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2" role="switch" aria-checked="false">
+                                <span class="sr-only">Enable MFA</span>
+                                <span id="mfaToggleThumb" class="inline-block h-4 w-4 transform rounded-full bg-white transition duration-200 ease-in-out translate-x-1"></span>
+                            </button>
+                        </div>
+                        <button class="w-full px-4 py-2 text-sm font-medium text-green-600 border border-green-600 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors duration-200">
+                            Change Password
+                        </button>
+                    </div>
+                </div>
+
+                <!-- File Upload Settings -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                            <i class="fas fa-upload text-green-600 mr-3"></i>
+                            File Upload
+                        </h2>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Allowed File Types</label>
+                            <input type="text" id="allowedFileTypes" value="pdf, docx, pptx, xlsx, jpg, png" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="pdf, docx, pptx">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Max File Size (MB)</label>
+                            <input type="number" id="maxFileSize" value="10" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                            <i class="fas fa-bolt text-green-600 mr-3"></i>
+                            Quick Actions
+                        </h2>
+                    </div>
+                    <div class="p-6 space-y-3">
+                        <button class="w-full px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                            Export Settings
+                        </button>
+                        <button class="w-full px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                            Reset to Defaults
+                        </button>
+                        <button class="w-full px-4 py-2 text-sm font-medium text-red-600 border border-red-600 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200">
+                            Delete Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Save Button -->
+        <div class="mt-8 flex justify-end space-x-4">
+            <button id="resetBtn" class="px-6 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                Reset Changes
+            </button>
+            <button id="saveBtn" class="px-6 py-3 text-sm font-medium text-white bg-green-600 border border-transparent rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                Save Changes
             </button>
         </div>
     </div>
 </div>
+
+<!-- Success Toast -->
+<div id="successToast" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 z-50">
+    <div class="flex items-center">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span>Settings saved successfully!</span>
+    </div>
+</div>
+
 <script>
-    // Accordion functionality
-    function toggleAccordion(header) {
-        const section = header.parentElement;
-        section.classList.toggle('active');
+// Theme Toggle Functionality
+class ThemeManager {
+    constructor() {
+        this.themeToggle = document.getElementById('themeToggle');
+        this.themeToggleThumb = document.getElementById('themeToggleThumb');
+        this.themeLabel = document.getElementById('themeLabel');
+        this.currentTheme = localStorage.getItem('theme') || 'light';
+        
+        this.init();
     }
-    // Responsive: open first section by default
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelector('.accordion-section').classList.add('active');
-    });
-    // Preferences logic (expand as needed)
-    function savePreferences() {
-        // Collect all preferences here and save to localStorage or backend
-        alert('Preferences saved! (Implement saving logic as needed)');
+
+    init() {
+        this.applyTheme(this.currentTheme);
+        this.themeToggle.addEventListener('click', () => this.toggleTheme());
     }
+
+    applyTheme(theme) {
+        const isDark = theme === 'dark';
+        document.documentElement.classList.toggle('dark', isDark);
+        
+        // Update toggle state
+        this.themeToggle.classList.toggle('bg-green-600', isDark);
+        this.themeToggle.classList.toggle('bg-gray-200', !isDark);
+        this.themeToggleThumb.classList.toggle('translate-x-6', isDark);
+        this.themeToggleThumb.classList.toggle('translate-x-1', !isDark);
+        
+        // Update label
+        this.themeLabel.textContent = isDark ? 'Dark' : 'Light';
+        
+        // Update aria-checked
+        this.themeToggle.setAttribute('aria-checked', isDark);
+        
+        this.currentTheme = theme;
+        localStorage.setItem('theme', theme);
+    }
+
+    toggleTheme() {
+        const newTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+        this.applyTheme(newTheme);
+    }
+}
+
+// MFA Toggle Functionality
+class MFAManager {
+    constructor() {
+        this.mfaToggle = document.getElementById('mfaToggle');
+        this.mfaToggleThumb = document.getElementById('mfaToggleThumb');
+        this.isEnabled = false;
+        
+        this.init();
+    }
+
+    init() {
+        this.mfaToggle.addEventListener('click', () => this.toggleMFA());
+    }
+
+    toggleMFA() {
+        this.isEnabled = !this.isEnabled;
+        
+        // Update toggle state
+        this.mfaToggle.classList.toggle('bg-green-600', this.isEnabled);
+        this.mfaToggle.classList.toggle('bg-gray-200', !this.isEnabled);
+        this.mfaToggleThumb.classList.toggle('translate-x-6', this.isEnabled);
+        this.mfaToggleThumb.classList.toggle('translate-x-1', !this.isEnabled);
+        
+        // Update aria-checked
+        this.mfaToggle.setAttribute('aria-checked', this.isEnabled);
+    }
+}
+
+// Settings Manager
+class SettingsManager {
+    constructor() {
+        this.saveBtn = document.getElementById('saveBtn');
+        this.resetBtn = document.getElementById('resetBtn');
+        this.successToast = document.getElementById('successToast');
+        
+        this.init();
+    }
+
+    init() {
+        this.saveBtn.addEventListener('click', () => this.saveSettings());
+        this.resetBtn.addEventListener('click', () => this.resetSettings());
+    }
+
+    saveSettings() {
+        // Collect all form data
+        const settings = {
+            profile: {
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                department: document.getElementById('department').value,
+                phone: document.getElementById('phone').value
+            },
+            notifications: {
+                emailAssignments: document.getElementById('emailAssignments').checked,
+                emailAnnouncements: document.getElementById('emailAnnouncements').checked,
+                emailMessages: document.getElementById('emailMessages').checked,
+                inAppAssignments: document.getElementById('inAppAssignments').checked,
+                inAppAttendance: document.getElementById('inAppAttendance').checked,
+                inAppSystem: document.getElementById('inAppSystem').checked
+            },
+            academic: {
+                gradingSystem: document.getElementById('gradingSystem').value,
+                language: document.getElementById('language').value,
+                timezone: document.getElementById('timezone').value,
+                dateFormat: document.getElementById('dateFormat').value
+            },
+            security: {
+                passwordStrength: document.getElementById('passwordStrength').value,
+                mfaEnabled: mfaManager.isEnabled
+            },
+            files: {
+                allowedFileTypes: document.getElementById('allowedFileTypes').value,
+                maxFileSize: document.getElementById('maxFileSize').value
+            }
+        };
+
+        // Save to localStorage (in real app, send to backend)
+        localStorage.setItem('facultySettings', JSON.stringify(settings));
+        
+        this.showSuccessToast();
+    }
+
+    resetSettings() {
+        if (confirm('Are you sure you want to reset all settings to default values?')) {
+            // Reset form fields to default values
+            document.getElementById('fullName').value = '{{ fullname }}';
+            document.getElementById('email').value = 'faculty@example.com';
+            document.getElementById('department').value = 'computer-science';
+            document.getElementById('phone').value = '+63 912 345 6789';
+            
+            // Reset checkboxes
+            document.getElementById('emailAssignments').checked = true;
+            document.getElementById('emailAnnouncements').checked = true;
+            document.getElementById('emailMessages').checked = false;
+            document.getElementById('inAppAssignments').checked = true;
+            document.getElementById('inAppAttendance').checked = true;
+            document.getElementById('inAppSystem').checked = false;
+            
+            // Reset selects
+            document.getElementById('gradingSystem').value = 'letter';
+            document.getElementById('language').value = 'en';
+            document.getElementById('timezone').value = 'Asia/Manila';
+            document.getElementById('dateFormat').value = 'MM/DD/YYYY';
+            document.getElementById('passwordStrength').value = 'medium';
+            document.getElementById('allowedFileTypes').value = 'pdf, docx, pptx, xlsx, jpg, png';
+            document.getElementById('maxFileSize').value = '10';
+            
+            this.showSuccessToast('Settings reset to defaults!');
+        }
+    }
+
+    showSuccessToast(message = 'Settings saved successfully!') {
+        this.successToast.querySelector('span').textContent = message;
+        this.successToast.classList.remove('translate-x-full');
+        
+        setTimeout(() => {
+            this.successToast.classList.add('translate-x-full');
+        }, 3000);
+    }
+}
+
+// Initialize all managers when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    const themeManager = new ThemeManager();
+    const mfaManager = new MFAManager();
+    const settingsManager = new SettingsManager();
+    
+    // Make managers globally accessible
+    window.themeManager = themeManager;
+    window.mfaManager = mfaManager;
+    window.settingsManager = settingsManager;
+});
 </script>
-</body>
+{% endblock %}
+<!--</body>
 </html>
