@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'faculty_seatworkSubmission',
     'faculty_attendance',
     'notifications',
+    'notifications_faculty',
     'faculty_settings',
     'student_settings',
     'student_profile',
