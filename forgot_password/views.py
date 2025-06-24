@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
-from core.models import Faculty, PasswordResetToken, Student, AdminUser
+from core.models import Faculty, Student, AdminUser
+from .models import PasswordResetToken
 from .token_generator import SimpleTokenGenerator
 
 def forgot_password_view(request):
