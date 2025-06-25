@@ -12,11 +12,12 @@
         </button>
     </div>
 
-    {% if classes %}
+    {# ---- VISIBLE CLASSES ---- #}
+    {% if visible_classes %}
         <div id="classList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {% for class in classes %}
+            {% for enrol in visible_classes %}
                 <div class="relative">  <!-- Added this wrapper div with relative positioning -->
-                    <form method="post" action="{% url 'leave_class' class.id %}" class="absolute top-2 right-2 z-10">
+                    <form method="post" action="{% url 'leave_class' enrol.enrolled_class.id %}" class="absolute top-2 right-2 z-10">
                         {% csrf_token %}
                         <button type="submit" class="text-red-500 hover:text-red-700" 
                                 onclick="return confirm('Are you sure you want to leave this class?');">
@@ -28,14 +29,18 @@
                             </svg>
                         </button>
                     </form>
-                    <a href="{% url 'class_record_detail' class.id role %}" 
+                    <form action="{% url 'toggle_archive' enrol.id %}" method="post" class="absolute top-12 right-2 z-10">
+                        {% csrf_token %}
+                        <button class="text-xs text-gray-400 hover:text-red-500">Archive</button>
+                    </form>
+                    <a href="{% url 'class_record_detail' enrol.enrolled_class.id role %}" 
                     class="block border border-green-600 rounded-lg p-5 bg-white cursor-pointer transition animate-float emboss-effect hover:shadow-lg">
-                        <h3 class="text-xl font-semibold text-gray-900 emboss-text">{{ class.subject_name }}</h3>
-                        <p class="text-sm text-gray-600 mt-1">Code: {{ class.subject_code }}</p>
-                        <p class="text-sm text-gray-600 mt-1">Description: {{ class.description }}</p>
-                        <p class="text-sm text-gray-600 mt-1">Schedule: {{ class.schedule }}</p>
-                        <p class="text-sm text-gray-600 mt-1">Room: {{ class.room }}</p>
-                        <p class="text-sm text-gray-600 mt-1">Class Code: {{ class.class_code }}</p>
+                        <h3 class="text-xl font-semibold text-gray-900 emboss-text">{{ enrol.enrolled_class.subject_name }}</h3>
+                        <p class="text-sm text-gray-600 mt-1">Code: {{ enrol.enrolled_class.subject_code }}</p>
+                        <p class="text-sm text-gray-600 mt-1">Description: {{ enrol.enrolled_class.description }}</p>
+                        <p class="text-sm text-gray-600 mt-1">Schedule: {{ enrol.enrolled_class.schedule }}</p>
+                        <p class="text-sm text-gray-600 mt-1">Room: {{ enrol.enrolled_class.room }}</p>
+                        <p class="text-sm text-gray-600 mt-1">Class Code: {{ enrol.enrolled_class.class_code }}</p>
                     </a>
                 </div>
             {% endfor %}
@@ -45,6 +50,32 @@
         <p class="text-gray-500 text-lg">No enrolled classes.</p>
     </div>
     {% endif %}
+
+    {# ---- HIDDEN SECTION ---- #}
+    <details class="mt-6">
+      <summary class="cursor-pointer text-sm text-gray-400">Hidden</summary>
+      <div class="grid gap-4 mt-3">
+        {% for enrol in hidden_classes %}
+            <div class="relative">
+                <form action="{% url 'toggle_archive' enrol.id %}" method="post" class="absolute top-2 right-2 z-10">
+                    {% csrf_token %}
+                    <button class="text-xs text-gray-400 hover:text-green-500">Un-archive</button>
+                </form>
+                <a href="{% url 'class_record_detail' enrol.enrolled_class.id role %}" 
+                class="block border border-gray-400 rounded-lg p-5 bg-gray-100 cursor-pointer transition animate-float emboss-effect hover:shadow-lg">
+                    <h3 class="text-xl font-semibold text-gray-900 emboss-text">{{ enrol.enrolled_class.subject_name }}</h3>
+                    <p class="text-sm text-gray-600 mt-1">Code: {{ enrol.enrolled_class.subject_code }}</p>
+                    <p class="text-sm text-gray-600 mt-1">Description: {{ enrol.enrolled_class.description }}</p>
+                    <p class="text-sm text-gray-600 mt-1">Schedule: {{ enrol.enrolled_class.schedule }}</p>
+                    <p class="text-sm text-gray-600 mt-1">Room: {{ enrol.enrolled_class.room }}</p>
+                    <p class="text-sm text-gray-600 mt-1">Class Code: {{ enrol.enrolled_class.class_code }}</p>
+                </a>
+            </div>
+        {% empty %}
+            <p class="text-xs text-gray-500">No archived classes.</p>
+        {% endfor %}
+      </div>
+    </details>
 </div>
 
 <div id="modal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden">
