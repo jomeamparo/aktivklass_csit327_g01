@@ -63,7 +63,6 @@ urlpatterns = [
     path('classes/', include('class_lists.urls')),
 
     path('help_and_support/', include('help_and_support.urls')),
-    path('faculty_attendance/', include('faculty_attendance.urls')),
     path('attendance_student/', include('attendance_student.urls')),
     path('classes/', include('class_lists.urls')),
     path('core/', include('core.urls')),
@@ -77,4 +76,3 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
