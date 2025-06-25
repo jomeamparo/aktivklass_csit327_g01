@@ -158,7 +158,7 @@ class Notification(models.Model):
     is_read = models.BooleanField(default=False)
 
     def mark_as_read(self):
-        self.is_read = True
+        self.is_read=True
         self.save()
 
     def __str__(self):
