@@ -3,10 +3,14 @@ from core.models import Class, Student, Enrollment, ClassJoinRequest
 from django.contrib import messages
 
 def class_list_view(request):
-    # Get all non-archived classes
     classes = Class.objects.filter(is_archived=False)
-    return render(request, 'class_lists/class_list.html', {'classes': classes})
 
+    role = request.session.get('role')  # or use however you normally store it
+
+    return render(request, 'class_lists/class_list.html', {
+        'classes': classes,
+        'role': role,
+    })
 def class_detail_view(request, class_id):
     selected_class = get_object_or_404(Class, id=class_id)
     return render(request, 'class_lists/class_detail.html', {'class': selected_class})
