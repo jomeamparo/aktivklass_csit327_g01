@@ -1,21 +1,5 @@
 from django.shortcuts import render
-from core.models import Class  # or wherever you define your Class model
-
-def dashboard(request):
-    classes = Class.objects.filter(is_archived=False)
-    return render(request, 'faculty_laboratory/dashboard.html', {'classes': classes})
-
-def compute_grade(percentage):
-    if percentage >= 90:
-        return 'A'
-    elif percentage >= 80:
-        return 'B'
-    elif percentage >= 70:
-        return 'C'
-    elif percentage >= 60:
-        return 'D'
-    else:
-        return 'F'
+from core.models import Class
 
 def laboratory_view(request):
     class_data = {
@@ -50,9 +34,29 @@ def laboratory_view(request):
         avg = round(sum(column_scores) / len(column_scores), 1)
         summary_data.append(f'Avg: {avg}')
 
+    # Get dashboard data
+    classes = Class.objects.filter(is_archived=False)
+
     return render(request, 'faculty_laboratory/laboratory.html', {
         'class': class_data,
         'activities': activities,
         'students': students,
         'summary_data': summary_data,
+        'classes': classes,  # Pass dashboard data
     })
+
+def dashboard(request):
+    classes = Class.objects.filter(is_archived=False)
+    return render(request, 'faculty_laboratory/dashboard.html', {'classes': classes})
+
+def compute_grade(percentage):
+    if percentage >= 90:
+        return 'A'
+    elif percentage >= 80:
+        return 'B'
+    elif percentage >= 70:
+        return 'C'
+    elif percentage >= 60:
+        return 'D'
+    else:
+        return 'F'

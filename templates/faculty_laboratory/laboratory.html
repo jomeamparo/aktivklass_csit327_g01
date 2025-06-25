@@ -14,19 +14,28 @@
         <button onclick="openAddStudentModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">+ Add Student</button>
         <button onclick="copyClassCode()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">📋 Copy Class Code</button>
         <button onclick="openAddClassModal()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition">+ Add Class</button>
+        <button onclick="resetAssignments()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">🗑️ Remove All Assignments</button>
     </div>
 
     <!-- Sort Filter -->
     <div class="flex flex-wrap items-center gap-4 mb-4">
         <div class="flex items-center space-x-2">
-            <label for="sort" class="text-gray-700 font-medium">Sort:</label>
-            <select id="sort" name="sort" onchange="handleSort(this.value)">
-            <option value="">Select</option>
-            <option value="az">Name A - Z</option>
-            <option value="za">Name Z - A</option>
-            <option value="high">Total High → Low</option>
-            <option value="low">Total Low → High</option>
-        </select>
+            <label for="sort" class="text-gray-700 font-medium">Sort by:</label>
+            <div class="relative">
+                <select id="sort" name="sort" onchange="handleSort(this.value)"
+                    class="block appearance-none w-44 bg-white border border-gray-300 hover:border-green-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-500 transition">
+                    <option value="">Select</option>
+                    <option value="az">Name A - Z</option>
+                    <option value="za">Name Z - A</option>
+                    <option value="high">Total High → Low</option>
+                    <option value="low">Total Low → High</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -59,45 +68,44 @@
             </thead>
             <tbody id="studentsBody">
                 <tr class="border-b">
-                    <td class="px-4 py-2"><input type="text" value="Eva at" class="w-full bg-transparent outline-none first-name" /></td>
-                    <td class="px-4 py-2"><input type="text" value="Adan" class="w-full bg-transparent outline-none last-name" /></td>
-                    <td class="px-4 py-2"><input type="number" value="85" class="score w-full text-center" /></td>
-                    <td class="px-4 py-2"><input type="number" value="90" class="score w-full text-center" /></td>
-                    <td class="px-4 py-2"><input type="number" value="92" class="score w-full text-center" /></td>
-                    <td class="px-4 py-2"><input type="number" value="88" class="score w-full text-center" /></td>
+                    <td class="px-4 py-2">Eva</td>
+                    <td class="px-4 py-2">Adan</td>
+                    <td class="px-4 py-2">85</td>
+                    <td class="px-4 py-2">90</td>
+                    <td class="px-4 py-2">92</td>
+                    <td class="px-4 py-2">88</td>
                     <td class="px-4 py-2 student-total font-semibold">355</td>
-                    <td class="px-4 py-2 student-grade">89%</td>
+                    <td class="px-4 py-2 student-grade text-green-600 font-semibold">Passed</td>
                     <td class="px-4 py-2 flex gap-2">
                         <button onclick="editStudentRow(this)" class="text-blue-500 hover:underline">Edit</button>
                         <button onclick="deleteStudent(this)" class="text-red-500 hover:underline">Delete</button>
                     </td>
                 </tr>
                 <tr class="border-b">
-                    <td class="px-4 py-2"><input type="text" value="Michael" class="w-full bg-transparent outline-none first-name" /></td>
-                    <td class="px-4 py-2"><input type="text" value="Jackstone" class="w-full bg-transparent outline-none last-name" /></td>
-                    <td class="px-4 py-2"><input type="number" value="85" class="score w-full text-center" /></td>
-                    <td class="px-4 py-2"><input type="number" value="90" class="score w-full text-center" /></td>
-                    <td class="px-4 py-2"><input type="number" value="92" class="score w-full text-center" /></td>
-                    <td class="px-4 py-2"><input type="number" value="88" class="score w-full text-center" /></td>
+                    <td class="px-4 py-2">Michael</td>
+                    <td class="px-4 py-2">Jackstone</td>
+                    <td class="px-4 py-2">85</td>
+                    <td class="px-4 py-2">90</td>
+                    <td class="px-4 py-2">92</td>
+                    <td class="px-4 py-2">88</td>
                     <td class="px-4 py-2 student-total font-semibold">355</td>
-                    <td class="px-4 py-2 student-grade">89%</td>
+                    <td class="px-4 py-2 student-grade text-green-600 font-semibold">Passed</td>
                     <td class="px-4 py-2 flex gap-2">
                         <button onclick="editStudentRow(this)" class="text-blue-500 hover:underline">Edit</button>
                         <button onclick="deleteStudent(this)" class="text-red-500 hover:underline">Delete</button>
                     </td>
                 </tr>
                 <tr class="border-b">
-                    <td class="px-4 py-2"><input type="text" value="AiAi" class="w-full bg-transparent outline-none first-name" /></td>
-                    <td class="px-4 py-2"><input type="text" value="Ayayay" class="w-full bg-transparent outline-none last-name" /></td>
-                    <td class="px-4 py-2"><input type="number" value="85" class="score w-full text-center" /></td>
-                    <td class="px-4 py-2"><input type="number" value="90" class="score w-full text-center" /></td>
-                    <td class="px-4 py-2"><input type="number" value="92" class="score w-full text-center" /></td>
-                    <td class="px-4 py-2"><input type="number" value="88" class="score w-full text-center" /></td>
+                    <td class="px-4 py-2">AiAi</td>
+                    <td class="px-4 py-2">Ayayay</td>
+                    <td class="px-4 py-2">85</td>
+                    <td class="px-4 py-2">90</td>
+                    <td class="px-4 py-2">92</td>
+                    <td class="px-4 py-2">88</td>
                     <td class="px-4 py-2 student-total font-semibold">355</td>
-                    <td class="px-4 py-2 student-grade">89%</td>
+                    <td class="px-4 py-2 student-grade text-green-600 font-semibold">Passed</td>
                     <td class="px-4 py-2 flex gap-2">
                         <button onclick="editStudentRow(this)" class="text-blue-500 hover:underline">Edit</button>
-
                         <button onclick="deleteStudent(this)" class="text-red-500 hover:underline">Delete</button>
                     </td>
                 </tr>
@@ -232,17 +240,18 @@ function submitAddStudentForm(event) {
         return;
     }
 
+    // Calculate number of score columns (between Last Name and Total)
     const totalHeaderCols = document.querySelectorAll("thead th").length;
-    const scoreColumnCount = totalHeaderCols - 5;
+    const scoreColumnCount = totalHeaderCols - 5; // 2 name + total + grade + action
 
     const newRow = document.createElement("tr");
     newRow.className = "border-b";
 
-    newRow.innerHTML += `<td class="px-4 py-2 student-name">${firstName}</td>`;
+    newRow.innerHTML += `<td class="px-4 py-2">${firstName}</td>`;
     newRow.innerHTML += `<td class="px-4 py-2">${lastName}</td>`;
 
     for (let i = 0; i < scoreColumnCount; i++) {
-        newRow.innerHTML += `<td class="px-4 py-2 score">0</td>`;
+        newRow.innerHTML += `<td class="px-4 py-2">0</td>`;
     }
 
     newRow.innerHTML += `<td class="px-4 py-2 student-total font-semibold">0</td>`;
@@ -357,11 +366,10 @@ function saveStudentRow(button) {
     const gradeCell = row.children[row.children.length - 2];
     gradeCell.textContent = grade;
 
+    gradeCell.classList.remove("text-green-600", "text-red-500");
     if (grade === "Passed") {
-        gradeCell.classList.remove("text-red-500");
         gradeCell.classList.add("text-green-600", "font-semibold");
     } else {
-        gradeCell.classList.remove("text-green-600");
         gradeCell.classList.add("text-red-500", "font-semibold");
     }
 
@@ -397,6 +405,50 @@ function addAssignment() {
         td.innerHTML = "0";
         row.insertBefore(td, row.children[6]);
     });
+
+    saveAssignmentsToLocalStorage(); // <-- Save assignments after adding
+    saveStudentsToLocalStorage();    // <-- Save students as well
+}
+
+function resetAssignments() {
+    // Remove assignments from localStorage
+    localStorage.removeItem("assignments");
+
+    // Remove all dynamic assignment ths after the default 4 (Quiz 1, Quiz 2, Project, Exam) and before Total
+    const theadRow = document.querySelector("thead tr");
+    while (theadRow.children.length > 9) {
+        theadRow.removeChild(theadRow.children[6]);
+    }
+
+    // For each student row, remove the corresponding assignment <td>s
+    const studentRows = document.querySelectorAll("#studentsBody tr");
+    studentRows.forEach(row => {
+        while (row.children.length > 9) {
+            row.removeChild(row.children[6]);
+        }
+        // Optionally, recalculate total and grade
+        let total = 0;
+        for (let i = 2; i < 6; i++) {
+            total += parseInt(row.children[i].textContent.trim()) || 0;
+        }
+        row.children[6].textContent = total;
+        const percentage = (total / (4 * 100)) * 100;
+        const grade = computeGrade(percentage);
+        row.children[7].textContent = grade;
+        row.children[7].classList.remove("text-green-600", "text-red-500");
+        if (grade === "Passed") {
+            row.children[7].classList.add("text-green-600", "font-semibold");
+        } else {
+            row.children[7].classList.add("text-red-500", "font-semibold");
+        }
+    });
+
+    // Reset assignment count so next added assignment is "Assignment 1"
+    assignmentCount = 0;
+
+    // Save changes
+    saveAssignmentsToLocalStorage();
+    saveStudentsToLocalStorage();
 }
 
 function saveStudentsToLocalStorage() {
@@ -448,8 +500,90 @@ function loadStudentsFromLocalStorage() {
     });
 }
 
-window.onload = loadStudentsFromLocalStorage;
+window.onload = function() {
+    loadAssignmentsFromLocalStorage();
+    loadStudentsFromLocalStorage();
+};
 
+function openEditClassModal(button) {
+    const card = button.closest(".relative");
+
+    // Replace each <p> with an input field
+    const paragraphs = card.querySelectorAll("p");
+
+    paragraphs.forEach(p => {
+        const text = p.textContent.split(": ");
+        const label = text[0];
+        const value = text[1];
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.className = "w-full text-sm text-gray-600 border px-2 py-1 rounded mt-1";
+        input.value = value || "";
+
+        const labelEl = document.createElement("label");
+        labelEl.textContent = label + ":";
+        labelEl.className = "text-sm text-gray-600 mt-1 block";
+
+        p.replaceWith(labelEl, input);
+    });
+
+    // Replace edit button with Save
+    button.textContent = "💾 Save";
+    button.onclick = function () { saveClassEdits(this); };
+}
+
+function saveClassEdits(button) {
+    const card = button.closest(".relative");
+    const labels = card.querySelectorAll("label");
+    const inputs = card.querySelectorAll("input");
+
+    // Remove all current labels + inputs, then recreate <p> with content
+    labels.forEach(label => label.remove());
+
+    const values = [];
+    inputs.forEach(input => {
+        values.push(input.value);
+        input.remove();
+    });
+
+    const fields = ["Code", "Description", "Schedule", "Room", "Class Code"];
+    fields.forEach((label, index) => {
+        const p = document.createElement("p");
+        p.className = "text-sm text-gray-600 mt-1";
+        p.textContent = `${label}: ${values[index]}`;
+        card.appendChild(p);
+    });
+
+    // Change Save back to Edit
+    button.textContent = "✏️ Edit";
+    button.onclick = function () { openEditClassModal(this); };
+}
+
+// Save assignment headers to localStorage
+function saveAssignmentsToLocalStorage() {
+    const headers = Array.from(document.querySelectorAll("thead th"));
+    const assignmentHeaders = headers.slice(6, headers.length - 3).map(th => th.textContent);
+    localStorage.setItem("assignments", JSON.stringify(assignmentHeaders));
+}
+
+// Load assignment headers from localStorage
+function loadAssignmentsFromLocalStorage() {
+    const saved = localStorage.getItem("assignments");
+    if (!saved) return;
+    const assignmentHeaders = JSON.parse(saved);
+
+    const theadRow = document.querySelector("thead tr");
+    while (theadRow.children.length > 9) {
+        theadRow.removeChild(theadRow.children[6]);
+    }
+    assignmentHeaders.forEach((name, idx) => {
+        const th = document.createElement("th");
+        th.className = "px-4 py-3 font-semibold";
+        th.textContent = name;
+        theadRow.insertBefore(th, theadRow.children[6 + idx]);
+    });
+}
 </script>
 
 <!-- Styles -->
@@ -465,11 +599,6 @@ animation: float 3s ease-in-out infinite;
 box-shadow:
     inset 2px 2px 5px rgba(255, 255, 255, 0.7),
     inset -2px -2px 5px rgba(0, 0, 0, 0.1);
-}
-.emboss-text {
-text-shadow:
-    1px 1px 0 #fff,
-    -1px -1px 0 #999;
 }
 </style>
 {% endblock %}
