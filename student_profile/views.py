@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from core.models import Student, StudentProfile
+from core.models import Student
 from .forms import StudentProfileForm, StudentStatusForm
 
 def student_profile_view(request):
