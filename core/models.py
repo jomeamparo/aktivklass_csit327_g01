@@ -258,7 +258,9 @@ class FacultyProfileConfig(AppConfig):
 
 
 class PasswordResetToken(models.Model):
-    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE)
+    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, null=True, blank=True)
+    admin_user = models.ForeignKey(AdminUser, on_delete=models.CASCADE, null=True, blank=True)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True, blank=True)
     token = models.UUIDField(default=uuid.uuid4, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_used = models.BooleanField(default=False)
