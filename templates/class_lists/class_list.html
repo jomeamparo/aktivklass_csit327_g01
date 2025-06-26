@@ -4,51 +4,64 @@
 
 {% block content %}
 <div class="container">
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">Available Classes</h2>
+    <!-- Top bar: Search + Pending Requests + (future) actions -->
+    <div class="flex flex-wrap items-center gap-3 mb-6">
+        <form method="get" action="{% url 'class_list' %}" class="flex items-center gap-2">
+            <input type="text" name="q" value="{{ search_query }}" placeholder="Search classes by name or subject code..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+            <button type="submit" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">Search</button>
+            {% if search_query %}
+                <a href="{% url 'class_list' %}" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition">Clear</a>
+            {% endif %}
+        </form>
+        <a href="{% url 'pending_requests' %}" class="flex items-center gap-2 px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">
+            <span>Pending Requests</span>
+            <span class="bg-yellow-700 text-white text-xs rounded-full px-2 py-1">{{ pending_requests_count|default:0 }}</span>
+        </a>
     </div>
 
     {% if classes %}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {% for class in classes %}
-                <div class="relative">
-                    <form method="post" action="{% url 'join_class_view' class.id %}" class="block">
+                <div class="border border-green-600 rounded-lg p-5 bg-white shadow-sm relative">
+                    <form method="post" action="{% url 'toggle_favorite' class.id %}" class="absolute top-2 right-2">
                         {% csrf_token %}
-                        <div class="border border-green-600 rounded-lg p-5 bg-white cursor-pointer transition animate-float emboss-effect hover:shadow-lg">
-                            <h3 class="text-xl font-semibold text-gray-900 emboss-text">{{ class.subject_name }}</h3>
-                            <p class="text-sm text-gray-600 mt-1">Code: {{ class.subject_code }}</p>
-                            <p class="text-sm text-gray-600 mt-1">Description: {{ class.description }}</p>
-                            <p class="text-sm text-gray-600 mt-1">Schedule: {{ class.schedule }}</p>
-                            <p class="text-sm text-gray-600 mt-1">Room: {{ class.room }}</p>
-                            <p class="text-sm text-gray-600 mt-1">Class Code: {{ class.class_code }}</p>
-                            <button type="submit" class="mt-4 w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
-                                Request to Join
-                            </button>
-                        </div>
+                        <button type="submit" class="text-2xl">
+                            {% if class.id in favorited_ids %}
+                                ⭐
+                            {% else %}
+                                ☆
+                            {% endif %}
+                        </button>
+                    </form>
+                    <h3 class="text-lg font-semibold text-gray-900">{{ class.subject_name }}</h3>
+                    <p class="text-sm text-gray-600 mt-1">Code: {{ class.subject_code }}</p>
+                    <p class="text-sm text-gray-600 mt-1">Description: {{ class.description }}</p>
+                    <p class="text-sm text-gray-600 mt-1">Schedule: {{ class.schedule }}</p>
+                    <p class="text-sm text-gray-600 mt-1">Room: {{ class.room }}</p>
+                    <p class="text-sm text-gray-600 mt-1">Class Code: {{ class.class_code }}</p>
+                    <form method="post" action="{% url 'join_class_view' class.id %}" class="mt-3">
+                        {% csrf_token %}
+                        <button type="submit" class="bg-green-600 text-white w-full py-2 rounded hover:bg-green-700 transition">Request to Join</button>
                     </form>
                 </div>
             {% endfor %}
         </div>
     {% else %}
         <div class="flex justify-center items-center h-48">
-            <p class="text-gray-500 text-lg">No available classes.</p>
+            <p class="text-gray-500 text-lg">
+                {% if search_query %}
+                    No classes found matching "{{ search_query }}".
+                {% else %}
+                    No available classes.
+                {% endif %}
+            </p>
         </div>
     {% endif %}
 </div>
 
 <style>
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
+/* Remove float animation from cards */
+.animate-float { animation: none !important; }
 
 .emboss-effect {
   box-shadow:

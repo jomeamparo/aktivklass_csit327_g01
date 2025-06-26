@@ -285,3 +285,15 @@ class FacultyProfile(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+# Feature 3: Bookmark / Favorite Class # asdasd
+class FavoriteClass(models.Model): # asdasd
+    student = models.ForeignKey(Student, on_delete=models.CASCADE) # asdasd
+    class_obj = models.ForeignKey(Class, on_delete=models.CASCADE) # asdasd
+    created_at = models.DateTimeField(auto_now_add=True) # asdasd
+
+    class Meta: # asdasd
+        unique_together = ('student', 'class_obj') # asdasd
+
+    def __str__(self): # asdasd
+        return f"{self.student} favorited {self.class_obj}" # asdasd
+
