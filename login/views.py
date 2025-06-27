@@ -71,3 +71,8 @@ def forgot_password(request):
             return render(request, 'login/forgot_password.html')
 
     return render(request, 'login/forgot_password.html')
+
+def logout_view(request):
+    request.session['user_id'] = None
+    request.session['role'] =  None
+    return render(request, 'login/login.html')

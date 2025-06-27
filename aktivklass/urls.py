@@ -34,7 +34,6 @@ urlpatterns = [
     path('admin_faculty_list/', include('admin_faculty_list.urls')),
     path('admin_student_list/', include('admin_student_list.urls')),
     path('edit_faculty/', include('edit_faculty.urls')),
-    path('edit_admin/', include('edit_admin.urls')),
     path('edit_student/', include('edit_student.urls')),
     path('teacher_student/', include('teacher_student.urls')),
     path('class_record/', include('class_record.urls')),
@@ -59,7 +58,6 @@ urlpatterns = [
     path('admin_notif/', include(('admin_notif.urls', 'admin_notif'), namespace='admin_notif')),
 
     path('faculty_notifications/', include('notifications_faculty.urls')),
-    path('edit_admin/', include('edit_admin.urls')),
     path('classes/', include('class_lists.urls')),
     path('faculty_notifications/', include('notifications_faculty.urls')),
     path('help_and_support/', include('help_and_support.urls')),
