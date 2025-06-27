@@ -89,6 +89,18 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Faculty_Attendance',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id_number', models.CharField(max_length=50)),
+                ('first_name', models.CharField(max_length=100)),
+                ('last_name', models.CharField(max_length=100)),
+                ('subject', models.CharField(max_length=100)),
+                ('date', models.DateField()),
+                ('status', models.CharField(max_length=50)),
+            ],
+        ),
+        migrations.CreateModel(
             name='Student',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -101,7 +113,11 @@ class Migration(migrations.Migration):
                 ('course', models.CharField(blank=True, max_length=50, null=True)),
                 ('year', models.CharField(blank=True, max_length=50, null=True)),
                 ('password', models.CharField(blank=True, max_length=128, null=True)),
+<<<<<<< HEAD
                 ('status', models.CharField(choices=[('Available', 'Available'), ('Busy', 'Busy'), ('Offline', 'Offline')], default='Available', max_length=20)),
+=======
+                ('status', models.CharField(choices=[('ACTIVE', 'Active'), ('DISABLED', 'Disabled')], default='ACTIVE', max_length=10)),
+>>>>>>> be9fa20 (feature(edit):update code)
                 ('enrolled_classes', models.ManyToManyField(related_name='students', through='core.Enrollment', to='core.class')),
             ],
         ),

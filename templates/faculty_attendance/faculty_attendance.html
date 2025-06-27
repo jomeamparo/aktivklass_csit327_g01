@@ -1,163 +1,176 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <title>AktivKlass Management System - Attendance</title>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>AktivKlass Management System - Attendance</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
 </head>
 <body class="min-h-screen bg-gray-100 font-sans antialiased text-gray-800">
-  <div class="flex h-screen overflow-hidden">
-    <!-- Sidebar -->
-    <aside id="sidebar" class="w-64 bg-white shadow-xl border-r border-gray-200 p-4 flex flex-col transition-all duration-300 ease-in-out">
-      <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 shadow-sm mb-6">
-        <img src="https://placehold.co/56x56/f0f0f0/333?text=P" alt="Profile Photo" class="w-14 h-14 rounded-full border-2 border-green-500 object-cover" />
-        <div>
-          <p class="text-xs text-gray-500">email@example.com</p>
-        </div>
-      </div>
+    <div class="flex h-screen overflow-hidden">
 
-      <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition"><i class="fas fa-user text-green-600"></i><span>Class Record</span></a>
-      <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition"><i class="fas fa-users text-green-600"></i><span>Students</span></a>
-      <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition"><i class="fas fa-users text-green-600"></i><span>Class Join Request</span></a>
-      <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition"><i class="fas fa-users text-green-600"></i><span>Archived Classes</span></a>
-      <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg bg-green-50 text-green-700 transition"><i class="fas fa-clipboard-list text-green-600"></i><span>Attendance</span></a>
-
-      <div class="border-t border-gray-200 my-4"></div>
-      <span class="text-xs uppercase text-gray-400 px-4">Settings</span>
-      <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition"><i class="fas fa-cog text-green-600"></i><span>Preferences</span></a>
-      <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition"><i class="fas fa-info-circle text-green-600"></i><span>Help & Support</span></a>
-
-      <div class="mt-auto pt-4 border-t border-gray-200">
-        <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 transition"><i class="fas fa-sign-out-alt text-red-600"></i><span>Logout</span></a>
-      </div>
-    </aside>
-
-    <!-- Main Content -->
-    <div id="mainContent" class="flex-1 flex flex-col bg-gray-50 transition-all duration-300 ease-in-out">
-      <header class="bg-white shadow-sm p-4 flex items-center justify-between">
-        <button id="toggleSidebar" class="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-          <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="18" x2="21" y2="18" />
-          </svg>
-        </button>
-        <div class="w-full flex justify-center items-center mt-4">
-          <h1 class="text-3xl font-bold tracking-tight" style="font-family: 'Poppins', sans-serif;">
-            <span class="text-green-600">Aktiv</span><span class="text-gray-800">Klass</span>
-            <span class="font-medium text-gray-500">Management</span>
-          </h1>
-        </div>
-        <div></div>
-      </header>
-
-      <!-- Page Content -->
-      <main class="flex-1 p-6 overflow-y-auto">
-        <div class="container mx-auto">
-          <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">Attendance Records</h2>
-          </div>
-
-          <!-- Filter Form -->
-          <form method="get" class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-4">
-              <select name="class" class="filter-dropdown px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm">
-                <option value="">Select Class</option>
-                <option value="OOP" {% if selected_class == "OOP" %}selected{% endif %}>OOP</option>
-                <option value="DSA" {% if selected_class == "DSA" %}selected{% endif %}>DSA</option>
-                <option value="MOBDEV" {% if selected_class == "MOBDEV" %}selected{% endif %}>MOBDEV</option>
-                <option value="IM2" {% if selected_class == "IM2" %}selected{% endif %}>IM2</option>
-              </select>
-              <input type="date" name="date" value="{{ selected_date }}" class="filter-date px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm">
-              <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">Filter</button>
+        <aside id="sidebar" class="hidden md:flex w-64 bg-white shadow-xl border-r border-gray-200 p-4 flex-col transition-all duration-300 ease-in-out fixed md:relative z-40 h-full">
+            <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 shadow-sm mb-6">
+                <img src="https://placehold.co/56x56/f0f0f0/333?text=P" alt="Profile Photo" class="w-14 h-14 rounded-full border-2 border-green-500 object-cover" />
+                <div>
+                    <p class="text-xs text-gray-500">email@example.com</p>
+                </div>
             </div>
-          </form>
 
-          <!-- Attendance Table -->
-          <div class="overflow-x-auto bg-white p-4 rounded-lg shadow-md">
-            <table class="min-w-full border-collapse">
-              <thead>
-                <tr class="bg-gray-100">
-                  <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm font-semibold border-b border-gray-200">ID Number</th>
-                  <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm font-semibold border-b border-gray-200">First Name</th>
-                  <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm font-semibold border-b border-gray-200">Last Name</th>
-                  <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm font-semibold border-b border-gray-200">Date</th>
-                  <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm font-semibold border-b border-gray-200">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for record in records %}
-                <tr class="hover:bg-gray-50">
-                  <td class="py-3 px-4 border-b text-sm text-gray-700">{{ record.id_number }}</td>
-                  <td class="py-3 px-4 border-b text-sm text-gray-700">{{ record.first_name }}</td>
-                  <td class="py-3 px-4 border-b text-sm text-gray-700">{{ record.last_name }}</td>
-                  <td class="py-3 px-4 border-b text-sm text-gray-700">{{ record.date }}</td>
-                  <td class="py-3 px-4 border-b text-sm font-semibold text-green-600">{{ record.status }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                  <td colspan="5" class="text-center py-4 text-gray-500">No records found.</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
+            <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition"><i class="fas fa-user text-green-600"></i><span>Class Record</span></a>
+            <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition"><i class="fas fa-users text-green-600"></i><span>Students</span></a>
+            <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition"><i class="fas fa-users text-green-600"></i><span>Class Join Request</span></a>
+            <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition"><i class="fas fa-users text-green-600"></i><span>Archived Classes</span></a>
+            <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg bg-green-50 text-green-700 transition"><i class="fas fa-clipboard-list text-green-600"></i><span>Attendance</span></a>
 
-          <!-- Download Button -->
-          <div class="flex justify-end mt-4">
-            <button class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition shadow-md">
-              <i class="fas fa-download mr-2"></i> Download Report
-            </button>
-          </div>
+            <div class="border-t border-gray-200 my-4"></div>
+            <span class="text-xs uppercase text-gray-400 px-4">Settings</span>
+            <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition"><i class="fas fa-cog text-green-600"></i><span>Preferences</span></a>
+            <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition"><i class="fas fa-info-circle text-green-600"></i><span>Help & Support</span></a>
+
+            <div class="mt-auto pt-4 border-t border-gray-200">
+                <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 transition"><i class="fas fa-sign-out-alt text-red-600"></i><span>Logout</span></a>
+            </div>
+        </aside>
+
+        <div id="mainContent" class="md:ml-64 flex-1 flex flex-col bg-gray-50 transition-all duration-300 ease-in-out">
+            <header class="bg-white shadow-sm p-4 flex items-center justify-between">
+                <button id="toggleSidebar" class="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+                <div class="w-full flex justify-center items-center mt-4">
+                    <h1 class="text-3xl font-bold tracking-tight" style="font-family: 'Poppins', sans-serif;">
+                        <span class="text-green-600">Aktiv</span><span class="text-gray-800">Klass</span>
+                        <span class="font-medium text-gray-500">Management</span>
+                    </h1>
+                </div>
+                <div></div>
+            </header>
+
+            <main class="flex-1 p-6 overflow-y-auto">
+                <div class="container mx-auto">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Attendance Records</h2>
+                    </div>
+
+                    <form method="get" class="bg-white p-6 rounded-lg shadow-md mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                        <select name="subject" class="filter-dropdown px-4 py-2 border border-gray-300 rounded-lg shadow-sm">
+                            <option value="">Select Class</option>
+                            <option value="OOP" {% if request.GET.subject == 'OOP' %}selected{% endif %}>OOP</option>
+                            <option value="DSA" {% if request.GET.subject == 'DSA' %}selected{% endif %}>DSA</option>
+                            <option value="IM2" {% if request.GET.subject == 'IM2' %}selected{% endif %}>IM2</option>
+                            <option value="DA" {% if request.GET.subject == 'DA' %}selected{% endif %}>DA</option>
+                        </select>
+
+                        <input type="date" name="date" class="filter-date px-4 py-2 border border-gray-300 rounded-lg shadow-sm" value="{{ request.GET.date }}">
+
+                        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition shadow-md">
+                            Filter
+                        </button>
+
+                        <button type="submit" name="download" value="1" class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition shadow-md">
+                            <i class="fas fa-download mr-2"></i> Download Report
+                        </button>
+                    </form>
+
+                    <div class="overflow-x-auto bg-white p-4 rounded-lg shadow-md">
+                        <table class="min-w-full border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm font-semibold border-b border-gray-200">ID Number</th>
+                                    <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm font-semibold border-b border-gray-200">First Name</th>
+                                    <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm font-semibold border-b border-gray-200">Last Name</th>
+                                    <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm font-semibold border-b border-gray-200">Subject</th>
+                                    <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm font-semibold border-b border-gray-200">Date</th>
+                                    <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm font-semibold border-b border-gray-200">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for record in records %}
+                                <tr class="hover:bg-gray-50 transition duration-150 ease-in-out">
+                                    <td class="py-3 px-4 border-b border-gray-200 text-sm text-gray-700">{{ record.id_number }}</td>
+                                    <td class="py-3 px-4 border-b border-gray-200 text-sm text-gray-700">{{ record.first_name }}</td>
+                                    <td class="py-3 px-4 border-b border-gray-200 text-sm text-gray-700">{{ record.last_name }}</td>
+                                    <td class="py-3 px-4 border-b border-gray-200 text-sm text-gray-700">{{ record.subject }}</td>
+                                    <td class="py-3 px-4 border-b border-gray-200 text-sm text-gray-700">{{ record.date|date:"d-m-Y" }}</td>
+                                    <td class="py-3 px-4 border-b border-gray-200 text-sm text-green-600 font-semibold">{{ record.status }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center text-gray-500 py-4">No records found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
         </div>
-      </main>
     </div>
-  </div>
 
-  <script>
-    const toggleButton = document.getElementById("toggleSidebar");
-    const sidebar = document.getElementById("sidebar");
-    toggleButton.addEventListener("click", () => {
-      sidebar.classList.toggle("hidden");
-    });
-  </script>
+    <script>
+        const toggleButton = document.getElementById("toggleSidebar");
+        const sidebar = document.getElementById("sidebar");
 
-  <style>
-    .scrollbar-thin::-webkit-scrollbar {
-      width: 6px;
-    }
-    .scrollbar-thin::-webkit-scrollbar-thumb {
-      background-color: #10b981;
-      border-radius: 9999px;
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
-    }
-    .animate-float {
-      animation: float 3s ease-in-out infinite;
-    }
-    @media (max-width: 768px) {
-      #sidebar {
-        position: absolute;
-        left: -256px;
-        z-index: 50;
-        height: 100vh;
-      }
-      #sidebar.hidden {
-        left: 0;
-      }
-    }
-    @media (max-width: 640px) {
-      .filter-dropdown, .filter-date {
-        width: 100%;
-        flex-basis: 100%;
-      }
-    }
-  </style>
+        toggleButton.addEventListener("click", () => {
+            sidebar.classList.toggle("hidden");
+        });
+
+        // This ensures the sidebar hides on small screens when shown
+        // and stays hidden unless toggled or screen size changes
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) {
+                sidebar.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('hidden');
+            }
+        });
+
+        // Initialize sidebar state on load
+        if (window.innerWidth < 768) {
+            sidebar.classList.add('hidden');
+        }
+    </script>
+
+    <style>
+        /* These media queries are already correctly controlling sidebar visibility */
+        @media (max-width: 768px) {
+            #sidebar {
+                display: none; /* Hide by default on small screens */
+                position: fixed; /* Allow it to slide over content */
+                left: 0;
+                top: 0;
+                height: 100vh;
+                background-color: white;
+                z-index: 50; /* Ensure it's above other content */
+            }
+            #sidebar.hidden {
+                transform: translateX(-100%); /* Slide out of view */
+            }
+            #sidebar.show {
+                transform: translateX(0); /* Slide into view */
+            }
+        }
+
+        /* Adjust main content margin for mobile when sidebar is shown (optional, depends on UX) */
+        @media (min-width: 768px) {
+            #mainContent {
+                margin-left: 16rem; /* Tailwind's ml-64 */
+            }
+        }
+
+        @media (max-width: 640px) {
+            .filter-dropdown, .filter-date {
+                width: 100%;
+            }
+        }
+    </style>
 </body>
 </html>
