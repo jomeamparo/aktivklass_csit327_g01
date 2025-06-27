@@ -61,7 +61,7 @@ INSTALLED_APPS = [
     'faculty_profile',
     'faculty_laboratory',
     'notifications_faculty',
-    'settings',
+    'admin_settings',
     'analytics',
     'chat_screen',
     'edit_faculty',
