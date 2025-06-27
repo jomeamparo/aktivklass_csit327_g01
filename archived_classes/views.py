@@ -1,23 +1,11 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from core.models import Class, Faculty
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-@login_required
+from core.models import Class
+
 def archived_classes(request):
-    # Get the faculty member
-    faculty = Faculty.objects.get(email=request.user.email)
-    
-    # Get all classes where the faculty is enrolled and is_archived is True
-    classes = Class.objects.filter(
-        enrollment__faculty=faculty,
-        is_archived=True
-    ).distinct()
-    
-    return render(request, 'archived_classes/archived_classes.html', {
-        'classes': classes,
-        'role': 'faculty'
-    })
+    classes = Class.objects.filter(is_archived=True)
+    return render(request, 'archived_classes/archived_classes.html', {'classes': classes, 'role': 'faculty'})
 
 def delete_archived_class(request, class_id):
     if request.method == "POST":
