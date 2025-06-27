@@ -1,0 +1,341 @@
+{% extends 'core/main.html' %} 
+{% block title %}Course List{% endblock %}
+{% block content %}
+<div class="container">
+    {% csrf_token %}
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
+            Course List
+        </h2>
+
+        <div class="flex space-x-2 ml-auto">
+            <button id="openModalBtn" 
+                    type="button"
+                    class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                Add Course
+            </button>
+
+            <form id="uploadForm" method="post" enctype="multipart/form-data" >
+                {% csrf_token %}
+                <label for="uploadInput" 
+                    class="cursor-pointer bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition inline-block">
+                    Upload Course List
+                </label>
+                <input id="uploadInput" name="class_list" type="file" class="hidden" onchange="document.getElementById('uploadForm').submit()" />
+            </form>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow mb-6">
+        <div class="flex flex-wrap justify-between items-center gap-4">
+            <!-- Search Box with Button (Left) -->
+            <div class="flex items-center space-x-2">
+                <label for="search" class="text-gray-700 dark:text-gray-300 font-medium">Search:</label>
+                <input id="search" name="search" type="text" placeholder="Enter keyword..." class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-2 w-64 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+                    Search
+                </button>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-4">
+                <div class="flex items-center space-x-2">
+                    <label for="sort" class="text-gray-700 dark:text-gray-300 font-medium">Sort:</label>
+                    <select id="sort" name="sort" class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="">Select</option>
+                        <option value="ascending">A - Z</option>
+                        <option value="descending">Z - A</option>
+                    </select>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <label for="college_name" class="text-gray-700 dark:text-gray-300 font-medium">College:</label>
+                    <select id="college_name" name="college_name" class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="">All</option>
+                        <option value="ccs">College of Computer Science</option>
+                        <option value="case">College of Arts, Science, and Education</option>
+                    </select>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <label for="department_name" class="text-gray-700 dark:text-gray-300 font-medium">Department:</label>
+                    <select id="department_name" name="department_name" class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="">All</option>
+                        <option value="it">Information Technology</option>
+                        <option value="cs">Computer Science</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if courseList %}
+    <div class="overflow-x-auto bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+        <table class="min-w-full border border-gray-200 dark:border-gray-700">
+            <thead class="bg-gray-100 dark:bg-gray-700">
+                <tr>
+                    <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">ID</th>
+                    <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Subject Name</th>
+                    <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Subject Code</th>
+                    <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Section</th>
+                    <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Schedule</th>
+                    <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Capacity</th>
+                    <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Room</th>
+                    <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courseList %}
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" onclick="openEditModal('{{ course.course_id }}', '{{ course.subject_name }}', '{{ course.subject_code }}', '{{ course.section }}', '{{ course.schedule }}', '{{ course.capacity }}', '{{ course.room }}')">
+                    <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ course.course_id }}</td>
+                    <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ course.subject_name }}</td>
+                    <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ course.subject_code }}</td>
+                    <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ course.section }}</td>
+                    <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ course.schedule }}</td>
+                    <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ course.capacity }}</td>
+                    <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ course.room }}</td>
+                    <td class="border px-4 py-2">
+                        <button 
+                            class="px-4 py-2 rounded transition-colors bg-green-500 hover:bg-green-600 text-white">
+                            Edit
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-center text-gray-500 dark:text-gray-400 font-medium">
+        No courses
+    </div>
+    {% endif %}
+
+    <div id="modalBackdrop" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
+
+    <div id="addcourseModal" class="fixed inset-0 flex items-center justify-center hidden z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md w-full p-6 relative">
+            <h3 class="text-xl font-semibold mb-4 dark:text-gray-100">Add Course</h3>
+            <form method="post" action="{% url 'admin_course_list' %}">
+                {% csrf_token %}
+                <div class="space-y-4 text-gray-900 dark:text-gray-100">
+                    <div>
+                        <label for="course_id" class="block font-medium text-gray-700 dark:text-gray-100">Course ID</label>
+                        <input id="course_id" name="course_id" type="text" required
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="subject_name" class="block font-medium text-gray-700 dark:text-gray-100">Subject Name</label>
+                        <input id="subject_name" name="subject_name" type="text" required
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="subject_code" class="block font-medium text-gray-700 dark:text-gray-100">Subject Code</label>
+                        <input id="subject_code" name="subject_code" type="text"
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="section" class="block font-medium text-gray-700 dark:text-gray-100">Section</label>
+                        <input id="section" name="section" type="text" required
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="schedule" class="block font-medium text-gray-700 dark:text-gray-100">Schedule</label>
+                        <input id="schedule" name="schedule" type="text" required
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="capacity" class="block font-medium text-gray-700 dark:text-gray-100">Capacity</label>
+                        <input id="capacity" name="capacity" type="text" required
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="room" class="block font-medium text-gray-700 dark:text-gray-100">Room</label>
+                        <input id="room" name="room" type="text" required
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button type="button" id="closeModalBtn"
+                            class="bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 px-4 py-2 rounded hover:bg-gray-400 dark:hover:bg-gray-500 transition">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 dark:hover:bg-green-800 transition">
+                        Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Course Modal -->
+    <div id="editcourseModal" class="fixed inset-0 flex items-center justify-center hidden z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md w-full p-6 relative">
+            <h3 class="text-xl font-semibold mb-4 dark:text-gray-100">Edit Course</h3>
+            <form method="post" action="{% url 'admin_course_list' %}">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="edit">
+                <div class="space-y-4 text-gray-900 dark:text-gray-100">
+                    <div>
+                        <label for="edit_course_id" class="block font-medium text-gray-700 dark:text-gray-100">Course ID</label>
+                        <input id="edit_course_id" name="course_id" type="text" required readonly
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" />
+                    </div>
+                    <div>
+                        <label for="edit_subject_name" class="block font-medium text-gray-700 dark:text-gray-100">Subject Name</label>
+                        <input id="edit_subject_name" name="subject_name" type="text" required
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="edit_subject_code" class="block font-medium text-gray-700 dark:text-gray-100">Subject Code</label>
+                        <input id="edit_subject_code" name="subject_code" type="text"
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="edit_section" class="block font-medium text-gray-700 dark:text-gray-100">Section</label>
+                        <input id="edit_section" name="section" type="text" required
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="edit_schedule" class="block font-medium text-gray-700 dark:text-gray-100">Schedule</label>
+                        <input id="edit_schedule" name="schedule" type="text" required
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="edit_capacity" class="block font-medium text-gray-700 dark:text-gray-100">Capacity</label>
+                        <input id="edit_capacity" name="capacity" type="text" required
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="edit_room" class="block font-medium text-gray-700 dark:text-gray-100">Room</label>
+                        <input id="edit_room" name="room" type="text" required
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button type="button" id="closeEditModalBtn"
+                            class="bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 px-4 py-2 rounded hover:bg-gray-400 dark:hover:bg-gray-500 transition">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 dark:hover:bg-green-800 transition">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const openModalBtn = document.getElementById('openModalBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const modal = document.getElementById('addcourseModal');
+    const backdrop = document.getElementById('modalBackdrop');
+    const editModal = document.getElementById('editcourseModal');
+    const closeEditModalBtn = document.getElementById('closeEditModalBtn');
+
+    openModalBtn.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+        backdrop.classList.remove('hidden');
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+        backdrop.classList.add('hidden');
+    });
+
+    closeEditModalBtn.addEventListener('click', () => {
+        editModal.classList.add('hidden');
+        backdrop.classList.add('hidden');
+    });
+
+    // Close modals if backdrop is clicked
+    backdrop.addEventListener('click', () => {
+        modal.classList.add('hidden');
+        editModal.classList.add('hidden');
+        backdrop.classList.add('hidden');
+    });
+
+    function openEditModal(courseId, subjectName, subjectCode, section, schedule, departmentName) {
+        document.getElementById('edit_course_id').value = courseId;
+        document.getElementById('edit_subject_name').value = subjectName;
+        document.getElementById('edit_subject_code').value = subjectCode;
+        document.getElementById('edit_section').value = section;
+        document.getElementById('edit_schedule').value = schedule;
+        document.getElementById('edit_capacity').value = capacity;
+        document.getElementById('edit_room').value = room;
+
+        
+        editModal.classList.remove('hidden');
+        backdrop.classList.remove('hidden');
+    }
+
+    /*function toggleFacultyStatus(courseId) {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const button = document.querySelector(`button[data-faculty-id="${courseId}"]`);
+        
+        if (!button) {
+            console.error('Button not found for faculty ID:', courseId);
+            return;
+        }
+
+        fetch(`/admin_faculty_list/toggle-faculty-status/${courseId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                if (data.status === 'DISABLED') {
+                    button.classList.remove('bg-green-500', 'hover:bg-green-600');
+                    button.classList.add('bg-red-500', 'hover:bg-red-600');
+                    button.textContent = 'Activate';
+                } else {
+                    button.classList.remove('bg-red-500', 'hover:bg-red-600');
+                    button.classList.add('bg-green-500', 'hover:bg-green-600');
+                    button.textContent = 'Disable';
+                }
+                showMessage(data.message, 'success');
+            } else {
+                showMessage(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showMessage('An error occurred while updating the faculty status.', 'error');
+        });
+    } */
+
+    function showMessage(message, type) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `p-4 rounded-lg ${type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} mb-4`;
+        messageDiv.textContent = message;
+        document.querySelector('.container').insertBefore(messageDiv, document.querySelector('.container').subjectChild);
+        
+        setTimeout(() => {
+            messageDiv.remove();
+        }, 3000);
+    }
+
+    const savedTheme = localStorage.getItem("theme");
+       if (savedTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+</script>
+
+<!-- Replace the old FontAwesome script with the new one -->
+<script src="https://kit.fontawesome.com/your-kit-code.js" crossorigin="anonymous"></script>
+{% endblock %}

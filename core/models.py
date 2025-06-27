@@ -287,3 +287,14 @@ class FacultyProfile(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+class Course(models.Model):
+    course_id = models.CharField(max_length=255, primary_key=True)
+    subject_name = models.CharField(max_length=255)
+    subject_code = models.CharField(max_length=255)
+    section = models.CharField(max_length=255)
+    schedule = models.CharField(max_length=6)
+    capacity = models.CharField(max_length=255)
+    room = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.course_id} - {self.subject_name} {self.subject_code}"
