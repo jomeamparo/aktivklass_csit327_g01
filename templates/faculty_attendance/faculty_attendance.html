@@ -62,18 +62,22 @@
             <h2 class="text-2xl font-bold text-gray-800">Attendance Records</h2>
           </div>
 
-          <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+          <!-- Filter Form -->
+          <form method="get" class="bg-white p-6 rounded-lg shadow-md mb-6">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-4">
-              <select class="filter-dropdown px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm w-fit">
+              <select name="class" class="filter-dropdown px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm">
                 <option value="">Select Class</option>
-                <option value="math">Mathematics 101</option>
-                <option value="science">Science 202</option>
-                <option value="history">World History</option>
+                <option value="OOP" {% if selected_class == "OOP" %}selected{% endif %}>OOP</option>
+                <option value="DSA" {% if selected_class == "DSA" %}selected{% endif %}>DSA</option>
+                <option value="MOBDEV" {% if selected_class == "MOBDEV" %}selected{% endif %}>MOBDEV</option>
+                <option value="IM2" {% if selected_class == "IM2" %}selected{% endif %}>IM2</option>
               </select>
-              <input type="date" class="filter-date px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm w-fit">
+              <input type="date" name="date" value="{{ selected_date }}" class="filter-date px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm">
+              <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">Filter</button>
             </div>
-          </div>
+          </form>
 
+          <!-- Attendance Table -->
           <div class="overflow-x-auto bg-white p-4 rounded-lg shadow-md">
             <table class="min-w-full border-collapse">
               <thead>
@@ -86,18 +90,24 @@
                 </tr>
               </thead>
               <tbody>
-                <tr class="hover:bg-gray-50 transition duration-150 ease-in-out">
-                  <td class="py-3 px-4 border-b border-gray-200 text-sm text-gray-700">202312345</td>
-                  <td class="py-3 px-4 border-b border-gray-200 text-sm text-gray-700">Juan</td>
-                  <td class="py-3 px-4 border-b border-gray-200 text-sm text-gray-700">Dela Cruz</td>
-                  <td class="py-3 px-4 border-b border-gray-200 text-sm text-gray-700">2025-06-10</td>
-                  <td class="py-3 px-4 border-b border-gray-200 text-sm text-green-600 font-semibold">Present</td>
+                {% for record in records %}
+                <tr class="hover:bg-gray-50">
+                  <td class="py-3 px-4 border-b text-sm text-gray-700">{{ record.id_number }}</td>
+                  <td class="py-3 px-4 border-b text-sm text-gray-700">{{ record.first_name }}</td>
+                  <td class="py-3 px-4 border-b text-sm text-gray-700">{{ record.last_name }}</td>
+                  <td class="py-3 px-4 border-b text-sm text-gray-700">{{ record.date }}</td>
+                  <td class="py-3 px-4 border-b text-sm font-semibold text-green-600">{{ record.status }}</td>
                 </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="5" class="text-center py-4 text-gray-500">No records found.</td>
+                </tr>
+                {% endfor %}
               </tbody>
             </table>
           </div>
 
-          <!-- Download Button Below the Table -->
+          <!-- Download Button -->
           <div class="flex justify-end mt-4">
             <button class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition shadow-md">
               <i class="fas fa-download mr-2"></i> Download Report
