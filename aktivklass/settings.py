@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'dashboard_admin',
     'admin_faculty_list',
     'admin_student_list',
+    'admin_course_list',
     'dashboard_student',
     'archived_classes',
     'class_join_request',

@@ -57,6 +57,7 @@ urlpatterns = [
     path('analytics/', include('analytics.urls')),
     path('forgot_password/', include('forgot_password.urls')),
     path('admin_notif/', include(('admin_notif.urls', 'admin_notif'), namespace='admin_notif')),
+    path('admin_course_list/', include('admin_course_list.urls')),
 
     path('faculty_notifications/', include('notifications_faculty.urls')),
     path('edit_admin/', include('edit_admin.urls')),
