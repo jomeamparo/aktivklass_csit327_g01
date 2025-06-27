@@ -1,5 +1,4 @@
 from django.db import models
-<<<<<<< HEAD
 from core.models import Faculty, Class
 
 class FacultyAttendance(models.Model):
@@ -49,5 +48,3 @@ class AttendanceSchedule(models.Model):
 
     def __str__(self):
         return f"{self.class_instance} - {self.get_day_of_week_display()} ({self.start_time} - {self.end_time})"
-=======
->>>>>>> 8d26231 (feature(faculty_attendance): create_faculty_attendance_ui)
