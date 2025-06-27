@@ -1,304 +1,311 @@
 {% extends 'core/main.html' %}
-{% block title %}Edit Student - {{ student.student_id }}{% endblock %}
-
+{% block title %}Edit Student{% endblock %}
 {% block content %}
-<div class="min-h-screen bg-gray-50 py-8">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Header -->
-        <div class="mb-8">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Edit Student Information</h1>
-                    <p class="mt-2 text-gray-600">Update student details and save changes to the database</p>
-                </div>
-                <div class="flex items-center space-x-3">
-                    <a href="{% url 'student_list_view' %}" 
-                       class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                        </svg>
-                        Back to Student List
-                    </a>
-                </div>
-            </div>
-        </div>
+<div class="container">
+    {% csrf_token %}
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">
+            Edit Student
+        </h2>
 
-        <!-- Student ID Display -->
-        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <div class="flex items-center">
-                <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                </svg>
-                <span class="text-blue-800 font-medium">Student ID: {{ student.student_id }}</span>
-            </div>
-        </div>
+        <div class="flex space-x-2 ml-auto">
+            <button id="openModalBtn" 
+                    type="button"
+                    class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                Add Student
+            </button>
 
-        <!-- Edit Form -->
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h2 class="text-xl font-semibold text-gray-900">Student Information</h2>
-            </div>
-            
-            <form id="editStudentForm" class="p-6 space-y-6">
+            <form id="uploadForm" method="post" enctype="multipart/form-data" >
                 {% csrf_token %}
-                
-                <!-- Personal Information Section -->
-                <div>
-                    <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
-                        <svg class="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                        </svg>
-                        Personal Information
-                    </h3>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- First Name -->
-                        <div>
-                            <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">
-                                First Name <span class="text-red-500">*</span>
-                            </label>
-                            <input type="text" 
-                                   id="first_name" 
-                                   name="first_name" 
-                                   value="{{ student.first_name }}"
-                                   required
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors">
-                        </div>
-                        
-                        <!-- Middle Name -->
-                        <div>
-                            <label for="middle_name" class="block text-sm font-medium text-gray-700 mb-2">
-                                Middle Name
-                            </label>
-                            <input type="text" 
-                                   id="middle_name" 
-                                   name="middle_name" 
-                                   value="{{ student.middle_name }}"
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors">
-                        </div>
-                        
-                        <!-- Last Name -->
-                        <div>
-                            <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">
-                                Last Name <span class="text-red-500">*</span>
-                            </label>
-                            <input type="text" 
-                                   id="last_name" 
-                                   name="last_name" 
-                                   value="{{ student.last_name }}"
-                                   required
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors">
-                        </div>
-                    </div>
+                <label for="uploadInput" 
+                    class="cursor-pointer bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition inline-block">
+                    Upload Student List
+                </label>
+                <input id="uploadInput" name="class_list" type="file" class="hidden" onchange="document.getElementById('uploadForm').submit()" />
+            </form>
+        </div>
+    </div>
+
+    <div class="bg-white p-4 rounded-lg shadow mb-6">
+        <div class="flex flex-wrap justify-between items-center gap-4">
+            <!-- Search Box with Button (Left) -->
+            <div class="flex items-center space-x-2">
+                <label for="search" class="text-gray-700 font-medium">Search:</label>
+                <input id="search" name="search" type="text" placeholder="Enter keyword..." class="border border-gray-300 rounded-lg px-4 py-2 w-64 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+                    Search
+                </button>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-4">
+                <div class="flex items-center space-x-2">
+                    <label for="sort" class="text-gray-700 font-medium">Sort:</label>
+                    <select id="sort" name="sort" class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="">Select</option>
+                        <option value="ascending">A - Z</option>
+                        <option value="descending">Z - A</option>
+                    </select>
                 </div>
 
-                <!-- Academic Information Section -->
-                <div>
-                    <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
-                        <svg class="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                        </svg>
-                        Academic Information
-                    </h3>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Course -->
-                        <div>
-                            <label for="course" class="block text-sm font-medium text-gray-700 mb-2">
-                                Course <span class="text-red-500">*</span>
-                            </label>
-                            <select id="course" 
-                                    name="course" 
-                                    required
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors">
-                                <option value="">Select Course</option>
-                                {% for course in courses %}
-                                <option value="{{ course }}" {% if student.course == course %}selected{% endif %}>
-                                    {{ course }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        
-                        <!-- Year -->
-                        <div>
-                            <label for="year" class="block text-sm font-medium text-gray-700 mb-2">
-                                Year Level <span class="text-red-500">*</span>
-                            </label>
-                            <select id="year" 
-                                    name="year" 
-                                    required
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors">
-                                <option value="">Select Year</option>
-                                {% for year in years %}
-                                <option value="{{ year }}" {% if student.year == year %}selected{% endif %}>
-                                    {{ year }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
+                <div class="flex items-center space-x-2">
+                    <label for="course" class="text-gray-700 font-medium">Course:</label>
+                    <select id="course" name="course" class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="">All</option>
+                        <option value="BSIT">BSIT</option>
+                        <option value="BSCS">BSCS</option>
+                    </select>
                 </div>
 
-                <!-- Account Status Section -->
-                <div>
-                    <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
-                        <svg class="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        Account Status
-                    </h3>
-                    
+                <div class="flex items-center space-x-2">
+                    <label for="year" class="text-gray-700 font-medium">Year:</label>
+                    <select id="year" name="year" class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="">All</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if students %}
+    <div class="overflow-x-auto bg-white p-4 rounded-lg shadow">
+        <table class="min-w-full border border-gray-200">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="border px-4 py-2 text-left">Student ID</th>
+                    <th class="border px-4 py-2 text-left">First Name</th>
+                    <th class="border px-4 py-2 text-left">Middle Name</th>
+                    <th class="border px-4 py-2 text-left">Last Name</th>
+                    <th class="border px-4 py-2 text-left">Course</th>
+                    <th class="border px-4 py-2 text-left">Year</th>
+                    <th class="border px-4 py-2 text-left">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr class="hover:bg-gray-50 cursor-pointer" onclick="openEditModal('{{ student.student_id }}', '{{ student.first_name }}', '{{ student.middle_name }}', '{{ student.last_name }}', '{{ student.course }}', '{{ student.year }}')">
+                    <td class="border px-4 py-2">{{ student.student_id }}</td>
+                    <td class="border px-4 py-2">{{ student.first_name }}</td>
+                    <td class="border px-4 py-2">{{ student.middle_name }}</td>
+                    <td class="border px-4 py-2">{{ student.last_name }}</td>
+                    <td class="border px-4 py-2">{{ student.course }}</td>
+                    <td class="border px-4 py-2">{{ student.year }}</td>
+                    <td class="border px-4 py-2">
+                        <button 
+                            data-student-id="{{ student.student_id }}"
+                            onclick="toggleStudentStatus(this.dataset.studentId); event.stopPropagation();"
+                            class="px-4 py-2 rounded transition-colors {% if student.status == 'ACTIVE' %}bg-green-500 hover:bg-green-600{% else %}bg-red-500 hover:bg-red-600{% endif %} text-white">
+                            {% if student.status == 'ACTIVE' %}ACTIVE{% else %}DISABLED{% endif %}
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="bg-white p-6 rounded-lg shadow text-center text-gray-500 font-medium">
+        No enrolled students
+    </div>
+    {% endif %}
+
+    <div id="modalBackdrop" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
+
+    <div id="addStudentModal" class="fixed inset-0 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative">
+            <h3 class="text-xl font-semibold mb-4">Add Student</h3>
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="space-y-4">
                     <div>
-                        <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
-                            Status
-                        </label>
-                        <select id="status" 
-                                name="status"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors">
-                            {% for status_value, status_label in status_choices %}
-                            <option value="{{ status_value }}" {% if student.status == status_value %}selected{% endif %}>
-                                {{ status_label }}
-                            </option>
-                            {% endfor %}
+                        <label for="student_id" class="block font-medium text-gray-700">Student ID</label>
+                        <input id="student_id" name="student_id" type="text" required
+                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="first_name" class="block font-medium text-gray-700">First Name</label>
+                        <input id="first_name" name="first_name" type="text" required
+                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="middle_name" class="block font-medium text-gray-700">Middle Name</label>
+                        <input id="middle_name" name="middle_name" type="text"
+                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="last_name" class="block font-medium text-gray-700">Last Name</label>
+                        <input id="last_name" name="last_name" type="text" required
+                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="course" class="block font-medium text-gray-700">Course</label>
+                        <select id="course" name="course" required
+                                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="">Select Course</option>
+                            <option value="BSIT">BSIT</option>
+                            <option value="BSCS">BSCS</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="year" class="block font-medium text-gray-700">Year</label>
+                        <select id="year" name="year" required
+                                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="">Select Year</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
-                <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
-                    <a href="{% url 'student_list_view' %}" 
-                       class="px-6 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button type="button" id="closeModalBtn"
+                            class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition">
                         Cancel
-                    </a>
-                    <button type="submit" 
-                            id="saveButton"
-                            class="inline-flex items-center px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
+                    </button>
+                    <button type="submit"
+                            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                        Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Student Modal -->
+    <div id="editStudentModal" class="fixed inset-0 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative">
+            <h3 class="text-xl font-semibold mb-4">Edit Student</h3>
+            <form method="post" action="">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="edit">
+                <div class="space-y-4">
+                    <div>
+                        <label for="edit_student_id" class="block font-medium text-gray-700">Student ID</label>
+                        <input id="edit_student_id" name="student_id" type="text" required readonly
+                               class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100" />
+                    </div>
+                    <div>
+                        <label for="edit_first_name" class="block font-medium text-gray-700">First Name</label>
+                        <input id="edit_first_name" name="first_name" type="text" required
+                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="edit_middle_name" class="block font-medium text-gray-700">Middle Name</label>
+                        <input id="edit_middle_name" name="middle_name" type="text"
+                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="edit_last_name" class="block font-medium text-gray-700">Last Name</label>
+                        <input id="edit_last_name" name="last_name" type="text" required
+                               class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="edit_course" class="block font-medium text-gray-700">Course</label>
+                        <select id="edit_course" name="course" required
+                                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="">Select Course</option>
+                            <option value="BSIT">BSIT</option>
+                            <option value="BSCS">BSCS</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="edit_year" class="block font-medium text-gray-700">Year</label>
+                        <select id="edit_year" name="year" required
+                                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="">Select Year</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button type="button" id="closeEditModalBtn"
+                            class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
                         Save Changes
                     </button>
                 </div>
             </form>
         </div>
-
-        <!-- Success/Error Messages -->
-        <div id="messageContainer" class="mt-6"></div>
     </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('editStudentForm');
-    const saveButton = document.getElementById('saveButton');
-    const messageContainer = document.getElementById('messageContainer');
+    const openModalBtn = document.getElementById('openModalBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const modal = document.getElementById('addStudentModal');
+    const backdrop = document.getElementById('modalBackdrop');
+    const editModal = document.getElementById('editStudentModal');
+    const closeEditModalBtn = document.getElementById('closeEditModalBtn');
 
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Show loading state
-        saveButton.disabled = true;
-        saveButton.innerHTML = `
-            <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            Saving...
-        `;
-
-        // Get form data
-        const formData = new FormData(form);
-        
-        // Send AJAX request
-        fetch('{% url "update_student" student.student_id %}', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Reset button state
-            saveButton.disabled = false;
-            saveButton.innerHTML = `
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                Save Changes
-            `;
-
-            // Show message
-            showMessage(data.success, data.message);
-            
-            if (data.success) {
-                // Update the page with new data if needed
-                setTimeout(() => {
-                    window.location.href = '{% url "student_list_view" %}';
-                }, 2000);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            
-            // Reset button state
-            saveButton.disabled = false;
-            saveButton.innerHTML = `
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                Save Changes
-            `;
-            
-            showMessage(false, 'An error occurred while saving. Please try again.');
-        });
+    openModalBtn.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+        backdrop.classList.remove('hidden');
     });
 
-    function showMessage(success, message) {
-        const alertClass = success ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800';
-        const iconClass = success ? 'text-green-400' : 'text-red-400';
-        const icon = success ? 
-            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>' :
-            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>';
+    closeModalBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+        backdrop.classList.add('hidden');
+    });
 
-        messageContainer.innerHTML = `
-            <div class="rounded-md p-4 border ${alertClass}">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 ${iconClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            ${icon}
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm font-medium">${message}</p>
-                    </div>
-                </div>
-            </div>
-        `;
+    closeEditModalBtn.addEventListener('click', () => {
+        editModal.classList.add('hidden');
+        backdrop.classList.add('hidden');
+    });
 
-        // Auto-hide success messages after 5 seconds
-        if (success) {
-            setTimeout(() => {
-                messageContainer.innerHTML = '';
-            }, 5000);
-        }
+    function openEditModal(studentId, firstName, middleName, lastName, course, year) {
+        document.getElementById('edit_student_id').value = studentId;
+        document.getElementById('edit_first_name').value = firstName;
+        document.getElementById('edit_middle_name').value = middleName;
+        document.getElementById('edit_last_name').value = lastName;
+        document.getElementById('edit_course').value = course;
+        document.getElementById('edit_year').value = year;
+        
+        editModal.classList.remove('hidden');
+        backdrop.classList.remove('hidden');
     }
 
-    // Form validation
-    const requiredFields = ['first_name', 'last_name', 'course', 'year'];
-    requiredFields.forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        field.addEventListener('blur', function() {
-            if (!this.value.trim()) {
-                this.classList.add('border-red-500', 'focus:ring-red-500', 'focus:border-red-500');
-                this.classList.remove('border-gray-300', 'focus:ring-green-500', 'focus:border-green-500');
-            } else {
-                this.classList.remove('border-red-500', 'focus:ring-red-500', 'focus:border-red-500');
-                this.classList.add('border-gray-300', 'focus:ring-green-500', 'focus:border-green-500');
-            }
-        });
-    });
-});
+    function toggleStudentStatus(studentId) {
+        if (confirm('Are you sure you want to change this student\'s status?')) {
+            const button = document.querySelector(`button[data-student-id='${studentId}']`);
+            fetch(`/toggle_student_status/${studentId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (data.status === 'ACTIVE') {
+                        button.classList.remove('bg-red-500', 'hover:bg-red-600');
+                        button.classList.add('bg-green-500', 'hover:bg-green-600');
+                        button.textContent = 'ACTIVE';
+                    } else {
+                        button.classList.remove('bg-green-500', 'hover:bg-green-600');
+                        button.classList.add('bg-red-500', 'hover:bg-red-600');
+                        button.textContent = 'DISABLED';
+                    }
+                } else {
+                    alert('Failed to update student status');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while updating student status');
+            });
+        }
+    }
 </script>
 {% endblock %} 

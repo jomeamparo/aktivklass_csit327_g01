@@ -1,7 +1,6 @@
 from django.urls import path
-from . import views
+from .views import edit_student_view
 
 urlpatterns = [
-    path('edit/<str:student_id>/', views.edit_student_view, name='edit_student'),
-    path('update/<str:student_id>/', views.update_student, name='update_student'),
+    path('', edit_student_view, name='edit_student')
 ] 
