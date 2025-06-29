@@ -20,6 +20,7 @@ STUDENT_STATUS_CHOICES = [
 ]
 
 class Class(models.Model):
+    course = models.ForeignKey('Course', on_delete=models.CASCADE, null=True, blank=True)
     subject_name = models.CharField(max_length=100)
     subject_code = models.CharField(max_length=20)
     description = models.TextField()

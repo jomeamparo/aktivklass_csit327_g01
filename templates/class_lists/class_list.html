@@ -14,7 +14,7 @@
             {% endif %}
         </form>
         <a href="{% url 'pending_requests' %}" class="flex items-center gap-2 px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">
-            <span>Pending Requests</span>
+            <span>Requests Sent</span>
             <span class="bg-yellow-700 text-white text-xs rounded-full px-2 py-1">{{ pending_requests_count|default:0 }}</span>
         </a>
     </div>
