@@ -51,9 +51,18 @@
                     <p class="text-gray-400 dark:text-gray-300 text-xs pl-2">{{ notification.message }}</p>
                 </div>
             </div>
+
+            {% if not notification.is_read %}
+            <div class="pl-4 border-l-2 border-gray-300">
+                <button data-pk="{{ notification.pk }}"
+                    class="mark-as-read-btn bg-green-600 text-white w-fit h-fit px-4 py-2 rounded shadow-md hover:bg-green-700 transition">
+                    Mark as Read
+                </button>
+            </div>
+            {% endif %}
+        </div>
         {% endfor %}
     </div>
-{% endif %}
 </div>
 
 <script>
