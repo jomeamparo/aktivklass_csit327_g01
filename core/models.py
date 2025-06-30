@@ -172,9 +172,48 @@ class Notification(models.Model):
 class Conversation(models.Model):
     participants = models.ManyToManyField(Student, related_name='conversations')
     created_at = models.DateTimeField(auto_now_add=True)
+    muted_by = models.ManyToManyField(Student, related_name='muted_conversations', blank=True)
 
     def __str__(self):
         return f"Conversation ({self.id})"
+    
+    def get_other_participant(self, user):
+        """Get the other participant in the conversation"""
+        return self.participants.exclude(id=user.id).first()
+    
+    def get_last_message(self):
+        """Get the last message in the conversation"""
+        return self.messages.last()
+    
+    def get_unread_count_for_user(self, user):
+        """Get count of unread messages for a specific user"""
+        # If conversation is muted by the user, return 0
+        if user in self.muted_by.all():
+            return 0
+        
+        return self.messages.filter(
+            is_read=False
+        ).exclude(
+            sender=user
+        ).count()
+    
+    @classmethod
+    def get_or_create_conversation(cls, user1, user2):
+        """Get existing conversation between two users or create a new one"""
+        # Check if conversation already exists
+        existing_conversation = cls.objects.filter(
+            participants=user1
+        ).filter(
+            participants=user2
+        ).first()
+        
+        if existing_conversation:
+            return existing_conversation
+        
+        # Create new conversation
+        conversation = cls.objects.create()
+        conversation.participants.add(user1, user2)
+        return conversation
 
 class Message(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
