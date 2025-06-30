@@ -2,8 +2,12 @@ from django.db import models
 import random, string
 import uuid
 from django.apps import AppConfig
+<<<<<<< HEAD
 from django.conf import settings
 from django.db import models
+=======
+from django.core.validators import MinValueValidator, MaxValueValidator
+>>>>>>> 58c990e (feature(connected_database): connect database)
 
 # Utility for generating unique class codes
 def generate_random_code(length=10):
@@ -257,6 +261,7 @@ class FacultyProfileConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'faculty_profile'
 
+<<<<<<< HEAD
 
 class PasswordResetToken(models.Model):
     faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, null=True, blank=True)
@@ -318,3 +323,157 @@ class SeatworkRecord(models.Model):
         return f"{self.name} - {self.activity} ({self.status})"
         
 
+=======
+# Quiz Models
+class Quiz(models.Model):
+    """Model for storing quiz information"""
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True, null=True)
+    class_obj = models.ForeignKey(Class, on_delete=models.CASCADE, related_name='quizzes')
+    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, related_name='created_quizzes')
+    total_points = models.IntegerField(default=100)
+    time_limit = models.IntegerField(default=60, help_text="Time limit in minutes")  # 0 for no limit
+    is_active = models.BooleanField(default=True)
+    allow_multiple_attempts = models.BooleanField(default=False)
+    max_attempts = models.IntegerField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    due_date = models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.title} - {self.class_obj.subject_name}"
+
+    class Meta:
+        ordering = ['-created_at']
+
+class QuizQuestion(models.Model):
+    """Model for storing individual quiz questions"""
+    QUESTION_TYPES = [
+        ('multiple_choice', 'Multiple Choice'),
+        ('true_false', 'True/False'),
+        ('short_answer', 'Short Answer'),
+        ('essay', 'Essay'),
+    ]
+    
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
+    question_text = models.TextField()
+    question_type = models.CharField(max_length=20, choices=QUESTION_TYPES, default='multiple_choice')
+    points = models.IntegerField(default=1, validators=[MinValueValidator(1)])
+    order = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return f"Question {self.order}: {self.question_text[:50]}..."
+
+    class Meta:
+        ordering = ['order']
+
+class QuizChoice(models.Model):
+    """Model for storing multiple choice options"""
+    question = models.ForeignKey(QuizQuestion, on_delete=models.CASCADE, related_name='choices')
+    choice_text = models.CharField(max_length=500)
+    is_correct = models.BooleanField(default=False)
+    order = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return f"{self.choice_text[:30]}..."
+
+    class Meta:
+        ordering = ['order']
+
+class QuizAttempt(models.Model):
+    """Model for storing student quiz attempts"""
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='quiz_attempts')
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='attempts')
+    started_at = models.DateTimeField(auto_now_add=True)
+    completed_at = models.DateTimeField(blank=True, null=True)
+    score = models.FloatField(blank=True, null=True)
+    max_score = models.FloatField(blank=True, null=True)
+    is_completed = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return f"{self.student} - {self.quiz.title} (Attempt {self.id})"
+
+    class Meta:
+        unique_together = ['student', 'quiz']
+        ordering = ['-started_at']
+
+class QuizResponse(models.Model):
+    """Model for storing student responses to quiz questions"""
+    attempt = models.ForeignKey(QuizAttempt, on_delete=models.CASCADE, related_name='responses')
+    question = models.ForeignKey(QuizQuestion, on_delete=models.CASCADE)
+    selected_choice = models.ForeignKey(QuizChoice, on_delete=models.CASCADE, blank=True, null=True)
+    text_response = models.TextField(blank=True, null=True)
+    is_correct = models.BooleanField(blank=True, null=True)
+    points_earned = models.FloatField(default=0)
+    
+    def __str__(self):
+        return f"Response to {self.question} by {self.attempt.student}"
+
+class QuizGrade(models.Model):
+    """Model for storing quiz grades that integrates with ActivityRecord"""
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='quiz_grades')
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='grades')
+    attempt = models.OneToOneField(QuizAttempt, on_delete=models.CASCADE, related_name='grade')
+    score = models.FloatField()
+    max_score = models.FloatField()
+    percentage = models.FloatField()
+    grade_letter = models.CharField(max_length=2, blank=True)
+    feedback = models.TextField(blank=True, null=True)
+    graded_by = models.ForeignKey(Faculty, on_delete=models.SET_NULL, null=True, blank=True)
+    graded_at = models.DateTimeField(auto_now_add=True)
+    
+    def save(self, *args, **kwargs):
+        # Calculate percentage
+        if self.max_score > 0:
+            self.percentage = (self.score / self.max_score) * 100
+        
+        # Calculate letter grade
+        if self.percentage >= 90:
+            self.grade_letter = 'A'
+        elif self.percentage >= 80:
+            self.grade_letter = 'B'
+        elif self.percentage >= 70:
+            self.grade_letter = 'C'
+        elif self.percentage >= 60:
+            self.grade_letter = 'D'
+        else:
+            self.grade_letter = 'F'
+        
+        super().save(*args, **kwargs)
+        
+        # Create or update ActivityRecord
+        self.create_activity_record()
+    
+    def create_activity_record(self):
+        """Create or update ActivityRecord for this quiz grade"""
+        enrollment = self.student.enrolled_classes.filter(
+            enrolled_class=self.quiz.class_obj
+        ).first()
+        
+        if enrollment:
+            activity_record, created = ActivityRecord.objects.get_or_create(
+                enrollment=enrollment,
+                student=self.student,
+                activity_type='Quiz',
+                activity_name=self.quiz.title,
+                defaults={
+                    'date': self.graded_at.date(),
+                    'faculty': self.graded_by or self.quiz.faculty,
+                    'score': self.score,
+                    'perfect_score': self.max_score,
+                }
+            )
+            
+            if not created:
+                # Update existing record
+                activity_record.score = self.score
+                activity_record.perfect_score = self.max_score
+                activity_record.save()
+    
+    def __str__(self):
+        return f"{self.student} - {self.quiz.title}: {self.score}/{self.max_score} ({self.percentage:.1f}%)"
+
+    class Meta:
+        unique_together = ['student', 'quiz']
+        ordering = ['-graded_at']
+>>>>>>> 58c990e (feature(connected_database): connect database)
