@@ -43,7 +43,11 @@ def edit_faculty_view(request):
         return redirect('edit_faculty')
 
     facultyList = Faculty.objects.all()
-    return render(request, 'edit_faculty/edit_faculty.html', {'facultyList': facultyList})
+    context = {
+        'facultyList': facultyList,
+        'role': 'admin'
+    }
+    return render(request, 'edit_faculty/edit_faculty.html', context)
 
 
 @require_POST

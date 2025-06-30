@@ -80,7 +80,6 @@
                     <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Schedule</th>
                     <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Capacity</th>
                     <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Room</th>
-                    <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -93,12 +92,6 @@
                     <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ course.schedule }}</td>
                     <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ course.capacity }}</td>
                     <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ course.room }}</td>
-                    <td class="border px-4 py-2">
-                        <button 
-                            class="px-4 py-2 rounded transition-colors bg-green-500 hover:bg-green-600 text-white">
-                            Edit
-                        </button>
-                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
