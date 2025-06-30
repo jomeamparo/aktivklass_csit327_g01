@@ -21,6 +21,7 @@ STUDENT_STATUS_CHOICES = [
 ]
 
 class Class(models.Model):
+    course = models.ForeignKey('Course', on_delete=models.CASCADE, null=True, blank=True)
     subject_name = models.CharField(max_length=100)
     subject_code = models.CharField(max_length=20)
     description = models.TextField()
@@ -317,4 +318,15 @@ class SeatworkRecord(models.Model):
     def __str__(self):
         return f"{self.name} - {self.activity} ({self.status})"
         
+# Feature 3: Bookmark / Favorite Class # asdasd
+class FavoriteCourse(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('student', 'course')
+
+    def __str__(self):
+        return f"{self.student} favorited {self.course}"
 

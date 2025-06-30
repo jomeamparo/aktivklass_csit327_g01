@@ -1,0 +1,50 @@
+{% extends 'core/main.html' %}
+
+{% block title %}Requests Sent{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Requests Sent</h2>
+        <a href="{% url 'class_list' %}" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+            Back to Class List
+        </a>
+    </div>
+
+    {% if pending_requests %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for request in pending_requests %}
+                <div class="border border-yellow-500 rounded-lg p-5 bg-white shadow-md">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xl font-semibold text-gray-900">{{ request.class_requested.subject_name }}</h3>
+                        {% if request.status == 'pending' %}
+                            <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">Pending</span>
+                        {% elif request.status == 'approved' %}
+                            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Approved</span>
+                        {% elif request.status == 'rejected' %}
+                            <span class="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">Rejected</span>
+                        {% else %}
+                            <span class="px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded-full">{{ request.status|title }}</span>
+                        {% endif %}
+                    </div>
+                    <p class="text-sm text-gray-600">Code: {{ request.class_requested.subject_code }}</p>
+                    <p class="text-sm text-gray-600">Description: {{ request.class_requested.description }}</p>
+                    <p class="text-sm text-gray-600">Schedule: {{ request.class_requested.schedule }}</p>
+                    <p class="text-sm text-gray-600">Room: {{ request.class_requested.room }}</p>
+                    <p class="text-sm text-gray-600">Class Code: {{ request.class_requested.class_code }}</p>
+                    <p class="text-xs text-gray-500 mt-2">Requested: {{ request.requested_at|date:"M d, Y H:i" }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="flex justify-center items-center h-48">
+            <div class="text-center">
+                <p class="text-gray-500 text-lg mb-4">No requests sent yet.</p>
+                <a href="{% url 'class_list' %}" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                    Browse Classes
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 
