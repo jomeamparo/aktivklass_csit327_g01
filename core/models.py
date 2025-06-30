@@ -1,12 +1,5 @@
 from django.db import models
 import random, string
-<<<<<<< HEAD
-import uuid
-from django.apps import AppConfig
-from django.conf import settings
-from django.db import models
-=======
->>>>>>> 6571ab2 (fixes)
 
 STATUS_CHOICES = [
     ('ACTIVE', 'ACTIVE'),
@@ -311,7 +304,6 @@ class ActivityRecord(models.Model):
     def __str__(self):
         return f"{self.enrollment.student} - {self.activity_type} {self.activity_name}: {self.score}/{self.perfect_score}"
 
-<<<<<<< HEAD
 class Notification(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
@@ -387,8 +379,6 @@ class Message(models.Model):
     def __str__(self):
         return f"From {self.sender} at {self.timestamp}"
 
-=======
->>>>>>> 6571ab2 (fixes)
 class AdminUser(models.Model):
     employee_id = models.CharField(
         max_length=20,
@@ -415,7 +405,6 @@ class Notification(models.Model):
         return self.title
 
     class Meta:
-<<<<<<< HEAD
         app_label = 'faculty_profile'
 
     def __str__(self):
@@ -501,6 +490,3 @@ class FavoriteCourse(models.Model):
     def __str__(self):
         return f"{self.student} favorited {self.course}"
 
-=======
-        app_label = 'notifications' 
->>>>>>> 6571ab2 (fixes)
