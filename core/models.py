@@ -3,6 +3,7 @@ import random, string
 import uuid
 from django.apps import AppConfig
 from django.conf import settings
+from django.db import models
 
 # Utility for generating unique class codes
 def generate_random_code(length=10):
@@ -298,3 +299,22 @@ class Course(models.Model):
 
     def __str__(self):
         return f"{self.course_id} - {self.subject_name} {self.subject_code}"
+
+
+
+class SeatworkRecord(models.Model):
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Completed', 'Completed'),
+    ]
+
+    name = models.CharField(max_length=100)
+    activity = models.CharField(max_length=100)
+    score = models.PositiveIntegerField()
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES)
+    date = models.DateField()
+
+    def __str__(self):
+        return f"{self.name} - {self.activity} ({self.status})"
+        
+
