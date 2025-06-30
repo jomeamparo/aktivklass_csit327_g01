@@ -507,7 +507,9 @@ class QuizGrade(models.Model):
     
     def create_activity_record(self):
         """Create or update ActivityRecord for this quiz grade"""
-        enrollment = self.student.enrolled_classes.filter(
+        # Get the enrollment through the through relationship
+        enrollment = Enrollment.objects.filter(
+            student=self.student,
             enrolled_class=self.quiz.class_obj
         ).first()
         
