@@ -93,7 +93,7 @@ def attendance_records(request):
     if selected_date:
         records = records.filter(date=selected_date)
 
-    return render(request, 'attendance.html', {
+    return render(request, 'attendance.html'), {
         'records': records,
         'selected_class': selected_class,
         'selected_date': selected_date,
