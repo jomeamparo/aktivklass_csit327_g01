@@ -23,8 +23,11 @@ def mark_as_read(request, pk):
 @require_POST
 def mark_all_as_read(request):
     Notification.objects.filter(is_read=False).update(is_read=True)
-
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return JsonResponse({'status': 'ok'})
 
     return redirect('faculty_notifications') 
+# Create your views here.
+
+def faculty_notifications(request):
+    return render(request, 'notifications_faculty/faculty_notifications.html')
