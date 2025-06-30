@@ -1,5 +1,5 @@
 from django.urls import path
-from core.views import faculty_attendance_view
+from faculty_attendance.views import faculty_attendance_view
 
 urlpatterns = [
     path('', faculty_attendance_view, name='faculty_attendance'),
