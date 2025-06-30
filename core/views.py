@@ -75,3 +75,69 @@ def test_profile(request):
     }
     
     return HttpResponse("Session data set up for testing. <a href='/dashboard_teacher/'>Go to Dashboard</a>")
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse, HttpResponse
+from .models import SeatworkRecord
+import csv
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+def records_list(request):
+    # Render the page with all records
+    records = SeatworkRecord.objects.all().order_by('-date')
+    return render(request, 'yourapp/records.html', {'records': records})
+
+@csrf_exempt
+def api_records(request):
+    # API endpoint for CRUD operations (expects JSON)
+
+    if request.method == 'GET':
+        # Return all records as JSON
+        records = list(SeatworkRecord.objects.values())
+        return JsonResponse(records, safe=False)
+
+    elif request.method == 'POST':
+        # Create new record
+        data = json.loads(request.body)
+        record = SeatworkRecord.objects.create(
+            name=data['name'],
+            activity=data['activity'],
+            score=data['score'],
+            status=data['status'],
+            date=data['date']
+        )
+        return JsonResponse({'id': record.id})
+
+    elif request.method == 'PUT':
+        # Update existing record
+        data = json.loads(request.body)
+        record = get_object_or_404(SeatworkRecord, pk=data['id'])
+        record.name = data['name']
+        record.activity = data['activity']
+        record.score = data['score']
+        record.status = data['status']
+        record.date = data['date']
+        record.save()
+        return JsonResponse({'updated': True})
+
+    elif request.method == 'DELETE':
+        data = json.loads(request.body)
+        record = get_object_or_404(SeatworkRecord, pk=data['id'])
+        record.delete()
+        return JsonResponse({'deleted': True})
+
+def export_csv(request):
+    records = SeatworkRecord.objects.all().order_by('-date')
+    
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="student_seatwork_records.csv"'
+    
+    writer = csv.writer(response)
+    writer.writerow(['Name', 'Activity', 'Score', 'Status', 'Date'])
+    
+    for record in records:
+        writer.writerow([record.name, record.activity, record.score, record.status, record.date])
+    
+    return response

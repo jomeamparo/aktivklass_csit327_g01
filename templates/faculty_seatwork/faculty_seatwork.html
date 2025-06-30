@@ -1,179 +1,196 @@
-<!doctype html>
-{% load static %}
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>Seatwork Records | AktivKlass</title>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-  </head>
-  <body class="min-h-screen bg-gray-100 font-sans antialiased text-gray-800">
-    <div class="flex h-screen overflow-hidden">
-      <!-- Sidebar -->
-      <aside id="sidebar" class="w-64 bg-white shadow-xl border-r border-gray-200 p-4 flex flex-col transition-all duration-300 ease-in-out">
-        <!-- Profile Section -->
-        <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 shadow-sm mb-6">
-          <img
-            src="https://thumbs.dreamstime.com/b/cartoon-angry-teacher-man-looking-55342685.jpg"
-            alt="Profile Photo"
-            class="w-14 h-14 rounded-full border-2 border-green-500 object-cover"
-          />
-          <div>
-            <h2 class="text-base font-semibold text-gray-900">{{ fullname }}</h2>
-            <p class="text-xs text-gray-500">email@example.com</p>
-          </div>
-        </div>
-
-        <!-- Navigation Links -->
-        <nav class="flex-1">
-          <!-- Class Record Section -->
-          <div class="mb-4">
-            <h3 class="text-sm font-semibold text-gray-500 uppercase px-4">Class Record</h3>
-            <div class="mt-2 space-y-1">
-              <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-green-50 rounded-lg transition">
-                Students
-              </a>
-              <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-green-50 rounded-lg transition">
-                Class Join Request
-              </a>
-              <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-green-50 rounded-lg transition">
-                Archived Classes
-              </a>
-            </div>
-          </div>
-
-          <!-- Seatworks Section -->
-          <div class="mb-4">
-            <h3 class="text-sm font-semibold text-gray-500 uppercase px-4">Seatworks</h3>
-            <div class="mt-2 space-y-1">
-              <a href="#" class="block px-4 py-2 bg-green-100 text-green-700 font-medium rounded-lg">
-                Seatwork Records
-              </a>
-            </div>
-          </div>
-
-          <!-- Settings Section -->
-          <div class="mb-4">
-            <h3 class="text-sm font-semibold text-gray-500 uppercase px-4">Settings</h3>
-            <div class="mt-2 space-y-1">
-              <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-green-50 rounded-lg transition">
-                Preferences
-              </a>
-              <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-green-50 rounded-lg transition">
-                Help & Support
-              </a>
-            </div>
-          </div>
-        </nav>
-
-        <!-- Logout -->
-        <div class="mt-auto pt-4 border-t border-gray-200">
-          <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition">
-            Logout
-          </a>
-          <p class="text-xs text-gray-400 mt-2 px-4">Sports</p>
-        </div>
-      </aside>
-
-      <!-- Main Content -->
-      <div id="mainContent" class="flex-1 flex flex-col bg-gray-50 transition-all duration-300 ease-in-out">
-        <!-- Header -->
-        <header class="bg-white shadow-sm p-4 flex items-center justify-between">
-          <button id="toggleSidebar" class="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
-          </button>
-          <div class="w-full flex justify-center items-center">
-            <h1 class="text-2xl font-bold tracking-tight">
-              <span class="text-green-600">Seatwork</span><span class="text-gray-800">Records</span>
-            </h1>
-          </div>
-          <div></div>
-        </header>
-
-        <!-- Page Content -->
-        <main class="flex-1 p-6 overflow-y-auto">
-          <div class="max-w-6xl mx-auto">
-            <div class="overflow-x-auto bg-white shadow-md rounded-lg p-4">
-              <table class="min-w-full table-auto text-sm text-left text-gray-700">
-                <thead class="bg-green-100 text-green-800 font-semibold">
-                  <tr>
-                    <th class="px-4 py-2">Student Name</th>
-                    <th class="px-4 py-2">Seatwork 1</th>
-                    <th class="px-4 py-2">Seatwork 2</th>
-                    <th class="px-4 py-2">Seatwork 3</th>
-                    <th class="px-4 py-2">Average</th>
-                  </tr>
-                </thead>
-                <tbody id="quizTableBody">
-                  <tr class="border-t">
-                    <td class="px-4 py-2 font-medium">Jam Dela Cruz</td>
-                    <td class="px-4 py-2"><input type="number" class="score-input w-16 border rounded px-2 py-1" value="65" min="0" max="100"></td>
-                    <td class="px-4 py-2"><input type="number" class="score-input w-16 border rounded px-2 py-1" value="90" min="0" max="100"></td>
-                    <td class="px-4 py-2"><input type="number" class="score-input w-16 border rounded px-2 py-1" value="95" min="0" max="100"></td>
-                    <td class="px-4 py-2 font-semibold text-center avg-cell">83.33</td>
-                  </tr>
-                  <tr class="border-t">
-                    <td class="px-4 py-2 font-medium">Mahla Santos</td>
-                    <td class="px-4 py-2"><input type="number" class="score-input w-16 border rounded px-2 py-1" value="75" min="0" max="100"></td>
-                    <td class="px-4 py-2"><input type="number" class="score-input w-16 border rounded px-2 py-1" value="80" min="0" max="100"></td>
-                    <td class="px-4 py-2"><input type="number" class="score-input w-16 border rounded px-2 py-1" value="78" min="0" max="100"></td>
-                    <td class="px-4 py-2 font-semibold text-center avg-cell">77.67</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </main>
-      </div>
+{% extends 'core/main.html' %}
+ 
+{% block title %}Seatworks Records{% endblock %}
+ 
+{% block content %}
+<div id="recordsPage" class="page-content">
+  <div class="flex justify-between items-center mb-4 bg-green-100 p-4 rounded">
+    <h1 class="text-2xl font-bold text-green-900">Seatwork Records</h1>
+    <div>
+      <button onclick="goBack()" class="bg-green-200 text-green-900 px-4 py-2 rounded hover:bg-green-300">
+        ← Back
+      </button>
     </div>
-
-    <script>
-      // Toggle sidebar
-      const toggleButton = document.getElementById("toggleSidebar");
-      const sidebar = document.getElementById("sidebar");
-      toggleButton.addEventListener("click", () => {
-        sidebar.classList.toggle("hidden");
-      });
-
-      // Calculate averages
-      function updateAverages() {
-        document.querySelectorAll("#quizTableBody tr").forEach(row => {
-          const scores = row.querySelectorAll(".score-input");
-          let total = 0;
-          let count = 0;
-
-          scores.forEach(input => {
-            const val = parseFloat(input.value);
-            if (!isNaN(val) && val >= 0 && val <= 100) {
-              total += val;
-              count++;
-            }
-          });
-
-          const avgCell = row.querySelector(".avg-cell");
-          if (count > 0) {
-            const average = (total / count).toFixed(2);
-            avgCell.textContent = average;
-          } else {
-            avgCell.textContent = "0.00";
-          }
-        });
+  </div>
+ 
+  <div class="flex justify-between items-center mb-4">
+    <div class="flex gap-2">
+      <input id="searchInput" type="text" placeholder="Search..." class="border px-3 py-2 rounded w-64" />
+      <button id="downloadBtn" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Export CSV</button>
+      <button id="addRecordBtn" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Add Record</button>
+    </div>
+  </div>
+ 
+  <div class="bg-white rounded shadow overflow-x-auto">
+    <table class="min-w-full text-sm border border-green-700 border-collapse">
+      <thead class="bg-green-100 text-left text-green-900 font-semibold">
+        <tr>
+          <th class="p-2 border-2 border-green-700">Name</th>
+          <th class="p-2 border-2 border-green-700">Activity</th>
+          <th class="p-2 border-2 border-green-700">Score</th>
+          <th class="p-2 border-2 border-green-700">Status</th>
+          <th class="p-2 border-2 border-green-700">Date</th>
+          <th class="p-2 border-2 border-green-700 text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <p id="noData" class="text-center text-gray-500 py-4 hidden">No records found.</p>
+  </div>
+</div>
+ 
+<!-- Modal -->
+<div id="modalBg" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center z-50">
+  <div class="bg-white p-6 rounded shadow w-96">
+    <h2 class="text-lg font-bold mb-4">Seatwork Record</h2>
+    <form id="recordForm" class="flex flex-col gap-3">
+      <input id="studentName" type="text" placeholder="Student Name" required class="border px-3 py-2 rounded" />
+      <input id="activityName" type="text" placeholder="Activity" required class="border px-3 py-2 rounded" />
+      <input id="scoreValue" type="number" placeholder="Score" required class="border px-3 py-2 rounded" />
+      <select id="statusSelect" required class="border px-3 py-2 rounded">
+        <option value="">Select Status</option>
+        <option value="Pending">Pending</option>
+        <option value="Completed">Completed</option>
+      </select>
+      <input id="dateInput" type="date" required class="border px-3 py-2 rounded" />
+      <div class="flex justify-end gap-2 mt-2">
+        <button type="button" id="cancelBtn" class="bg-gray-300 px-4 py-2 rounded">Cancel</button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+ 
+<script>
+  let records = JSON.parse(localStorage.getItem("studentRecords")) || [];
+  let editId = null;
+ 
+  const modal = document.getElementById("modalBg");
+  const form = document.getElementById("recordForm");
+  const tableBody = document.getElementById("tableBody");
+  const noData = document.getElementById("noData");
+  const searchInput = document.getElementById("searchInput");
+ 
+  function goBack() {
+    window.history.back();
+  }
+ 
+  document.getElementById("addRecordBtn").onclick = () => {
+    form.reset();
+    editId = null;
+    modal.classList.remove("hidden");
+  };
+ 
+  document.getElementById("cancelBtn").onclick = () => {
+    modal.classList.add("hidden");
+    editId = null;
+  };
+ 
+  form.onsubmit = (e) => {
+    e.preventDefault();
+    const recordData = {
+      name: form.studentName.value.trim(),
+      activity: form.activityName.value.trim(),
+      score: form.scoreValue.value,
+      status: form.statusSelect.value,
+      date: form.dateInput.value
+    };
+ 
+    if (editId !== null) {
+      const index = records.findIndex(r => r.id === editId);
+      if (index !== -1) {
+        records[index] = { id: editId, ...recordData };
       }
-
-      // Initialize and set up event listeners
-      document.addEventListener("DOMContentLoaded", () => {
-        document.querySelectorAll(".score-input").forEach(input => {
-          input.addEventListener("input", updateAverages);
-          input.addEventListener("change", updateAverages);
-        });
-
-        updateAverages();
-      });
-    </script>
-  </body>
-</html>
+    } else {
+      const newRecord = { id: Date.now(), ...recordData };
+      records.push(newRecord);
+    }
+ 
+    localStorage.setItem("studentRecords", JSON.stringify(records));
+    modal.classList.add("hidden");
+    renderTable();
+    editId = null;
+  };
+ 
+  function editRecord(id) {
+    const record = records.find(r => r.id === id);
+    if (!record) return;
+ 
+    form.studentName.value = record.name;
+    form.activityName.value = record.activity;
+    form.scoreValue.value = record.score;
+    form.statusSelect.value = record.status;
+    form.dateInput.value = record.date;
+ 
+    editId = id;
+    modal.classList.remove("hidden");
+  }
+ 
+  function getStatusBadge(status) {
+    const badgeClasses = {
+      Completed: 'bg-green-100 text-green-800',
+      Pending: 'bg-yellow-100 text-yellow-800'
+    };
+    return `<span class="px-2 py-1 rounded-full text-xs font-semibold ${badgeClasses[status] || 'bg-gray-200'}">${status}</span>`;
+  }
+ 
+  function renderTable() {
+    const keyword = searchInput.value.toLowerCase();
+    const filteredRecords = records.filter(r =>
+      r.name.toLowerCase().includes(keyword) ||
+      r.activity.toLowerCase().includes(keyword)
+    );
+ 
+    tableBody.innerHTML = "";
+ 
+    if (filteredRecords.length === 0) {
+      noData.classList.remove("hidden");
+      return;
+    }
+    noData.classList.add("hidden");
+ 
+    filteredRecords.forEach(r => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td class="p-2 border-2 border-green-700">${r.name}</td>
+        <td class="p-2 border-2 border-green-700">${r.activity}</td>
+        <td class="p-2 border-2 border-green-700">${r.score}</td>
+        <td class="p-2 border-2 border-green-700">${getStatusBadge(r.status)}</td>
+        <td class="p-2 border-2 border-green-700">${r.date}</td>
+        <td class="p-2 border-2 border-green-700 text-center space-x-2">
+          <button class="text-blue-600 hover:underline" onclick="editRecord(${r.id})">Edit</button>
+          <button class="text-red-600 hover:underline" onclick="deleteRecord(${r.id})">Delete</button>
+        </td>
+      `;
+      tableBody.appendChild(row);
+    });
+  }
+ 
+  function deleteRecord(id) {
+    if (confirm("Are you sure you want to delete this record?")) {
+      records = records.filter(r => r.id !== id);
+      localStorage.setItem("studentRecords", JSON.stringify(records));
+      renderTable();
+    }
+  }
+ 
+  document.getElementById("downloadBtn").onclick = () => {
+    if (records.length === 0) return alert("No records to export.");
+    let csv = "Name,Activity,Score,Status,Date\n";
+    records.forEach(r => {
+      csv += `"${r.name}","${r.activity}","${r.score}","${r.status}","${r.date}"\n`;
+    });
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "student_seatwork_records.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+ 
+  searchInput.addEventListener("input", renderTable);
+ 
+  renderTable();
+</script>
+{% endblock %}
