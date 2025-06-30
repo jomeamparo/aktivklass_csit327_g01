@@ -51,7 +51,7 @@ urlpatterns = [
     path('faculty_notifications/', include('notifications_faculty.urls')),
     path('chat/', include('chat_screen.urls')),
     path('help_and_support/', include('help_and_support.urls')),
-    path('quizzes/', include('quizzes.urls')),
+    path('', include('core.urls')),
     path('admin_settings/', include('admin_settings.urls')),
     path('analytics/', include('analytics.urls')),
     path('forgot_password/', include('forgot_password.urls')),
