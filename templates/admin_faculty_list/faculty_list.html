@@ -302,12 +302,12 @@
         .then(data => {
             if (data.success) {
                 if (data.status === 'DISABLED') {
-                    button.classList.remove('bg-green-500', 'hover:bg-green-600');
-                    button.classList.add('bg-red-500', 'hover:bg-red-600');
-                    button.textContent = 'Activate';
-                } else {
                     button.classList.remove('bg-red-500', 'hover:bg-red-600');
                     button.classList.add('bg-green-500', 'hover:bg-green-600');
+                    button.textContent = 'Activate';
+                } else {
+                    button.classList.remove('bg-green-500', 'hover:bg-green-600');
+                    button.classList.add('bg-red-500', 'hover:bg-red-600');
                     button.textContent = 'Disable';
                 }
                 showMessage(data.message, 'success');

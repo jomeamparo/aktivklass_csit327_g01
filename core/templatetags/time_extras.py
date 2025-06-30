@@ -24,4 +24,4 @@ def time_delta(value):
         days = int(seconds // 86400)
         return f"{days}d ago."
     else:
-        return value.strftime("%b %d")
+        return value.strftime("%b %d") 

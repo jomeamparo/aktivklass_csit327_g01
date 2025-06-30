@@ -26,9 +26,16 @@
                 class="block"
               >
                 <div class="flex items-center justify-between mb-1">
-                  <span class="text-base font-semibold text-green-700">
-                    {{ conv_data.other_participant.first_name }} {{ conv_data.other_participant.last_name }}
-                  </span>
+                  <div class="flex items-center space-x-2">
+                    <span class="text-base font-semibold text-green-700">
+                      {{ conv_data.other_participant.first_name }} {{ conv_data.other_participant.last_name }}
+                    </span>
+                    {% if user in conv_data.conversation.muted_by.all %}
+                      <span class="text-gray-400 text-xs">
+                        <i class="fas fa-volume-mute"></i> Muted
+                      </span>
+                    {% endif %}
+                  </div>
                   {% if conv_data.unread_count > 0 %}
                     <span class="bg-red-500 text-white text-xs rounded-full px-2 py-1">
                       {{ conv_data.unread_count }}

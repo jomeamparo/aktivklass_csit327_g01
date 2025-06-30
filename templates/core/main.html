@@ -94,6 +94,10 @@
             <i class="fas fa-users text-green-600"></i>
             <span>Seatwork History</span>
           </a>
+          <a href="{% url 'faculty_attendance:faculty_attendance' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+            <i class="fas fa-user text-green-600"></i>
+            <span>Attendance</span>
+          </a>
           <a href="{% url 'faculty_laboratory' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-user text-green-600"></i>
             <span>Class Page</span>
@@ -106,18 +110,20 @@
             <i class="fas fa-users text-green-600"></i>
             <span>Quizzes</span>
           </a>
-
-          
-          
           <a href="{% url 'faculty_settings' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-700 dark:hover:text-green-400 transition">
             <i class="fas fa-user text-green-600"></i>
             <span>Preferences</span>
           </a>
+          <a href="{% url 'help_and_support' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
+            <i class="fas fa-info-circle text-green-600"></i>
+            <span>Help & Support</span>
+          </a>
+
         {% endif %}
      
         {% if role == 'admin' %}
           <!-- Admin Options only -->
-          <a href="{% url 'admin_faculty_list' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-700 dark:hover:text-green-400 transition">
+          <a href="{% url 'edit_faculty' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-700 dark:hover:text-green-400 transition">
             <i class="fas fa-user text-green-600"></i>
             <span>Faculty</span>
           </a>
@@ -159,7 +165,7 @@
           </a>
           <a href="{% url 'attendance_student' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-700 dark:hover:text-green-400 transition">
             <i class="fas fa-user text-green-600"></i>
-            <span>Class list</span>
+            <span>Attendance</span>
           </a>
           <a href="{% url 'notifications' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-user text-green-600"></i>
@@ -173,8 +179,6 @@
             <i class="fas fa-cog text-green-600"></i>
             <span>Settings</span>
           </a>
-          <!-- <a href="{% url 'help_and_support' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-          </a> -->
           <a href="{% url 'help_and_support' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
             <i class="fas fa-info-circle text-green-600"></i>
             <span>Help & Support</span>
