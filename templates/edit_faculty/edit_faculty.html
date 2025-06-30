@@ -271,35 +271,41 @@
     }
 
     function toggleFacultyStatus(facultyId) {
-        if (confirm('Are you sure you want to change this faculty\'s status?')) {
-            const button = document.querySelector(`button[data-faculty-id='${facultyId}']`);
-            fetch(`/toggle_faculty_status/${facultyId}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    if (data.status === 'ACTIVE') {
-                        button.classList.remove('bg-red-500', 'hover:bg-red-600');
-                        button.classList.add('bg-green-500', 'hover:bg-green-600');
-                        button.textContent = 'ACTIVE';
-                    } else {
-                        button.classList.remove('bg-green-500', 'hover:bg-green-600');
-                        button.classList.add('bg-red-500', 'hover:bg-red-600');
-                        button.textContent = 'DISABLED';
-                    }
+    if (confirm('Are you sure you want to change this faculty\'s status?')) {
+        const button = document.querySelector(`button[data-faculty-id='${facultyId}']`);
+        button.disabled = true; // Prevent double click
+        button.textContent = 'Updating...';
+
+        fetch(`/toggle-faculty-status/${facultyId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if (data.status === 'ACTIVE') {
+                    button.classList.remove('bg-red-500', 'hover:bg-red-600');
+                    button.classList.add('bg-green-500', 'hover:bg-green-600');
+                    button.textContent = 'ACTIVE';
                 } else {
-                    alert('Failed to update faculty status');
+                    button.classList.remove('bg-green-500', 'hover:bg-green-600');
+                    button.classList.add('bg-red-500', 'hover:bg-red-600');
+                    button.textContent = 'DISABLED';
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while updating faculty status');
-            });
-        }
+            } else {
+                alert('Failed to update faculty status');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while updating faculty status');
+        })
+        .finally(() => {
+            button.disabled = false;
+        });
     }
+}
 </script>
 {% endblock %} 
