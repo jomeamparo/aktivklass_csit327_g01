@@ -123,7 +123,7 @@ DATABASES = {
         'USER': 'root',          # default user in XAMPP
         'PASSWORD': '',          # default password is empty
         'HOST': 'localhost',
-        'PORT': '3308',
+        'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION'",
         },
@@ -186,8 +186,3 @@ EMAIL_HOST_USER = 'minecrafterusergame@gmail.com'  # Replace with your Gmail add
 EMAIL_HOST_PASSWORD = 'lukojehfetcplftj'  # Paste the 16-character app password here
 # Login URL configuration
 LOGIN_URL = '/'  # This points to your custom login view at the root URL
-
-def class_list_view(request):
-    # Get all non-archived classes
-    classes = Class.objects.filter(is_archived=False)
-    return render(request, 'class_lists/class_list.html', {'classes': classes})
