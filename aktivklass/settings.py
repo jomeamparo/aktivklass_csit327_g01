@@ -73,14 +73,12 @@ INSTALLED_APPS = [
 
     'forgot_password',
     'attendance_student',
-    'notifications_faculty',
 
 
     'edit_student',
     'tailwind',
     'theme',
     'widget_tweaks',
-    'forgot_password',
 ]
 
 
