@@ -1,5 +1,5 @@
 from django import forms
-from core.models import Student, StudentProfile
+from core.models import Student
 import re
 
 class StudentProfileForm(forms.ModelForm):
