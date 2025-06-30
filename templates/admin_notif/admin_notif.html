@@ -7,25 +7,49 @@
 {% block content %}
 
 <div class="flex justify-between mb-6">
-    <h2 class="font-bold text-2xl text-gray-800">Notifications</h2>
-    <button id="mark-all-btn" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
-        Mark All As Read
-    </button>
+    <h2 class="font-bold text-2xl text-gray-800 dark:text-gray-100">Notifications</h2>
+    <form method="post" action="{% url 'admin_notif:mark_all_notifications_as_read' %}">
+        {% csrf_token %}
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+            Mark All As Read
+        </button>
+    </form>
 </div>
 
-<div class="flex flex-col p-4 bg-white rounded shadow-lg">
+<div class="flex flex-col p-4 bg-white dark:bg-gray-800 rounded shadow-lg">
+    {% if new_notifications %}
+    <h2 class="font-bold text-sm text-gray-800 dark:text-gray-100 mb-2">New</h2>
     <div class="flex flex-col mb-4 gap-2">
-        {% for notification in notifications %}
-        <div class="notification-item w-full p-4 rounded flex flex-row justify-between items-center transition-colors 
-                {% if notification.is_read %}bg-gray-100{% else %}bg-green-50 hover:bg-gray-50{% endif %}"
-            data-id="{{ notification.pk }}">
+        {% for notification in new_notifications %}
+            <div class="w-full p-4 rounded flex flex-row justify-between items-center bg-green-50 dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                <div class="flex flex-col gap-2">
+                    <h3 class="font-bold dark:text-gray-100">{{ notification.title }} 
+                        <span class="text-gray-300 dark:text-gray-400 text-xs font-medium">{{ notification.created_at|time_delta }}</span>
+                    </h3>
+                    <p class="text-gray-400 dark:text-gray-300 text-xs pl-2">{{ notification.content }}</p>
+                </div>
+                <div class="pl-4 border-l-2 border-gray-300 dark:border-gray-600">
+                    <form method="post" action="{% url 'admin_notif:mark_notification_as_read' notification.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="bg-green-600 text-white w-fit h-fit px-4 py-2 rounded shadow-md hover:bg-green-700 transition">Mark as Read</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
 
-            <div class="flex flex-col gap-2">
-                <h3 class="font-bold">
-                    {{ notification.title }}
-                    <span class="text-gray-300 text-xs font-medium">{{ notification.created_at|time_delta }}</span>
-                </h3>
-                <p class="text-gray-400 text-xs pl-2">{{ notification.content }}</p>
+{% if old_notifications %}
+    <h2 class="font-bold text-sm text-gray-800 dark:text-gray-100 mb-2">Old</h2>
+    <div class="flex flex-col gap-2">
+        {% for notification in old_notifications %}
+            <div class="w-full p-4 rounded flex flex-row justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <div class="flex flex-col gap-2">
+                    <h3 class="font-bold dark:text-gray-100">{{ notification.title }} 
+                        <span class="text-gray-300 dark:text-gray-400 text-xs font-medium">{{ notification.created_at|time_delta }}</span>
+                    </h3>
+                    <p class="text-gray-400 dark:text-gray-300 text-xs pl-2">{{ notification.message }}</p>
+                </div>
             </div>
 
             {% if not notification.is_read %}
@@ -42,44 +66,12 @@
 </div>
 
 <script>
-    document.querySelectorAll('.mark-as-read-btn').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const pk = this.dataset.pk;
-            fetch(`/admin_notif/${pk}/read/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                }
-            })
-                .then(response => {
-                    if (response.ok) {
-                        const notifItem = this.closest('.notification-item');
-                        notifItem.classList.remove('bg-green-50');
-                        notifItem.classList.add('bg-gray-100');
-                        this.parentElement.remove(); // remove the "Mark as Read" button
-                    }
-                });
-        });
-    });
-
-    document.getElementById('mark-all-btn').addEventListener('click', function () {
-        fetch(`/admin_notif/mark-all/`, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}',
-            }
-        })
-            .then(response => {
-                if (response.ok) {
-                    document.querySelectorAll('.notification-item').forEach(item => {
-                        item.classList.remove('bg-green-50');
-                        item.classList.add('bg-gray-100');
-                        const btnDiv = item.querySelector('form, .pl-4');
-                        if (btnDiv) btnDiv.remove();
-                    });
-                }
-            });
-    });
+    const savedTheme = localStorage.getItem("theme");
+       if (savedTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
 </script>
 
 {% endblock %}
