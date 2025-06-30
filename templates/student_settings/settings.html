@@ -9,71 +9,182 @@
     const userPref = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const isDark = userPref === 'dark' || (userPref === null && prefersDark);
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    document.documentElement.classList.toggle('dark', isDark);
   })();
 </script>
 {% endblock %}
 
 {% block content %}
+
+<!-- Fixed Back Button at Top-Right -->
 <div 
   x-data="themeSwitcher()" 
   x-init="init()" 
-  class="container mx-auto px-4 py-6 transition-colors duration-300"
+  class="container mx-auto px-4 md:px-6 pt-24 pb-8 transition-colors duration-300 space-y-6 max-w-3xl"
 >
-  <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Settings</h2>
 
-  <div class="space-y-4">
-    <!-- General Settings -->
-    <div 
-      x-data="{ open: true }" 
-      class="bg-white dark:bg-gray-800 rounded-lg shadow emboss-effect p-5 transition-colors duration-300"
+  <!-- Page Title -->
+  <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+    ⚙️ <span>Settings</span>
+  </h2>
+
+  <!-- General Settings -->
+  <div x-data="{ open: true, showAbout: false }" class="bg-white dark:bg-gray-800 rounded-2xl shadow-md emboss-effect p-6 space-y-4">
+    <button 
+      @click="open = !open" 
+      class="flex items-center justify-between w-full text-left text-xl font-semibold text-green-700 dark:text-green-400 bg-green-100 dark:bg-green-900 px-5 py-3 rounded-lg hover:bg-green-200 dark:hover:bg-green-800 transition-all duration-200"
     >
+      <span>General Settings</span>
+      <svg :class="{ 'rotate-180': open }" class="w-5 h-5 transform transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+
+    <div x-show="open" x-cloak class="space-y-5 px-1 pt-2 transition-all duration-300">
+      <!-- Appearance Toggle -->
+      <div class="flex items-center justify-between bg-green-50 dark:bg-gray-700 px-4 py-3 rounded-xl">
+        <span class="text-green-800 dark:text-green-300 font-medium">🌓 Appearance (Light / Dark Mode)</span>
+        <label class="inline-flex items-center cursor-pointer">
+          <input type="checkbox" x-model="darkMode" @change="toggleTheme" class="sr-only peer">
+          <div class="w-11 h-6 bg-gray-300 dark:bg-gray-600 peer-checked:bg-green-600 rounded-full relative transition-all duration-300">
+            <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 peer-checked:translate-x-5"></div>
+          </div>
+        </label>
+      </div>
+
+      <!-- About Developers Trigger Button -->
       <button 
-        @click="open = !open" 
-        class="w-full text-left text-lg font-semibold text-green-700 dark:text-green-400 bg-green-100 dark:bg-green-900 px-4 py-3 rounded hover:bg-green-200 dark:hover:bg-green-800 transition"
+        @click="showAbout = true" 
+        class="w-full text-left bg-green-50 dark:bg-gray-700 text-green-800 dark:text-green-300 hover:bg-green-100 dark:hover:bg-gray-600 px-4 py-3 rounded-xl transition-all duration-200 font-medium"
       >
-        General Settings
+        👨‍💻 About Student Developers
       </button>
+    </div>
 
-      <div x-show="open" x-cloak class="mt-3 pl-4 space-y-4">
-        <!-- Appearance Switch -->
-        <div class="flex items-center justify-between bg-green-50 dark:bg-gray-700 px-4 py-2 rounded transition">
-          <span class="text-green-800 dark:text-green-300">Appearance (Light/Dark Mode)</span>
-          <label class="inline-flex items-center cursor-pointer">
-            <input 
-              type="checkbox" 
-              :checked="darkMode" 
-              @change="toggleTheme" 
-              class="sr-only peer"
-            >
-            <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:bg-green-600 relative transition-all duration-300">
-              <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-all peer-checked:translate-x-5"></div>
-            </div>
-          </label>
-        </div>
-
-        <button class="w-full text-left bg-green-50 dark:bg-gray-700 text-green-800 dark:text-green-300 hover:bg-green-100 dark:hover:bg-gray-600 px-4 py-2 rounded transition">
-          About Developers
+    <!-- About Developers Modal -->
+    <div 
+      x-show="showAbout" 
+      x-cloak 
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+    >
+      <div class="relative w-full max-w-5xl max-h-[90vh] mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
+        <button 
+          @click="showAbout = false" 
+          class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition"
+        >
+          ✖
         </button>
+
+        <div class="overflow-y-auto max-h-[75vh] pr-2 scrollbar-hide">
+          <h3 class="text-2xl font-bold text-green-700 dark:text-green-300 mb-6 text-center flex justify-center gap-2 items-center">
+            💡 Student Developer Team
+          </h3>
+
+          <!-- Team Leader -->
+          <div class="flex justify-center mb-10">
+            <div class="flex flex-col items-center text-center bg-green-100 dark:bg-gray-700 p-6 rounded-xl shadow-lg w-full sm:w-2/3">
+              <p class="text-2xl font-bold text-green-700 dark:text-green-300">Anrey Keith Cabigas</p>
+              <p class="text-sm text-gray-700 dark:text-gray-300 mt-2">
+                👑 <strong>Team Leader / Lead Developer</strong><br>
+                Oversaw the entire project development lifecycle, managed backend logic, and handled full project integration including Notifications and Login logic.
+                <br><br>✔️ Project Integration, Backend Logic, Notifications, Login HTML
+              </p>
+            </div>
+          </div>
+
+          <!-- Other Developers -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-6">
+            <template x-for="developer in [
+              {name:'Mark Lorenz Barangan', role:'UI Developer & Chat Engineer', work:'✔️ Login HTML, Chat Layout, Search & Delete Function'},
+              {name:'Karl Miguel Penida', role:'UI/UX Designer & Profile Developer', work:'✔️ Login Layout, Profile Page, Edit Status'},
+              {name:'Marc Gabrielle Corsino', role:'Functional Developer & Support', work:'✔️ Button Actions, Help UI, FAQ, Suggest Feature'},
+              {name:'Jhecy Leigh Mando', role:'Frontend Developer & QA Specialist', work:'✔️ Login CSS, Settings, Terms, QA'},
+              {name:'John Earl Mandawe', role:'Documentation & Validation', work:'✔️ Class List Screen, Login Restrictions'},
+              {name:'Gwyn Sapio', role:'Project Manager & Attendance Developer', work:'✔️ Attendance, Quizzes, Labs, Seatworks, Assignments'}
+            ]" :key="developer.name">
+              <div class="flex flex-col items-center text-center bg-green-50 dark:bg-gray-700 p-4 rounded-xl shadow">
+                <p class="text-xl font-semibold text-green-700 dark:text-green-300" x-text="developer.name"></p>
+                <p class="text-sm text-gray-600 dark:text-gray-300">
+                  <strong x-text="developer.role"></strong><br><br>
+                  <span x-text="developer.work"></span>
+                </p>
+              </div>
+            </template>
+          </div>
+
+          <p class="text-sm pt-6 text-gray-700 dark:text-gray-300 text-center">
+            This system was developed for CSIT327 to streamline classroom activity management using modern, responsive tools.
+          </p>
+        </div>
       </div>
     </div>
+  </div>
 
-    <!-- Terms of Use -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow emboss-effect p-5 transition-colors duration-300">
-      <button class="w-full text-left text-lg font-semibold text-green-700 dark:text-green-400 bg-green-100 dark:bg-green-900 px-4 py-3 rounded hover:bg-green-200 dark:hover:bg-green-800 transition">
-        Terms of Use
-      </button>
+  <!-- Terms of Use -->
+  <div x-data="{ showTerms: false }" class="bg-white dark:bg-gray-800 rounded-2xl shadow-md emboss-effect p-6 mt-6">
+    <button 
+      @click="showTerms = true"
+      class="w-full text-left text-xl font-semibold text-green-700 dark:text-green-400 bg-green-100 dark:bg-green-900 px-5 py-3 rounded-lg hover:bg-green-200 dark:hover:bg-green-800 transition-all duration-200"
+    >
+      📜 Terms of Use
+    </button>
+
+    <!-- Modal -->
+    <div 
+      x-show="showTerms" 
+      x-cloak 
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+    >
+      <div class="relative w-full max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 space-y-4">
+        <button 
+          @click="showTerms = false" 
+          class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition"
+        >✖</button>
+        <h3 class="text-2xl font-bold text-green-700 dark:text-green-300 mb-4 flex items-center gap-2">
+          📜 Terms of Use
+        </h3>
+        <div class="space-y-3 text-gray-700 dark:text-gray-300 text-sm max-h-[60vh] overflow-y-auto">
+          <p>By accessing and using this system, you agree to comply with and be bound by the following terms and conditions. Please review them carefully.</p>
+          <p>All content, features, and functionalities are provided for academic and management purposes. Unauthorized use, duplication, or distribution is prohibited.</p>
+          <p>Your use of the system is at your own risk. We do not warrant uninterrupted or error-free performance.</p>
+          <p>This platform may collect limited personal data for authentication and analytics. We respect user privacy and comply with institutional data policies.</p>
+          <p>Changes to these terms may be made at any time without prior notice. Continued use constitutes acceptance of revised terms.</p>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Privacy & Cookies -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow emboss-effect p-5 transition-colors duration-300">
-      <button class="w-full text-left text-lg font-semibold text-green-700 dark:text-green-400 bg-green-100 dark:bg-green-900 px-4 py-3 rounded hover:bg-green-200 dark:hover:bg-green-800 transition">
-        Privacy & Cookies
-      </button>
+  <!-- Privacy & Cookies -->
+  <div x-data="{ showPrivacy: false }" class="bg-white dark:bg-gray-800 rounded-2xl shadow-md emboss-effect p-6 mt-6">
+    <button 
+      @click="showPrivacy = true"
+      class="w-full text-left text-xl font-semibold text-green-700 dark:text-green-400 bg-green-100 dark:bg-green-900 px-5 py-3 rounded-lg hover:bg-green-200 dark:hover:bg-green-800 transition-all duration-200"
+    >
+      🍪 Privacy & Cookies
+    </button>
+
+    <!-- Modal -->
+    <div 
+      x-show="showPrivacy" 
+      x-cloak 
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+    >
+      <div class="relative w-full max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 space-y-4">
+        <button 
+          @click="showPrivacy = false" 
+          class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition"
+        >✖</button>
+        <h3 class="text-2xl font-bold text-green-700 dark:text-green-300 mb-4 flex items-center gap-2">
+          🍪 Privacy & Cookies Policy
+        </h3>
+        <div class="space-y-3 text-gray-700 dark:text-gray-300 text-sm max-h-[60vh] overflow-y-auto">
+          <p>This system uses cookies to enhance user experience and ensure security of login sessions.</p>
+          <p>Cookies are used only to manage authentication and basic analytics.</p>
+          <p>No third-party tracking is used and no personal information is sold or shared.</p>
+          <p>Users can control cookie behavior via their browser settings.</p>
+          <p>By continuing to use the system, you accept this cookie policy in accordance with institutional privacy standards.</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -81,17 +192,17 @@
 <!-- Alpine.js -->
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
-<!-- Theme switcher -->
+<!-- Theme Switcher Logic -->
 <script>
   function themeSwitcher() {
     return {
       darkMode: false,
       init() {
-        // Read from <html> tag to sync switch state
-        this.darkMode = document.documentElement.classList.contains('dark');
+        this.darkMode = localStorage.getItem('theme') === 'dark' ||
+                        (localStorage.getItem('theme') === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('dark', this.darkMode);
       },
       toggleTheme() {
-        this.darkMode = !this.darkMode;
         localStorage.setItem('theme', this.darkMode ? 'dark' : 'light');
         document.documentElement.classList.toggle('dark', this.darkMode);
       }
@@ -99,6 +210,7 @@
   }
 </script>
 
+<!-- Custom Styles -->
 <style>
   [x-cloak] { display: none !important; }
 
@@ -106,18 +218,30 @@
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-6px); }
   }
+
   .animate-float {
     animation: float 3s ease-in-out infinite;
   }
+
   .emboss-effect {
     box-shadow:
       inset 2px 2px 5px rgba(255,255,255,0.7),
       inset -2px -2px 5px rgba(0,0,0,0.1);
   }
+
   .emboss-text {
     text-shadow:
       1px 1px 0 #fff,
      -1px -1px 0 #999;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 </style>
 {% endblock %}
