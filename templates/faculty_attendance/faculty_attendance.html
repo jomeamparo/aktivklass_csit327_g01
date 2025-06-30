@@ -53,11 +53,11 @@
                     <td class="py-3 px-4 border-b border-gray-200 text-sm text-gray-700">{{ record.last_name }}</td>
                     <td class="py-3 px-4 border-b border-gray-200 text-sm text-gray-700">{{ record.subject }}</td>
                     <td class="py-3 px-4 border-b border-gray-200 text-sm text-gray-700">{{ record.date|date:"d-m-Y" }}</td>
-                    <td class="py-3 px-4 border-b border-gray-200 text-sm font-semibold
-                        {% if record.status == 'Present' %}text-green-600
-                        {% elif record.status == 'Absent' %}text-red-600
-                        {% elif record.status == 'Late' %}text-yellow-600
-                        {% elif record.status == 'Excused' %}text-blue-600
+                    <td class="py-3 px-4 border-b border-gray-200 text-sm font-bold
+                        {% if record.status == 'PRESENT' %}text-green-600
+                        {% elif record.status == 'ABSENT' %}text-red-600
+                        {% elif record.status == 'LATE' %}text-yellow-600
+                        {% elif record.status == 'EXCUSE' %}text-blue-600
                         {% else %}text-gray-600
                         {% endif %}">
                         {{ record.status }}
