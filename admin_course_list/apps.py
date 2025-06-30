@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class NotificationsConfig(AppConfig):
+class AdminCourseConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'notifications_faculty'
+    name = 'admin_course_list'

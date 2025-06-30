@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'dashboard_admin',
     'admin_faculty_list',
     'admin_student_list',
+    'admin_course_list',
     'dashboard_student',
     'archived_classes',
     'class_join_request',
@@ -60,7 +61,8 @@ INSTALLED_APPS = [
     'student_profile',
     'faculty_profile',
     'faculty_laboratory',
-    'settings',
+    'notifications_faculty',
+    # 'settings',
     'analytics',
     'chat_screen',
     'edit_faculty',
@@ -126,7 +128,7 @@ DATABASES = {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION'",
         },
     }
-}   
+}
 
 
 # Password validation

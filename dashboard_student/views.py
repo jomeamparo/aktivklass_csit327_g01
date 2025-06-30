@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from core.models import Class, ClassJoinRequest, Enrollment, Student
+from django.contrib.auth.decorators import login_required
 
 def dashboard_view(request):
     student_id = request.session.get('user_id')
@@ -13,7 +14,7 @@ def dashboard_view(request):
         'role': 'student', 
         'classes': enrolled_classes,
         'student': student,
-        }
+    }
     return render(request, 'dashboard_student/dashboard.html', context)
 
 def leave_class(request, class_id):
@@ -61,4 +62,10 @@ def join_class(request):
             )
             return JsonResponse({'success': True, 'message': 'Your request has been submitted.'}, status=200)
 
+    return redirect('dashboard_student')
+
+def toggle_archive_view(request, enrollment_id):
+    enrollment = get_object_or_404(Enrollment, id=enrollment_id, student__student_id=request.session.get('user_id'))
+    enrollment.is_archived = not enrollment.is_archived
+    enrollment.save()
     return redirect('dashboard_student')

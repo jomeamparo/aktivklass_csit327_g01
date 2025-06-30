@@ -5,10 +5,6 @@ from django.contrib import messages
 
 def login_view(request):
     form = LoginForm(request.POST or None)
-    
-    # Get 'next' parameter from either GET or POST
-    next_url = request.GET.get('next') or request.POST.get('next')
-    
     if request.method == 'POST':
         if form.is_valid():
             user_id = form.cleaned_data.get('email')
@@ -19,10 +15,6 @@ def login_view(request):
                 request.session['user_id'] = faculty.faculty_id
                 request.session['role'] = 'faculty'
                 messages.success(request, "Login successful!")
-                
-                # Redirect to 'next' URL if provided, otherwise to dashboard
-                if next_url:
-                    return redirect(next_url)
                 return redirect('dashboard_teacher')
             except Faculty.DoesNotExist:
                 pass
@@ -32,10 +24,6 @@ def login_view(request):
                 request.session['user_id'] = admin_user.employee_id
                 request.session['role'] = 'admin'
                 messages.success(request, "Login successful!")
-                
-                # Redirect to 'next' URL if provided, otherwise to dashboard
-                if next_url:
-                    return redirect(next_url)
                 return redirect('dashboard_admin')
             except AdminUser.DoesNotExist:
                 pass
@@ -45,17 +33,13 @@ def login_view(request):
                 request.session['user_id'] = student.student_id
                 request.session['role'] = 'student'
                 messages.success(request, "Login successful!")
-                
-                # Redirect to 'next' URL if provided, otherwise to dashboard
-                if next_url:
-                    return redirect(next_url)
                 return redirect('dashboard_student')
             except Student.DoesNotExist:
                 pass
 
             messages.error(request, "Invalid user ID or password.")
 
-    return render(request, 'login/login.html', {'form': form, 'next': next_url})
+    return render(request, 'login/login.html', {'form': form})
 
 
 def forgot_password(request):
@@ -89,7 +73,6 @@ def forgot_password(request):
     return render(request, 'login/forgot_password.html')
 
 def logout_view(request):
-    """Clear session data and redirect to login"""
-    request.session.flush()
-    messages.success(request, "You have been logged out successfully.")
-    return redirect('login')
+    request.session['user_id'] = None
+    request.session['role'] =  None
+    return render(request, 'login/login.html')

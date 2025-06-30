@@ -3,6 +3,7 @@ import random, string
 import uuid
 from django.apps import AppConfig
 from django.conf import settings
+from django.db import models
 
 # Utility for generating unique class codes
 def generate_random_code(length=10):
@@ -20,6 +21,7 @@ STUDENT_STATUS_CHOICES = [
 ]
 
 class Class(models.Model):
+    course = models.ForeignKey('Course', on_delete=models.CASCADE, null=True, blank=True)
     subject_name = models.CharField(max_length=100)
     subject_code = models.CharField(max_length=20)
     description = models.TextField()
@@ -158,7 +160,7 @@ class Notification(models.Model):
     is_read = models.BooleanField(default=False)
 
     def mark_as_read(self):
-        self.is_read = True
+        self.is_read=True
         self.save()
 
     def __str__(self):
@@ -170,9 +172,48 @@ class Notification(models.Model):
 class Conversation(models.Model):
     participants = models.ManyToManyField(Student, related_name='conversations')
     created_at = models.DateTimeField(auto_now_add=True)
+    muted_by = models.ManyToManyField(Student, related_name='muted_conversations', blank=True)
 
     def __str__(self):
         return f"Conversation ({self.id})"
+    
+    def get_other_participant(self, user):
+        """Get the other participant in the conversation"""
+        return self.participants.exclude(id=user.id).first()
+    
+    def get_last_message(self):
+        """Get the last message in the conversation"""
+        return self.messages.last()
+    
+    def get_unread_count_for_user(self, user):
+        """Get count of unread messages for a specific user"""
+        # If conversation is muted by the user, return 0
+        if user in self.muted_by.all():
+            return 0
+        
+        return self.messages.filter(
+            is_read=False
+        ).exclude(
+            sender=user
+        ).count()
+    
+    @classmethod
+    def get_or_create_conversation(cls, user1, user2):
+        """Get existing conversation between two users or create a new one"""
+        # Check if conversation already exists
+        existing_conversation = cls.objects.filter(
+            participants=user1
+        ).filter(
+            participants=user2
+        ).first()
+        
+        if existing_conversation:
+            return existing_conversation
+        
+        # Create new conversation
+        conversation = cls.objects.create()
+        conversation.participants.add(user1, user2)
+        return conversation
 
 class Message(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
@@ -258,7 +299,9 @@ class FacultyProfileConfig(AppConfig):
 
 
 class PasswordResetToken(models.Model):
-    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE)
+    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, null=True, blank=True)
+    admin_user = models.ForeignKey(AdminUser, on_delete=models.CASCADE, null=True, blank=True)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True, blank=True)
     token = models.UUIDField(default=uuid.uuid4, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_used = models.BooleanField(default=False)
@@ -284,4 +327,45 @@ class FacultyProfile(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+
+class Course(models.Model):
+    course_id = models.CharField(max_length=255, primary_key=True)
+    subject_name = models.CharField(max_length=255)
+    subject_code = models.CharField(max_length=255)
+    section = models.CharField(max_length=255)
+    schedule = models.CharField(max_length=6)
+    capacity = models.CharField(max_length=255)
+    room = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.course_id} - {self.subject_name} {self.subject_code}"
+
+
+
+class SeatworkRecord(models.Model):
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Completed', 'Completed'),
+    ]
+
+    name = models.CharField(max_length=100)
+    activity = models.CharField(max_length=100)
+    score = models.PositiveIntegerField()
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES)
+    date = models.DateField()
+
+    def __str__(self):
+        return f"{self.name} - {self.activity} ({self.status})"
+        
+# Feature 3: Bookmark / Favorite Class # asdasd
+class FavoriteCourse(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('student', 'course')
+
+    def __str__(self):
+        return f"{self.student} favorited {self.course}"
 
