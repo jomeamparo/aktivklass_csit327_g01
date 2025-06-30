@@ -2,8 +2,12 @@ from django.db import models
 import random, string
 import uuid
 from django.apps import AppConfig
+<<<<<<< HEAD
 from django.conf import settings
 from django.db import models
+=======
+from django.core.validators import MinValueValidator, MaxValueValidator
+>>>>>>> 58c990e (feature(connected_database): connect database)
 
 from django.core.validators import MinValueValidator, MaxValueValidator
 
@@ -298,8 +302,14 @@ class EditAdminConfig(AppConfig):
 class FacultyProfileConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'faculty_profile'
+<<<<<<< HEAD
  
  
+=======
+
+<<<<<<< HEAD
+
+>>>>>>> 507968b (fix)
 class PasswordResetToken(models.Model):
     faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, null=True, blank=True)
     admin_user = models.ForeignKey(AdminUser, on_delete=models.CASCADE, null=True, blank=True)
@@ -365,12 +375,16 @@ class FavoriteCourse(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
+<<<<<<< HEAD
     class Meta:
         unique_together = ('student', 'course')
 
     def __str__(self):
         return f"{self.student} favorited {self.course}"
 
+=======
+=======
+>>>>>>> 507968b (fix)
 # Quiz Models
 class Quiz(models.Model):
     """Model for storing quiz information"""
@@ -523,3 +537,7 @@ class QuizGrade(models.Model):
     class Meta:
         unique_together = ['student', 'quiz']
         ordering = ['-graded_at']
+<<<<<<< HEAD
+=======
+>>>>>>> 58c990e (feature(connected_database): connect database)
+>>>>>>> 507968b (fix)
