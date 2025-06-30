@@ -3,6 +3,8 @@ from django.http import HttpResponseBadRequest
 from django.db.models import Q
 from functools import wraps
 from core.models import Conversation, Message, Student, Faculty, AdminUser
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 def get_user_from_session(request):
     """Get authenticated user and role from session"""
@@ -116,6 +118,20 @@ def send_message(request, user, conversation_id):
         content=content
     )
     
+    return redirect('conversation_detail', conversation_id=conversation.id)
+
+@student_only
+def mute_conversation(request, user, conversation_id):
+    conversation = get_object_or_404(Conversation, id=conversation_id, participants=user)
+    conversation.muted_by.add(user)
+    messages.success(request, "Conversation muted.")
+    return redirect('conversation_detail', conversation_id=conversation.id)
+
+@student_only
+def unmute_conversation(request, user, conversation_id):
+    conversation = get_object_or_404(Conversation, id=conversation_id, participants=user)
+    conversation.muted_by.remove(user)
+    messages.success(request, "Conversation unmuted.")
     return redirect('conversation_detail', conversation_id=conversation.id)
 
 # Helper functions

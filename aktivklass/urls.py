@@ -36,7 +36,6 @@ urlpatterns = [
     path('edit_faculty/', include('edit_faculty.urls')),
     path('edit_student/', include('edit_student.urls')),
     path('teacher_student/', include('teacher_student.urls')),
-    path('class_record/', include('class_record.urls')),
     path('archived_classes/', include('archived_classes.urls')),
     path('class_join_request/', include('class_join_request.urls')),
     path('faculty_seatwork/', include('faculty_seatwork.urls')),
