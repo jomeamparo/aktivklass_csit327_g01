@@ -2,12 +2,9 @@ from django.db import models
 import random, string
 import uuid
 from django.apps import AppConfig
-<<<<<<< HEAD
 from django.conf import settings
 from django.db import models
-=======
 from django.core.validators import MinValueValidator, MaxValueValidator
->>>>>>> 58c990e (feature(connected_database): connect database)
 
 # Utility for generating unique class codes
 def generate_random_code(length=10):
@@ -261,7 +258,6 @@ class FacultyProfileConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'faculty_profile'
 
-<<<<<<< HEAD
 
 class PasswordResetToken(models.Model):
     faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, null=True, blank=True)
@@ -323,7 +319,6 @@ class SeatworkRecord(models.Model):
         return f"{self.name} - {self.activity} ({self.status})"
         
 
-=======
 # Quiz Models
 class Quiz(models.Model):
     """Model for storing quiz information"""
@@ -478,4 +473,3 @@ class QuizGrade(models.Model):
     class Meta:
         unique_together = ['student', 'quiz']
         ordering = ['-graded_at']
->>>>>>> 58c990e (feature(connected_database): connect database)

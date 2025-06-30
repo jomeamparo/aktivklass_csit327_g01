@@ -1,9 +1,7 @@
-<<<<<<< HEAD
 from django.contrib import admin
 
 # Register your models here.
 
-=======
 from django.contrib import admin
 from .models import (
     Class, Student, StudentProfile, Faculty, ClassJoinRequest, Enrollment, 
@@ -87,4 +85,3 @@ admin.site.register(PasswordResetToken)
 admin.site.register(Post)
 admin.site.register(Comment)
 admin.site.register(FacultyProfile)
->>>>>>> 58c990e (feature(connected_database): connect database)
