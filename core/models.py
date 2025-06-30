@@ -297,4 +297,8 @@ class Course(models.Model):
     room = models.CharField(max_length=255)
 
     def __str__(self):
+<<<<<<< HEAD
         return f"{self.course_id} - {self.subject_name} {self.subject_code}"
+=======
+        return f"{self.first_name} {self.last_name} - {self.subject}"
+>>>>>>> c23e08c (added feature student_attendance)
