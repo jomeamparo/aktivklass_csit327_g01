@@ -22,7 +22,6 @@ from django.contrib.auth import views as auth_views
 from django.views.generic.base import RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
-from core.views import faculty_attendance_view
 
 
 urlpatterns = [
@@ -59,7 +58,7 @@ urlpatterns = [
     path('forgot_password/', include('forgot_password.urls')),
     path('admin_notif/', include(('admin_notif.urls', 'admin_notif'), namespace='admin_notif')),
     path('admin_course_list/', include('admin_course_list.urls')),
-    path('faculty_attendance/', faculty_attendance_view, name='faculty_attendance'),
+    path('faculty_attendance/', include('faculty_attendance.urls')),
 
     path('faculty_notifications/', include('notifications_faculty.urls')),
     path('classes/', include('class_lists.urls')),
