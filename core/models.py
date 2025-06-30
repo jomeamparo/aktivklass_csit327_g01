@@ -288,7 +288,6 @@ class FacultyProfile(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
-<<<<<<< HEAD
 class Course(models.Model):
     course_id = models.CharField(max_length=255, primary_key=True)
     subject_name = models.CharField(max_length=255)
@@ -300,7 +299,6 @@ class Course(models.Model):
 
     def __str__(self):
         return f"{self.course_id} - {self.subject_name} {self.subject_code}"
-=======
 
 
 
@@ -320,4 +318,3 @@ class SeatworkRecord(models.Model):
         return f"{self.name} - {self.activity} ({self.status})"
         
 
->>>>>>> 5393d73 (fix)
