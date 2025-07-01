@@ -22,6 +22,7 @@ STUDENT_STATUS_CHOICES = [
 ]
 
 class Class(models.Model):
+    course = models.ForeignKey('Course', on_delete=models.CASCADE, null=True, blank=True)
     subject_name = models.CharField(max_length=100)
     subject_code = models.CharField(max_length=20)
     description = models.TextField()
@@ -318,6 +319,7 @@ class SeatworkRecord(models.Model):
     def __str__(self):
         return f"{self.name} - {self.activity} ({self.status})"
         
+
 
 # Quiz Models
 class Quiz(models.Model):
