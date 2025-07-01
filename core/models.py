@@ -473,3 +473,15 @@ class QuizGrade(models.Model):
     class Meta:
         unique_together = ['student', 'quiz']
         ordering = ['-graded_at']
+        
+# Feature 3: Bookmark / Favorite Class # asdasd
+class FavoriteCourse(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('student', 'course')
+
+    def __str__(self):
+        return f"{self.student} favorited {self.course}"
