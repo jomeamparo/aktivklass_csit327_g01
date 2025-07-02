@@ -191,6 +191,10 @@ class Conversation(models.Model):
         """Return the latest message in the conversation, or None if there are no messages."""
         return self.messages.order_by('-timestamp').first()
 
+    def get_unread_count_for_user(self, user):
+        """Return the count of unread messages for the given user (excluding messages sent by that user)."""
+        return self.messages.filter(is_read=False).exclude(sender=user).count()
+
     def __str__(self):
         return f"Conversation ({self.id})"
 
