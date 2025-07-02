@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from core.models import Student, StudentProfile
 from .forms import StudentProfileForm, StudentStatusForm
+from django.db.models import Q
 
 def student_profile_view(request):
     """
@@ -80,3 +81,47 @@ def update_student_status(request, student_id):
                     messages.error(request, f"Error in {field}: {error}")
     
     return redirect('student_profile')
+
+def search_student_profiles(request):
+    """
+    Search for student profiles.
+    """
+    if 'user_id' not in request.session:
+        return redirect('/?next=/student_profile/search/')
+
+    query = request.GET.get('q')
+    students = []
+    if query:
+        students = Student.objects.filter(
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query) |
+            Q(student_id__icontains=query)
+        ).select_related('profile')
+
+    context = {
+        'students': students,
+        'query': query,
+    }
+    return render(request, 'student_profile/search_results.html', context)
+
+
+def view_student_profile(request, student_id):
+    """
+    View a student's profile.
+    """
+    if 'user_id' not in request.session:
+        return redirect(f'/?next=/student_profile/{student_id}/')
+
+    student = Student.objects.filter(student_id=student_id).first()
+
+    if not student:
+        messages.error(request, 'Student not found.')
+        return redirect('search_student_profiles')
+
+    profile, created = StudentProfile.objects.get_or_create(student=student)
+
+    context = {
+        'student': student,
+        'profile': profile,
+    }
+    return render(request, 'student_profile/view_profile.html', context)
