@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from core.models import Student
+from core.models import Student, StudentProfile
 from .forms import StudentProfileForm, StudentStatusForm
 
 def student_profile_view(request):
@@ -21,12 +21,7 @@ def student_profile_view(request):
         return redirect('/')
     
     # Make sure the student has a profile
-    try:
-        profile = student.profile
-    except StudentProfile.DoesNotExist:
-        # Create a profile without accessing the avatar immediately
-        profile = StudentProfile(student=student)
-        profile.save()
+    profile, created = StudentProfile.objects.get_or_create(student=student)
     
     # Process form submission
     if request.method == 'POST':
