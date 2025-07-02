@@ -187,6 +187,10 @@ class Conversation(models.Model):
         """Return the other participant in the conversation given the current user."""
         return self.participants.exclude(id=user.id).first()
 
+    def get_last_message(self):
+        """Return the latest message in the conversation, or None if there are no messages."""
+        return self.messages.order_by('-timestamp').first()
+
     def __str__(self):
         return f"Conversation ({self.id})"
 
