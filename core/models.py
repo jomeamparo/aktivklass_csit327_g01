@@ -174,6 +174,17 @@ class Conversation(models.Model):
     participants = models.ManyToManyField(Student, related_name='conversations')
     created_at = models.DateTimeField(auto_now_add=True)
 
+    @classmethod
+    def get_or_create_conversation(cls, student1, student2):
+        # Try to find an existing conversation with both participants
+        conversations = cls.objects.filter(participants=student1).filter(participants=student2)
+        if conversations.exists():
+            return conversations.first()
+        # Otherwise, create a new conversation
+        conversation = cls.objects.create()
+        conversation.participants.add(student1, student2)
+        return conversation
+
     def __str__(self):
         return f"Conversation ({self.id})"
 
