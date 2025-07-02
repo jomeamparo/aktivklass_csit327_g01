@@ -1,0 +1,68 @@
+{% extends 'core/main.html' %}
+{% block content %}
+<div class="px-8 py-6 flex flex-col items-center">
+    <h2 class="text-2xl font-bold mb-8 self-start">Your Results Dashboard</h2>
+    <!-- Subject Summary Cards -->
+    <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {% for card in cards %}
+        <a href="{% url 'student_view_results' %}?subject={{ card.subject|urlencode }}" class="block focus:outline-none">
+            <div class="rounded-lg shadow bg-blue-500 text-white p-6 flex flex-col items-center transition-transform transform hover:scale-105 cursor-pointer">
+                <div class="text-2xl font-bold mb-1">{{ card.subject }}</div>
+                <div class="text-4xl font-bold mt-1">{{ card.average|default:"-" }}%</div>
+                <div class="text-md mt-1">Avg. Score</div>
+                <div class="text-sm mt-1">Total Activities: <span class="font-semibold">{{ card.total }}</span></div>
+                <div class="flex flex-row gap-4 mt-2">
+                    <span class="bg-green-600 px-2 py-1 rounded text-xs">Passed: {{ card.passed }}</span>
+                    <span class="bg-red-500 px-2 py-1 rounded text-xs">Failed: {{ card.failed }}</span>
+                </div>
+                <div class="text-xs mt-2 opacity-80">Passing Rate: {{ card.passed|default:0|floatformat:0 }}/{{ card.total|default:1 }} ({{ card.total|yesno:"Yes,No" }})</div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    <!-- Passed/Failed Bar Chart by Subject -->
+    <div class="w-full max-w-5xl rounded-lg shadow bg-white p-6 mb-10">
+        <div class="font-semibold mb-4 text-blue-700">Passed vs Failed per Subject</div>
+        <canvas id="subjectPassFailChart" width="600" height="280"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    {{ chart_subjects|json_script:"chart-subjects" }}
+{{ chart_passed|json_script:"chart-passed" }}
+{{ chart_failed|json_script:"chart-failed" }}
+    <script>
+        const chartSubjects = JSON.parse(document.getElementById('chart-subjects').textContent);
+        const chartPassed = JSON.parse(document.getElementById('chart-passed').textContent);
+        const chartFailed = JSON.parse(document.getElementById('chart-failed').textContent);
+        new Chart(document.getElementById('subjectPassFailChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: chartSubjects,
+                datasets: [
+                    {
+                        label: 'Passed',
+                        data: chartPassed,
+                        backgroundColor: '#22b14c'
+                    },
+                    {
+                        label: 'Failed',
+                        data: chartFailed,
+                        backgroundColor: '#e74c3c'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'top' } },
+                scales: {
+                    x: { stacked: true },
+                    y: { beginAtZero: true, stacked: true, ticks: { stepSize: 1, precision: 0 } }
+                }
+            }
+        });
+    </script>
+    <div class="w-full max-w-5xl flex justify-end mt-6">
+        <a href="{% url 'student_view_results' %}" class="text-blue-600 hover:underline text-sm flex items-center"><i class="fas fa-table mr-2"></i>View Detailed Results Table</a>
+    </div>
+</div>
+{% endblock %}

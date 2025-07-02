@@ -1,0 +1,111 @@
+{% extends 'core/main.html' %}
+{% block content %}
+<div class="px-8 py-6 flex flex-col items-center">
+    <h2 class="text-2xl font-bold mb-8 self-start">Your Attendance Dashboard</h2>
+    <!-- Summary Cards -->
+    <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="rounded-lg shadow bg-yellow-400 text-white p-6 flex flex-col items-center">
+            <div class="text-3xl font-bold">{{ total_attendance|default:"-" }}</div>
+            <div class="text-lg mt-2">Total Attendance</div>
+            <a href="{% url 'student_attendance' %}" class="mt-4 text-sm flex items-center hover:underline">View All <span class="ml-1"><i class="fas fa-arrow-right"></i></span></a>
+        </div>
+        <div class="rounded-lg shadow bg-green-500 text-white p-6 flex flex-col items-center">
+            <div class="text-3xl font-bold">{{ present_count|default:"-" }}</div>
+            <div class="text-lg mt-2">Present</div>
+            <a href="{% url 'student_attendance_present' %}" class="mt-4 text-sm flex items-center hover:underline">View All <span class="ml-1"><i class="fas fa-arrow-right"></i></span></a>
+        </div>
+        <div class="rounded-lg shadow bg-red-400 text-white p-6 flex flex-col items-center">
+            <div class="text-3xl font-bold">{{ absent_count|default:"-" }}</div>
+            <div class="text-lg mt-2">Absent</div>
+            <a href="{% url 'student_attendance_absent' %}" class="mt-4 text-sm flex items-center hover:underline">View All <span class="ml-1"><i class="fas fa-arrow-right"></i></span></a>
+        </div>
+    </div>
+    <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+        <div class="rounded-lg shadow bg-red-100 p-6 flex flex-col items-center">
+            <div class="font-semibold mb-2 text-red-700">Attendance Chart</div>
+            <canvas id="attendancePieChart" class="mx-auto" width="220" height="180"></canvas>
+        </div>
+        <div class="rounded-lg shadow bg-green-100 p-6">
+            <div class="font-semibold mb-2 text-green-700">Attendance Statistics by Subject</div>
+            <canvas id="attendanceSubjectBarChart" class="mx-auto" height="240"></canvas>
+        </div>
+    </div>
+    <!-- Chart.js CDN and Script -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Pie Chart for overall Present vs Absent
+        const present = Number("{{ present_count|default:0 }}");
+        const absent = Number("{{ absent_count|default:0 }}");
+        const pieCtx = document.getElementById('attendancePieChart').getContext('2d');
+        new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Present', 'Absent'],
+                datasets: [{
+                    data: [present, absent],
+                    backgroundColor: ['#22b14c', '#bdbdbd'],
+                    borderColor: '#fff',
+                    borderWidth: 2,
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { position: 'top' },
+                }
+            }
+        });
+        // Grouped Bar Chart for per-class stats
+        const attendanceStats = JSON.parse('{{ attendance_stats_json|safe }}');
+        const subjects = attendanceStats.map(item => item.subject);
+        const presentCounts = attendanceStats.map(item => item.present);
+        const absentCounts = attendanceStats.map(item => item.absent);
+        const ctx = document.getElementById('attendanceSubjectBarChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: subjects,
+                datasets: [
+                    {
+                        label: 'Present in Class',
+                        data: presentCounts,
+                        backgroundColor: '#22b14c',
+                        borderRadius: 6,
+                    },
+                    {
+                        label: 'Absent in Class',
+                        data: absentCounts,
+                        backgroundColor: '#ef9a9a',
+                        borderRadius: 6,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                },
+                scales: {
+                    x: {
+                        stacked: false,
+                        title: { display: true, text: 'Subject/Class' }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        precision: 0,
+                        title: { display: true, text: 'Count' },
+                        ticks: {
+                            stepSize: 1,
+                            callback: function(value) {
+                                if (Number.isInteger(value)) {
+                                    return value;
+                                }
+                                return null;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</div>
+{% endblock %}
