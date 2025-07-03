@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'dashboard_student',
     'archived_classes',
     'class_join_request',
-    'class_lists',
     'faculty_seatwork',
     'faculty_seatworkSubmission',
     'faculty_attendance',
