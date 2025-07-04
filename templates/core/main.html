@@ -49,17 +49,27 @@
       <aside id="sidebar" class="w-64 bg-white dark:bg-gray-800 shadow-xl border-r border-gray-200 dark:border-gray-700 p-4 flex flex-col transition-all duration-300 ease-in-out">
         <!-- Profile Section -->
 
-        <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 shadow-sm mb-6">
+        <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-900 shadow-sm mb-6">
           <img
-            src="{% if avatar_url %}{{ avatar_url }}{% else %}https://ui-avatars.com/api/?name={{ fullname|urlencode }}&background=10b981&color=fff&size=32{% endif %}"
+            src="{% if sidebar_profile and sidebar_profile.profile_picture %}{{ sidebar_profile.profile_picture.url }}
+                  {% elif sidebar_profile and sidebar_profile.profile_picture_url %}{{ sidebar_profile.profile_picture_url }}
+                  {% else %}{% static 'img/default_avatar.jpg' %}{% endif %}"
             alt="user"
             class="w-8 h-8 rounded-full object-cover"
           />
           <div class="ltr:ml-2 rtl:mr-2">
-            <h6 class="font-semibold text-sm text-gray-800 dark:text-gray-300">{{ fullname }}</h6>
-            <p class="text-xs text-gray-400">{{ email }}</p>
-            
-           
+            <h6 class="font-semibold text-sm text-gray-800 dark:text-gray-300">
+              {% if sidebar_profile %}{{ sidebar_profile.first_name }} {{ sidebar_profile.last_name }}{% else %}Profile{% endif %}
+            </h6>
+            <p class="text-xs text-gray-400">{% if sidebar_profile %}{{ sidebar_profile.email }}{% endif %}</p>
+            {% if sidebar_profile %}
+                <span class="text-xs font-semibold px-2 py-1 rounded-full mt-1 block
+                    {% if sidebar_profile.status == 'Active' %}bg-green-200 text-green-800
+                    {% elif sidebar_profile.status == 'Busy' %}bg-yellow-200 text-yellow-800
+                    {% else %}bg-gray-200 text-gray-800{% endif %}">
+                    {{ sidebar_profile.status }}
+                </span>
+            {% endif %}
           </div>
         </div>
         {% if role == 'faculty' or role == 'student' %}
@@ -126,7 +136,15 @@
             <i class="fas fa-user text-green-600"></i>
             <span>Faculty</span>
           </a>
+
           <a href="{% url 'student_list_view' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
+
+          <a href="{% url 'admin_course_list' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-700 dark:hover:text-green-400 transition">
+            <i class="fas fa-user text-green-600"></i>
+            <span>Course</span>
+          </a>
+          <a href="{% url 'edit_student' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
+
             <i class="fas fa-users text-green-600"></i>
             <span>Student</span>
           </a>
@@ -154,9 +172,13 @@
             <i class="fas fa-plus text-green-600"></i>
             <span>Class List</span>
           </a>
-          <a href="{% url 'attendance_student' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-700 dark:hover:text-green-400 transition">
+          <a href="{% url 'student_attendance_dashboard' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-700 dark:hover:text-green-400 transition">
             <i class="fas fa-user text-green-600"></i>
             <span>Class list</span>
+          </a>
+          <a href="{% url 'student_results_dashboard' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-700 dark:hover:text-green-400 transition">
+            <i class="fas fa-user text-green-600"></i>
+            <span>Results</span>
           </a>
           <a href="{% url 'notifications' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-user text-green-600"></i>

@@ -1,5 +1,11 @@
 from django.shortcuts import render
 from core.models import Student, Faculty, AdminUser
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse, HttpResponse
+from .models import SeatworkRecord
+import csv
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 # Create your views here.
 
@@ -75,14 +81,6 @@ def test_profile(request):
     }
     
     return HttpResponse("Session data set up for testing. <a href='/dashboard_teacher/'>Go to Dashboard</a>")
-
-
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse, HttpResponse
-from .models import SeatworkRecord
-import csv
-from django.views.decorators.csrf import csrf_exempt
-import json
 
 def records_list(request):
     # Render the page with all records

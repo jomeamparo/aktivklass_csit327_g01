@@ -1,0 +1,75 @@
+{% extends 'core/main.html' %}
+
+{% block content %}
+<div class="px-8 py-6 flex flex-col items-center">
+    <h2 class="text-2xl font-bold mb-4 self-start">Attendance: {{ class_obj.subject_name }} ({{ class_obj.class_code }})</h2>
+
+    <div class="w-full max-w-4xl mt-4">
+        <h3 class="text-xl font-semibold mb-4">Attendance Records</h3>
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
+            <thead>
+                <tr class="bg-green-500 text-white text-center">
+                    <th class="py-2 px-4 font-semibold">Date</th>
+                    <th class="py-2 px-4 font-semibold">Status</th>
+                    <th class="py-2 px-4 font-semibold">Feedback</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in attendance_records %}
+                <tr class="text-center">
+                    <td class="py-2 px-4 border-b">{{ record.date|date:"F j, Y" }}</td>
+                    <td class="py-2 px-4 border-b">
+                        {% if record.status == 'Present' %}
+                            <span class="px-2 py-1 rounded bg-green-200 text-green-900">{{ record.status }}</span>
+                        {% else %}
+                             <span class="px-2 py-1 rounded bg-red-200 text-red-900">{{ record.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="py-2 px-4 border-b">{{ record.feedback|default:'-' }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3" class="py-4 text-center text-gray-500">No attendance records found for this class.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="w-full max-w-md rounded-lg shadow bg-white p-6 mt-8 flex flex-col items-center">
+        <div class="font-semibold mb-4 text-gray-700">Attendance Breakdown</div>
+        
+        <div class="relative h-64 w-full">
+            <canvas id="subjectPieChart"></canvas>
+        </div>
+    </div>
+
+    <div class="text-center mt-8">
+        <a href="{% url 'student_attendance_dashboard' %}" class="text-blue-600 hover:underline">&larr; Back to Attendance Overview</a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const pieData = JSON.parse('{{ pie_chart_data_json|safe }}');
+    new Chart(document.getElementById('subjectPieChart').getContext('2d'), {
+        type: 'pie',
+        data: {
+            labels: ['Present', 'Absent'],
+            datasets: [{
+                data: [pieData.present, pieData.absent],
+                backgroundColor: ['#22c55e', '#ef4444'],
+                borderColor: '#fff',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // Important for fitting chart in a sized container
+            plugins: { 
+                legend: { 
+                    position: 'bottom' 
+                } 
+            }
+        }
+    });
+</script>
+{% endblock %}

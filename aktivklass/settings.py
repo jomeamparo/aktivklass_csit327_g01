@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'dashboard_student',
     'archived_classes',
     'class_join_request',
-    'class_lists',
     'faculty_seatwork',
     'faculty_seatworkSubmission',
     'faculty_attendance',
@@ -69,10 +68,16 @@ INSTALLED_APPS = [
     'help_and_support',
     'quizzes',
     'edit_admin',
+
+
+    'forgot_password',
+    'attendance_student',
+
+
+    'edit_student',
     'tailwind',
     'theme',
     'widget_tweaks',
-    'forgot_password',
 ]
 
 
@@ -105,6 +110,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.user_context_processor',
+                'core.context_processors.user_profile_context',
             ],
         },
     },
@@ -119,7 +126,7 @@ WSGI_APPLICATION = 'aktivklass.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'aktivklass_v2',
+        'NAME': 'aktivklass_v3',
         'USER': 'root',          # default user in XAMPP
         'PASSWORD': '',          # default password is empty
         'HOST': 'localhost',

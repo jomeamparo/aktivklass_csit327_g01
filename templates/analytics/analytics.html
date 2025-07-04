@@ -9,48 +9,530 @@
         <div class="flex space-x-2 ml-auto">
             <button id="btnFaculty" type="button" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition dark:bg-green-500 dark:hover:bg-green-400 dark:text-gray-900">Faculty</button>
             <button id="btnStudent" type="button" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition dark:bg-green-500 dark:hover:bg-green-400 dark:text-gray-900">Student</button>
-            <button id="btnUniversity" type="button" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition dark:bg-green-500 dark:hover:bg-green-400 dark:text-gray-900">University</button>
         </div>
     </div>
     <div class="bg-white p-4 rounded-lg shadow mb-6 dark:bg-gray-800 dark:shadow-md">
         <div id="facultyRecords" class="analytics-section">
-            <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Faculty Records</h3>
-            <p>Display analytics for Faculty here...</p>
+            <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Faculty Statistics</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div class="bg-gray-50 p-6 rounded-lg dark:bg-gray-700">
+                    <h4 class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">Total Faculty Members</h4>
+                    <p class="text-3xl font-bold text-green-600 dark:text-green-400" id="facultyCount">{{ total_faculty }}</p>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-lg dark:bg-gray-700">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Faculty Accounts</h4>
+                        <button id="statusDropdownBtn" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="statusDropdown" class="hidden mb-3">
+                        <select id="statusSelect" class="w-full p-2 border border-gray-300 rounded dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
+                            <option value="">All Accounts</option>
+                            <option value="ACTIVE">Active Accounts</option>
+                            <option value="DISABLED">Deactivated Accounts</option>
+                        </select>
+                    </div>
+                    <p class="text-3xl font-bold text-green-600 dark:text-green-400" id="statusFacultyCount">{{ active_faculty }}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400" id="selectedStatus">Active Accounts</p>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-lg dark:bg-gray-700">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Faculty in College</h4>
+                        <button id="collegeDropdownBtn" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="collegeDropdown" class="hidden mb-3">
+                        <select id="collegeSelect" class="w-full p-2 border border-gray-300 rounded dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
+                            <option value="">Select College</option>
+                            {% for college in colleges %}
+                            <option value="{{ college }}">{{ college }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <p class="text-3xl font-bold text-green-600 dark:text-green-400" id="collegeFacultyCount">0</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400" id="selectedCollege">No college selected</p>
+                </div>
+            </div>
+            <!-- Pie Charts Section -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gray-50 p-6 rounded-lg dark:bg-gray-700">
+                    <h4 class="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">Account Status Distribution</h4>
+                    <div class="relative" style="height: 300px;">
+                        <canvas id="accountStatusChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-lg dark:bg-gray-700">
+                    <h4 class="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">Faculty by College</h4>
+                    <div class="relative" style="height: 300px;">
+                        <canvas id="facultyCollegeChart"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
         <div id="studentRecords" class="analytics-section hidden">
-            <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Student Records</h3>
-            <p>Display analytics for Students here...</p>
-        </div>
-        <div id="universityRecords" class="analytics-section hidden">
-            <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">University Records</h3>
-            <p>Display analytics for University here...</p>
+            <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Student Statistics</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div class="bg-gray-50 p-6 rounded-lg dark:bg-gray-700">
+                    <h4 class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">Total Students</h4>
+                    <p class="text-3xl font-bold text-green-600 dark:text-green-400" id="studentCount">{{ total_students }}</p>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-lg dark:bg-gray-700">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Students in Course</h4>
+                        <button id="courseDropdownBtn" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="courseDropdown" class="hidden mb-3">
+                        <select id="courseSelect" class="w-full p-2 border border-gray-300 rounded dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
+                            <option value="">Select Course</option>
+                            {% for course in courses %}
+                            <option value="{{ course }}">{{ course }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <p class="text-3xl font-bold text-green-600 dark:text-green-400" id="courseStudentCount">0</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400" id="selectedCourse">No course selected</p>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-lg dark:bg-gray-700">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Students by Year</h4>
+                        <button id="yearDropdownBtn" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="yearDropdown" class="hidden mb-3">
+                        <select id="yearSelect" class="w-full p-2 border border-gray-300 rounded dark:bg-gray-600 dark:border-gray-500 dark:text-gray-100">
+                            <option value="">Select Year</option>
+                            {% for year in years %}
+                            <option value="{{ year }}">Year {{ year }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <p class="text-3xl font-bold text-green-600 dark:text-green-400" id="yearStudentCount">0</p>
+                </div>
+            </div>
+            <!-- Student Pie Charts Section -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gray-50 p-6 rounded-lg dark:bg-gray-700">
+                    <h4 class="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">Students by Course</h4>
+                    <div class="relative" style="height: 300px;">
+                        <canvas id="studentCourseChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-lg dark:bg-gray-700">
+                    <h4 class="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">Students by Year</h4>
+                    <div class="relative" style="height: 300px;">
+                        <canvas id="studentYearChart"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
 <script>
     const btnFaculty = document.getElementById('btnFaculty');
     const btnStudent = document.getElementById('btnStudent');
-    const btnUniversity = document.getElementById('btnUniversity');
     const facultyRecords = document.getElementById('facultyRecords');
     const studentRecords = document.getElementById('studentRecords');
-    const universityRecords = document.getElementById('universityRecords');
+    const statusDropdownBtn = document.getElementById('statusDropdownBtn');
+    const statusDropdown = document.getElementById('statusDropdown');
+    const statusSelect = document.getElementById('statusSelect');
+    const statusFacultyCount = document.getElementById('statusFacultyCount');
+    const selectedStatus = document.getElementById('selectedStatus');
+    const collegeDropdownBtn = document.getElementById('collegeDropdownBtn');
+    const collegeDropdown = document.getElementById('collegeDropdown');
+    const collegeSelect = document.getElementById('collegeSelect');
+    const collegeFacultyCount = document.getElementById('collegeFacultyCount');
+    const selectedCollege = document.getElementById('selectedCollege');
+    const courseDropdownBtn = document.getElementById('courseDropdownBtn');
+    const courseDropdown = document.getElementById('courseDropdown');
+    const courseSelect = document.getElementById('courseSelect');
+    const courseStudentCount = document.getElementById('courseStudentCount');
+    const selectedCourse = document.getElementById('selectedCourse');
+    const yearDropdownBtn = document.getElementById('yearDropdownBtn');
+    const yearDropdown = document.getElementById('yearDropdown');
+    const yearSelect = document.getElementById('yearSelect');
+    const yearStudentCount = document.getElementById('yearStudentCount');
+
+    // Chart instances
+    let accountStatusChart = null;
+    let facultyCollegeChart = null;
+    let studentCourseChart = null;
+    let studentYearChart = null;
+
+    // Register the datalabels plugin
+    Chart.register(ChartDataLabels);
 
     function showSection(section) {
         facultyRecords.classList.add('hidden');
         studentRecords.classList.add('hidden');
-        universityRecords.classList.add('hidden');
         section.classList.remove('hidden');
     }
-    btnFaculty.addEventListener('click', () => showSection(facultyRecords));
-    btnStudent.addEventListener('click', () => showSection(studentRecords));
-    btnUniversity.addEventListener('click', () => showSection(universityRecords));
+
+    // Initialize pie charts
+    function initializeCharts() {
+        // Account Status Chart
+        fetch('/analytics/get_account_status_chart_data/')
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('accountStatusChart').getContext('2d');
+                accountStatusChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            data: data.data,
+                            backgroundColor: data.colors,
+                            borderWidth: 2,
+                            borderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            datalabels: {
+                                color: '#ffffff',
+                                font: {
+                                    weight: 'bold',
+                                    size: 14
+                                },
+                                formatter: function(value, context) {
+                                    return value;
+                                }
+                            },
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#374151'
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.parsed;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = ((value / total) * 100).toFixed(1);
+                                        return `${label}: ${value} (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+
+        // Faculty College Chart
+        fetch('/analytics/get_faculty_college_chart_data/')
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('facultyCollegeChart').getContext('2d');
+                facultyCollegeChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            data: data.data,
+                            backgroundColor: data.colors,
+                            borderWidth: 2,
+                            borderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            datalabels: {
+                                color: '#ffffff',
+                                font: {
+                                    weight: 'bold',
+                                    size: 14
+                                },
+                                formatter: function(value, context) {
+                                    return value;
+                                }
+                            },
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#374151'
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.parsed;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = ((value / total) * 100).toFixed(1);
+                                        return `${label}: ${value} (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+    }
+
+    // Initialize student pie charts
+    function initializeStudentCharts() {
+        // Student Course Chart
+        fetch('/analytics/get_student_course_chart_data/')
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('studentCourseChart').getContext('2d');
+                studentCourseChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            data: data.data,
+                            backgroundColor: data.colors,
+                            borderWidth: 2,
+                            borderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            datalabels: {
+                                color: '#ffffff',
+                                font: {
+                                    weight: 'bold',
+                                    size: 14
+                                },
+                                formatter: function(value, context) {
+                                    return value;
+                                }
+                            },
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#374151'
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.parsed;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = ((value / total) * 100).toFixed(1);
+                                        return `${label}: ${value} (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+
+        // Student Year Chart
+        fetch('/analytics/get_student_year_chart_data/')
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('studentYearChart').getContext('2d');
+                studentYearChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            data: data.data,
+                            backgroundColor: data.colors,
+                            borderWidth: 2,
+                            borderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            datalabels: {
+                                color: '#ffffff',
+                                font: {
+                                    weight: 'bold',
+                                    size: 14
+                                },
+                                formatter: function(value, context) {
+                                    return value;
+                                }
+                            },
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#374151'
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.parsed;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = ((value / total) * 100).toFixed(1);
+                                        return `${label}: ${value} (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+    }
+
+    // Toggle status dropdown
+    statusDropdownBtn.addEventListener('click', () => {
+        statusDropdown.classList.toggle('hidden');
+    });
+
+    // Handle status selection
+    statusSelect.addEventListener('change', () => {
+        const selectedValue = statusSelect.value;
+        if (selectedValue) {
+            fetch(`/analytics/get_faculty_by_status/?status=${encodeURIComponent(selectedValue)}`)
+                .then(response => response.json())
+                .then(data => {
+                    statusFacultyCount.textContent = data.count;
+                    selectedStatus.textContent = selectedValue === 'ACTIVE' ? 'Active Accounts' : 'Deactivated Accounts';
+                });
+        } else {
+            fetch('/analytics/get_faculty_count/')
+                .then(response => response.json())
+                .then(data => {
+                    statusFacultyCount.textContent = data.count;
+                    selectedStatus.textContent = 'All Accounts';
+                });
+        }
+    });
+
+    // Toggle college dropdown
+    collegeDropdownBtn.addEventListener('click', () => {
+        collegeDropdown.classList.toggle('hidden');
+    });
+
+    // Handle college selection
+    collegeSelect.addEventListener('change', () => {
+        const selectedValue = collegeSelect.value;
+        if (selectedValue) {
+            fetch(`/analytics/get_faculty_by_college/?college_id=${encodeURIComponent(selectedValue)}`)
+                .then(response => response.json())
+                .then(data => {
+                    collegeFacultyCount.textContent = data.count;
+                    selectedCollege.textContent = selectedValue;
+                });
+        } else {
+            collegeFacultyCount.textContent = '0';
+            selectedCollege.textContent = 'No college selected';
+        }
+    });
+
+    // Toggle course dropdown
+    courseDropdownBtn.addEventListener('click', () => {
+        courseDropdown.classList.toggle('hidden');
+    });
+
+    // Handle course selection
+    courseSelect.addEventListener('change', () => {
+        const selectedValue = courseSelect.value;
+        if (selectedValue) {
+            fetch(`/analytics/get_students_by_course/?course_id=${encodeURIComponent(selectedValue)}`)
+                .then(response => response.json())
+                .then(data => {
+                    courseStudentCount.textContent = data.count;
+                    selectedCourse.textContent = selectedValue;
+                });
+        } else {
+            courseStudentCount.textContent = '0';
+            selectedCourse.textContent = 'No course selected';
+        }
+    });
+
+    // Toggle year dropdown
+    yearDropdownBtn.addEventListener('click', () => {
+        yearDropdown.classList.toggle('hidden');
+    });
+
+    // Handle year selection
+    yearSelect.addEventListener('change', () => {
+        const selectedValue = yearSelect.value;
+        if (selectedValue) {
+            fetch(`/analytics/get_students_by_year/?year_id=${encodeURIComponent(selectedValue)}`)
+                .then(response => response.json())
+                .then(data => {
+                    yearStudentCount.textContent = data.count;
+                });
+        } else {
+            yearStudentCount.textContent = '0';
+        }
+    });
+
+    btnFaculty.addEventListener('click', () => {
+        showSection(facultyRecords);
+        // Update faculty counts
+        fetch('/analytics/get_faculty_count/')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('facultyCount').textContent = data.count;
+            });
+        
+        fetch('/analytics/get_active_faculty_count/')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('statusFacultyCount').textContent = data.count;
+                document.getElementById('selectedStatus').textContent = 'Active Accounts';
+            });
+        
+        // Update charts
+        if (accountStatusChart) accountStatusChart.destroy();
+        if (facultyCollegeChart) facultyCollegeChart.destroy();
+        initializeCharts();
+    });
+
+    btnStudent.addEventListener('click', () => {
+        showSection(studentRecords);
+        fetch('/analytics/get_student_count/')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('studentCount').textContent = data.count;
+            });
+        
+        // Update student charts
+        if (studentCourseChart) studentCourseChart.destroy();
+        if (studentYearChart) studentYearChart.destroy();
+        initializeStudentCharts();
+    });
+
+    // Initialize charts on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeCharts();
+        initializeStudentCharts();
+    });
 
     const savedTheme = localStorage.getItem("theme");
-       if (savedTheme === "dark") {
+    if (savedTheme === "dark") {
         document.documentElement.classList.add("dark");
-      } else {
+    } else {
         document.documentElement.classList.remove("dark");
-      }
+    }
 </script>
 <style>
     .hidden { display: none; }

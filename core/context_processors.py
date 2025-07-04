@@ -1,5 +1,6 @@
 from django.db import ProgrammingError
 from faculty_profile.views import MockFacultyProfile
+from core.models import FacultyProfile
 
 def user_context_processor(request):
     """
@@ -37,14 +38,13 @@ def user_context_processor(request):
     try:
         if role == 'student':
             from core.models import Student
-            user = Student.objects.filter(student_id=user_id).first()
+            user = Student.objects.select_related('profile').filter(student_id=user_id).first()
             if user:
                 context.update({
                     'fullname': f"{user.first_name} {user.last_name}",
                     'email': user.email,
                     'role': 'student',
-                    # Assuming students have a profile picture, adjust if needed
-                    # 'avatar_url': user.profile.avatar.url if hasattr(user, 'profile') and user.profile.avatar else None
+                    'avatar_url': user.profile.avatar.url if hasattr(user, 'profile') and user.profile.avatar else None
                 })
         elif role == 'admin':
             from core.models import AdminUser
@@ -79,3 +79,19 @@ def user_context_processor(request):
         pass
 
     return context 
+
+def user_profile_context(request):
+    profile = None
+    if request.user.is_authenticated:
+        try:
+            profile = FacultyProfile.objects.get(user=request.user)
+        except FacultyProfile.DoesNotExist:
+            profile = None
+    elif 'mock_profile' in request.session:
+        # For mock mode, use a simple object for template compatibility
+        class SessionProfile:
+            pass
+        profile = SessionProfile()
+        for k, v in request.session['mock_profile'].items():
+            setattr(profile, k, v)
+    return {'sidebar_profile': profile} 

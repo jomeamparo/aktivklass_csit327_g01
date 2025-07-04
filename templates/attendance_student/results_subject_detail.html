@@ -1,0 +1,75 @@
+{% extends 'core/main.html' %}
+
+{% block content %}
+<div class="px-8 py-6">
+    <h2 class="text-2xl font-bold mb-8">Results for: {{ class_obj.subject_name }}</h2>
+
+    <div class="mb-10">
+        <h3 class="text-xl font-semibold mb-4">Activity Records</h3>
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <table class="min-w-full">
+                <thead class="bg-green-600 text-white">
+                    <tr>
+                        <th class="py-2 px-4 text-left font-semibold">Type</th>
+                        <th class="py-2 px-4 text-left font-semibold">Name</th>
+                        <th class="py-2 px-4 text-left font-semibold">Score</th>
+                        <th class="py-2 px-4 text-left font-semibold">Perfect Score</th>
+                        <th class="py-2 px-4 text-left font-semibold">Faculty</th>
+                        <th class="py-2 px-4 text-left font-semibold">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in activity_records %}
+                    <tr class="border-t">
+                        <td class="py-2 px-4">{{ record.activity.type }}</td>
+                        <td class="py-2 px-4">{{ record.activity.name }}</td>
+                        <td class="py-2 px-4">{{ record.score }}</td>
+                        <td class="py-2 px-4">{{ record.perfect_score }}</td>
+                        <td class="py-2 px-4">{{ record.activity.faculty.get_full_name|default:"None" }}</td>
+                        <td class="py-2 px-4">{{ record.date|date:"F j, Y" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6" class="p-4 text-center text-gray-500">No activity records found for this subject.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div>
+        <h3 class="text-xl font-semibold mb-4">Quiz Grades</h3>
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <table class="min-w-full">
+                <thead class="bg-green-600 text-white">
+                    <tr>
+                        <th class="py-2 px-4 text-left font-semibold">Quiz</th>
+                        <th class="py-2 px-4 text-left font-semibold">Max Score</th>
+                        <th class="py-2 px-4 text-left font-semibold">Percentage</th>
+                        <th class="py-2 px-4 text-left font-semibold">Grade Letter</th>
+                        <th class="py-2 px-4 text-left font-semibold">Feedback</th>
+                        <th class="py-2 px-4 text-left font-semibold">Graded By</th> <th class="py-2 px-4 text-left font-semibold">Graded At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for grade in quiz_grades %}
+                    <tr class="border-t">
+                        <td class="py-2 px-4">{{ grade.quiz.title }}</td>
+                        <td class="py-2 px-4">{{ grade.max_score }}</td>
+                        <td class="py-2 px-4">{{ grade.percentage }}%</td>
+                        <td class="py-2 px-4">{{ grade.grade_letter }}</td>
+                        <td class="py-2 px-4">{{ grade.feedback|default:"-" }}</td>
+                        <td class="py-2 px-4">{{ grade.graded_by|default:"-" }}</td> <td class="py-2 px-4">{{ grade.graded_at|date:"F j, Y, P" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="7" class="p-4 text-center text-gray-500">No quiz grades found for this subject.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-8">
+        <a href="{% url 'student_results_dashboard' %}" class="text-green-600 hover:underline">&larr; Back to Results Dashboard</a>
+    </div>
+</div>
+{% endblock %}
