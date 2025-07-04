@@ -31,17 +31,6 @@
             <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
             Online
           </span>
-          {% if user in conversation.muted_by.all %}
-            <form method="post" action="{% url 'unmute_conversation' conversation.id %}" style="display:inline;">
-              {% csrf_token %}
-              <button type="submit" class="ml-2 px-3 py-1 rounded bg-yellow-400 text-white hover:bg-yellow-500 transition">Unmute</button>
-            </form>
-          {% else %}
-            <form method="post" action="{% url 'mute_conversation' conversation.id %}" style="display:inline;">
-              {% csrf_token %}
-              <button type="submit" class="ml-2 px-3 py-1 rounded bg-gray-400 text-white hover:bg-gray-500 transition">Mute</button>
-            </form>
-          {% endif %}
         </div>
       </div>
     </div>
