@@ -229,24 +229,33 @@ class AdminUser(models.Model):
 class Attendance(models.Model):
     STATUS_CHOICES = [('Present', 'Present'), ('Absent', 'Absent'), ('Late', 'Late')]
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    course = models.ForeignKey(Class, on_delete=models.CASCADE)
+    class_obj = models.ForeignKey(Class, on_delete=models.CASCADE)
     date = models.DateField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
-
-class Activity(models.Model):
-    TYPE_CHOICES = [('Quiz', 'Quiz'), ('Assignment', 'Assignment'), ('Exam', 'Exam')]
-    course = models.ForeignKey(Class, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)
-    activity_type = models.CharField(max_length=20, choices=TYPE_CHOICES)
-    due_date = models.DateField()
-    max_score = models.FloatField()
-
-class Grade(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
-    score = models.FloatField()
     feedback = models.TextField(blank=True, null=True)
-    date_graded = models.DateField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['student', 'class_obj', 'date'], 
+                name='unique_student_class_date_attendance'
+            )
+        ]
+
+# class Activity(models.Model):
+#     TYPE_CHOICES = [('Quiz', 'Quiz'), ('Assignment', 'Assignment'), ('Exam', 'Exam')]
+#     class_obj = models.ForeignKey(Class, on_delete=models.CASCADE)
+#     title = models.CharField(max_length=100)
+#     activity_type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+#     due_date = models.DateField()
+#     max_score = models.FloatField()
+
+# class Grade(models.Model):
+#     student = models.ForeignKey(Student, on_delete=models.CASCADE)
+#     activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
+#     score = models.FloatField()
+#     feedback = models.TextField(blank=True, null=True)
+#     date_graded = models.DateField(auto_now_add=True)
 
 class Post(models.Model):
     title = models.CharField(max_length=100)

@@ -6,7 +6,7 @@ from django.contrib import admin
 from .models import (
     Class, Student, StudentProfile, Faculty, ClassJoinRequest, Enrollment, 
     ActivityRecord, Notification, Conversation, Message, AdminUser, 
-    Attendance, Activity, Grade, PasswordResetToken, Post, Comment, 
+    Attendance, PasswordResetToken, Post, Comment, 
     FacultyProfile, Quiz, QuizQuestion, QuizChoice, QuizAttempt, QuizResponse, QuizGrade
 )
 
@@ -79,8 +79,6 @@ admin.site.register(Conversation)
 admin.site.register(Message)
 admin.site.register(AdminUser)
 admin.site.register(Attendance)
-admin.site.register(Activity)
-admin.site.register(Grade)
 admin.site.register(PasswordResetToken)
 admin.site.register(Post)
 admin.site.register(Comment)

@@ -1,0 +1,53 @@
+{% extends 'core/main.html' %}
+
+{% block content %}
+<div class="px-8 py-6 flex flex-col items-center">
+    <h2 class="text-2xl font-bold mb-8 self-start">Student Dashboard</h2>
+    <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+        <!-- Attendance Rate Card -->
+        <div class="rounded-lg shadow bg-white dark:bg-gray-800 p-6 flex flex-col items-center">
+            <div class="text-xl font-semibold mb-2">Attendance Rate</div>
+            <div class="text-4xl font-bold text-green-700">{{ attendance_rate|default:"-" }}%</div>
+        </div>
+        <!-- Average Grade Card -->
+        <div class="rounded-lg shadow bg-white dark:bg-gray-800 p-6 flex flex-col items-center">
+            <div class="text-xl font-semibold mb-2">Average Grade</div>
+            <div class="text-4xl font-bold text-green-700">{{ average_grade|default:"-" }}</div>
+        </div>
+        <!-- Recent Grade Card -->
+        <div class="rounded-lg shadow bg-white dark:bg-gray-800 p-6 flex flex-col items-center">
+            <div class="text-xl font-semibold mb-2">Most Recent Grade</div>
+            <div class="text-2xl font-bold">{{ recent_grade.quiz|default:"-" }}</div>
+            <div class="text-lg text-green-700">{{ recent_grade.score|default:"-" }}</div>
+        </div>
+    </div>
+    <!-- Recent Activity Table -->
+    <div class="w-full max-w-5xl mt-6">
+        <h3 class="text-lg font-semibold mb-4">Recent Activities</h3>
+        <table class="min-w-full bg-white dark:bg-gray-800 rounded-lg shadow text-center">
+            <thead>
+                <tr style="background-color: #22b14c; color: white;">
+                    <th class="px-4 py-2 font-bold">Date</th>
+                    <th class="px-4 py-2 font-bold">Type</th>
+                    <th class="px-4 py-2 font-bold">Name</th>
+                    <th class="px-4 py-2 font-bold">Score</th>
+                    <th class="px-4 py-2 font-bold">Perfect Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in recent_activities %}
+                <tr class="border-b hover:bg-green-50 dark:hover:bg-green-900/20">
+                    <td class="px-4 py-2">{{ record.date|date:"F j, Y" }}</td>
+                    <td class="px-4 py-2">{{ record.activity_type }}</td>
+                    <td class="px-4 py-2">{{ record.activity_name }}</td>
+                    <td class="px-4 py-2">{{ record.score|default:"-" }}</td>
+                    <td class="px-4 py-2">{{ record.perfect_score }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="px-4 py-2">No recent activities found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -173,9 +173,13 @@
             <i class="fas fa-plus text-green-600"></i>
             <span>Class List</span>
           </a>
-          <a href="{% url 'attendance_student' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-700 dark:hover:text-green-400 transition">
+          <a href="{% url 'student_attendance_dashboard' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-700 dark:hover:text-green-400 transition">
             <i class="fas fa-user text-green-600"></i>
             <span>Attendance</span>
+          </a>
+          <a href="{% url 'student_results_dashboard' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-700 dark:hover:text-green-400 transition">
+            <i class="fas fa-user text-green-600"></i>
+            <span>Results</span>
           </a>
           <a href="{% url 'notifications' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-user text-green-600"></i>
