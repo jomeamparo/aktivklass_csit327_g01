@@ -1,5 +1,6 @@
 from django.db import ProgrammingError
 from faculty_profile.views import MockFacultyProfile
+from core.models import FacultyProfile
 
 def user_context_processor(request):
     """
@@ -78,3 +79,19 @@ def user_context_processor(request):
         pass
 
     return context 
+
+def user_profile_context(request):
+    profile = None
+    if request.user.is_authenticated:
+        try:
+            profile = FacultyProfile.objects.get(user=request.user)
+        except FacultyProfile.DoesNotExist:
+            profile = None
+    elif 'mock_profile' in request.session:
+        # For mock mode, use a simple object for template compatibility
+        class SessionProfile:
+            pass
+        profile = SessionProfile()
+        for k, v in request.session['mock_profile'].items():
+            setattr(profile, k, v)
+    return {'sidebar_profile': profile} 

@@ -2,12 +2,12 @@
 {% load static %}
 
 {% block content %}
-<div class="container mx-auto p-4 sm:p-6 lg:p-8 text-gray-800">
+<div class="container mx-auto p-4 sm:p-6 lg:p-8 text-gray-800 dark:text-gray-200">
 
     <!-- Success Message -->
     {% if messages %}
         {% for message in messages %}
-            <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative mb-6" role="alert">
+            <div class="bg-blue-100 dark:bg-blue-900 border border-blue-400 dark:border-blue-700 text-blue-700 dark:text-blue-200 px-4 py-3 rounded relative mb-6" role="alert">
                 <span class="block sm:inline">{{ message }}</span>
             </div>
         {% endfor %}
@@ -15,18 +15,23 @@
 
     <div class="space-y-8">
         <!-- Profile Header -->
-        <div class="bg-white p-6 rounded-2xl shadow-lg flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
             <div class="relative">
-                <img class="h-28 w-28 rounded-full object-cover border-4 border-white shadow-md" 
+                <img class="h-28 w-28 rounded-full object-cover border-4 border-white dark:border-gray-700 shadow-md" 
                      src="{% if faculty.profile_picture_url %}{{ faculty.profile_picture_url }}{% else %}{% static 'img/default_avatar.jpg' %}{% endif %}" alt="Faculty profile picture">
-                <div class="absolute -bottom-1 -right-1 bg-yellow-400 text-gray-800 text-xs font-bold px-2 py-1 rounded-full border-2 border-white">
-                    Busy
+                <div class="absolute -bottom-1 -right-1">
+                    <span class="text-xs font-bold px-2 py-1 rounded-full border-2 border-white dark:border-gray-700
+                        {% if faculty.status == 'Active' %}bg-green-200 text-green-800
+                        {% elif faculty.status == 'Busy' %}bg-yellow-200 text-yellow-800
+                        {% else %}bg-gray-200 text-gray-800{% endif %}">
+                        {{ faculty.status }}
+                    </span>
                 </div>
             </div>
             <div class="text-center sm:text-left">
-                <h1 class="text-3xl font-bold text-gray-900">{{ faculty.first_name }} {{ faculty.last_name }}</h1>
-                <p class="text-lg text-gray-600">{{ faculty.department }}</p>
-                <div class="mt-2 text-sm text-gray-500 space-y-1">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">{{ faculty.first_name }} {{ faculty.last_name }}</h1>
+                <p class="text-lg text-gray-600 dark:text-gray-300">{{ faculty.department }}</p>
+                <div class="mt-2 text-sm text-gray-500 dark:text-gray-400 space-y-1">
                     <p>{{ faculty.email }}</p>
                     <p>{{ faculty.contact_number }}</p>
                 </div>
@@ -37,44 +42,43 @@
             <!-- Left Column -->
             <div class="lg:col-span-2 space-y-8">
                 <!-- Personal Information -->
-                <div class="bg-white p-6 rounded-2xl shadow-lg">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-900">Personal Information</h2>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Personal Information</h2>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm">
-                        <div><strong class="font-medium text-gray-500">Faculty ID:</strong> {{ faculty.faculty_id }}</div>
-                        <div><strong class="font-medium text-gray-500">Email:</strong> {{ faculty.email }}</div>
-                        <div><strong class="font-medium text-gray-500">Full Name:</strong> {{ faculty.first_name }} {{ faculty.last_name }}</div>
-                        <div><strong class="font-medium text-gray-500">Phone Number:</strong> {{ faculty.contact_number }}</div>
-                        <div><strong class="font-medium text-gray-500">Department:</strong> {{ faculty.department }}</div>
-                        <div><strong class="font-medium text-gray-500">Position:</strong> {{ faculty.position }}</div>
-                        <div><strong class="font-medium text-gray-500">Birth Date:</strong> {{ faculty.birth_date }}</div>
-                        <div><strong class="font-medium text-gray-500">Website:</strong> {{ faculty.website }}</div>
+                        <div><strong class="font-medium text-gray-500 dark:text-gray-400">Faculty ID:</strong> {{ faculty.faculty_id }}</div>
+                        <div><strong class="font-medium text-gray-500 dark:text-gray-400">Email:</strong> {{ faculty.email }}</div>
+                        <div><strong class="font-medium text-gray-500 dark:text-gray-400">Full Name:</strong> {{ faculty.first_name }} {{ faculty.last_name }}</div>
+                        <div><strong class="font-medium text-gray-500 dark:text-gray-400">Phone Number:</strong> {{ faculty.contact_number }}</div>
+                        <div><strong class="font-medium text-gray-500 dark:text-gray-400">Department:</strong> {{ faculty.department }}</div>
+                        <div><strong class="font-medium text-gray-500 dark:text-gray-400">Position:</strong> {{ faculty.position }}</div>
+                        <div><strong class="font-medium text-gray-500 dark:text-gray-400">Birth Date:</strong> {{ faculty.birth_date }}</div>
                     </div>
                 </div>
 
                 <!-- Professional Information -->
-                <div class="bg-white p-6 rounded-2xl shadow-lg">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-900">Professional Information</h2>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Professional Information</h2>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm">
-                        <div><strong class="font-medium text-gray-500">College:</strong> {{ faculty.college }}</div>
-                        <div><strong class="font-medium text-gray-500">Specialization:</strong> {{ faculty.specialization }}</div>
-                        <div><strong class="font-medium text-gray-500">Position:</strong> {{ faculty.position }}</div>
-                        <div><strong class="font-medium text-gray-500">Date Hired:</strong> {{ faculty.date_hired }}</div>
-                        <div><strong class="font-medium text-gray-500">Classes Taught:</strong> 0</div>
+                        <div><strong class="font-medium text-gray-500 dark:text-gray-400">College:</strong> {{ faculty.college }}</div>
+                        <div><strong class="font-medium text-gray-500 dark:text-gray-400">Specialization:</strong> {{ faculty.specialization }}</div>
+                        <div><strong class="font-medium text-gray-500 dark:text-gray-400">Position:</strong> {{ faculty.position }}</div>
+                        <div><strong class="font-medium text-gray-500 dark:text-gray-400">Date Hired:</strong> {{ faculty.date_hired }}</div>
+                        <div><strong class="font-medium text-gray-500 dark:text-gray-400">Classes Taught:</strong> 0</div>
                     </div>
                 </div>
 
                 <!-- About Me -->
-                <div class="bg-white p-6 rounded-2xl shadow-lg">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-900">About Me</h2>
-                    <p class="text-sm text-gray-600 leading-relaxed">{{ faculty.bio }}</p>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">About Me</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{{ faculty.bio }}</p>
                 </div>
 
                 <!-- Contact Information -->
-                <div class="bg-white p-6 rounded-2xl shadow-lg">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-900">Contact Information</h2>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Contact Information</h2>
                     <div class="text-sm">
                         <p>{{ faculty.email }}</p>
-                        <p class="mt-1">{{ faculty.contact_number }} <span class="text-xs text-gray-400 ml-2">Not verified</span></p>
+                        <p class="mt-1">{{ faculty.contact_number }} <span class="text-xs text-gray-400 dark:text-gray-500 ml-2">Not verified</span></p>
                     </div>
                 </div>
             </div>
@@ -82,31 +86,31 @@
             <!-- Right Column -->
             <div class="space-y-8">
                 <!-- Quick Actions -->
-                <div class="bg-white p-6 rounded-2xl shadow-lg">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-900">Quick Actions</h2>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Quick Actions</h2>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="#" onclick="openEditModal()" class="text-blue-600 hover:underline">Edit Profile</a></li>
-                        <li><a href="#" class="text-blue-600 hover:underline">Change Password</a></li>
-                        <li><a href="#" class="text-blue-600 hover:underline">Notification Settings</a></li>
+                        <li><a href="#" onclick="openEditModal()" class="text-blue-600 dark:text-blue-400 hover:underline">Edit Profile</a></li>
+                        <li><a href="#" class="text-blue-600 dark:text-blue-400 hover:underline">Change Password</a></li>
+                        <li><a href="#" class="text-blue-600 dark:text-blue-400 hover:underline">Notification Settings</a></li>
                     </ul>
                 </div>
 
                 <!-- Profile Stats -->
-                <div class="bg-white p-6 rounded-2xl shadow-lg">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-900">Profile Stats</h2>
-                    <p class="text-sm text-gray-600 mb-1">Profile Completion</p>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: 14%"></div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Profile Stats</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-1">Profile Completion</p>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ faculty.completion_percentage }}%"></div>
                     </div>
-                    <p class="text-xs text-right text-gray-500 mt-1">14%</p>
-                    <p class="text-xs text-gray-500 mt-3">Last updated: June 23, 2025</p>
+                    <p class="text-xs text-right text-gray-500 dark:text-gray-400 mt-1">{{ faculty.completion_percentage }}%</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-3">Last updated: {{ faculty.updated_at|default:faculty.date_hired|date:'F d, Y' }}</p>
                 </div>
 
                 <!-- Teaching & Classes -->
-                <div class="bg-white p-6 rounded-2xl shadow-lg text-center">
-                    <h2 class="text-xl font-semibold mb-2 text-gray-900">Teaching & Classes</h2>
-                    <p class="text-sm text-gray-600 mb-4">View your assigned classes, schedules, and student lists.</p>
-                    <a href="#" class="inline-block bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors">View My Classes</a>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg text-center">
+                    <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Teaching & Classes</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">View your assigned classes, schedules, and student lists.</p>
+                    <a href="#" class="inline-block bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-800 transition-colors">View My Classes</a>
                 </div>
             </div>
         </div>
@@ -125,6 +129,20 @@
         </div>
         <form method="post" action="{% url 'faculty_profile' %}" enctype="multipart/form-data" class="space-y-6">
             {% csrf_token %}
+            {% if form.errors %}
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+                    <ul>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
             
             <!-- Profile Picture Upload -->
             <div class="flex flex-col items-center text-center">
@@ -157,11 +175,15 @@
                     <label for="id_contact_number" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
                     {{ form.contact_number }}
                 </div>
-                 <div>
+                <div>
                     <label for="id_birth_date" class="block text-sm font-medium text-gray-700 mb-1">Birth Date</label>
                     {{ form.birth_date }}
                 </div>
-                 <div>
+                <div>
+                    <label for="id_status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    {{ form.status }}
+                </div>
+                <div>
                     <label for="id_department" class="block text-sm font-medium text-gray-700 mb-1">Department</label>
                     {{ form.department }}
                 </div>
@@ -169,17 +191,13 @@
                     <label for="id_college" class="block text-sm font-medium text-gray-700 mb-1">College</label>
                     {{ form.college }}
                 </div>
-                 <div>
+                <div>
                     <label for="id_position" class="block text-sm font-medium text-gray-700 mb-1">Position</label>
                     {{ form.position }}
                 </div>
                 <div>
                     <label for="id_specialization" class="block text-sm font-medium text-gray-700 mb-1">Specialization</label>
                     {{ form.specialization }}
-                </div>
-                 <div class="sm:col-span-2">
-                    <label for="id_website" class="block text-sm font-medium text-gray-700 mb-1">Website</label>
-                    {{ form.website }}
                 </div>
                 <div class="sm:col-span-2">
                     <label for="id_bio" class="block text-sm font-medium text-gray-700 mb-1">About Me</label>

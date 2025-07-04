@@ -14,6 +14,9 @@ def generate_random_code(length=10):
 STATUS_CHOICES = [
     ('ACTIVE', 'ACTIVE'),
     ('DISABLED', 'DISABLED'),
+    ('Active', 'Active'),
+    ('Offline', 'Offline'),
+    ('Busy', 'Busy'),
 ]
 
 STUDENT_STATUS_CHOICES = [
@@ -336,9 +339,20 @@ class FacultyProfile(models.Model):
     date_hired = models.DateField(blank=True, null=True)
     website = models.URLField(blank=True, null=True)
     birth_date = models.DateField(blank=True, null=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Active')
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+
+    def completion_percentage(self):
+        fields = [
+            self.first_name, self.last_name, self.department, self.email,
+            self.contact_number, self.office_location, self.profile_picture,
+            self.bio, self.faculty_id, self.position, self.college,
+            self.specialization, self.date_hired, self.birth_date
+        ]
+        filled = sum(1 for f in fields if f)
+        return int((filled / len(fields)) * 100)
 
 class Course(models.Model):
     course_id = models.CharField(max_length=255, primary_key=True)
