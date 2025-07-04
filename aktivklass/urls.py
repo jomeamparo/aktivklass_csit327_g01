@@ -60,6 +60,8 @@ urlpatterns = [
     path('help_and_support/', include('help_and_support.urls')),
     path('attendance_student/', include('attendance_student.urls')),
     path('core/', include('core.urls')),
+    path('class_lists/', include('class_lists.urls')),
+
     
     # Password reset URLs
     path('password_reset/', auth_views.PasswordResetView.as_view(template_name='forgot_password/password_reset_form.html'), name='password_reset'),
