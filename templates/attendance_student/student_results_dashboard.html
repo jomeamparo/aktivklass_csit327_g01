@@ -1,0 +1,69 @@
+{% extends 'core/main.html' %}
+
+{% block content %}
+<div class="px-8 py-6">
+    <h2 class="text-2xl font-bold mb-8">Your Results Dashboard</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        {% for card in subject_cards %}
+        <a href="{% url 'results_subject_detail' class_id=card.class_id %}" class="block focus:outline-none transition-transform transform hover:scale-105">
+            <div class="bg-green-600 text-white rounded-lg shadow-lg p-6 flex flex-col h-full">
+                <h3 class="text-xl font-bold">{{ card.subject_name }}</h3>
+                <div class="text-5xl font-bold my-4">{{ card.average_score }}%</div>
+                <div class="text-sm">Overall Average</div>
+                <div class="text-sm mt-1">Total Graded Items: {{ card.total_activities }}</div>
+                <div class="mt-auto pt-4 text-xs font-semibold opacity-80">
+                    View Details &rarr;
+                </div>
+            </div>
+        </a>
+        {% empty %}
+        <p class="text-gray-500">No results have been recorded yet.</p>
+        {% endfor %}
+    </div>
+
+    <div class="w-full bg-white rounded-lg shadow-lg p-6">
+        <h3 class="font-semibold text-gray-700 mb-4">Average Score per Subject</h3>
+        <div class="relative h-80">
+            <canvas id="averageScoreChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const chartData = JSON.parse('{{ chart_data_json|safe }}');
+    const subjects = chartData.map(item => item.subject);
+    const averages = chartData.map(item => item.average);
+
+    new Chart(document.getElementById('averageScoreChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: subjects,
+            datasets: [{
+                label: 'Average Score',
+                data: averages,
+                // Bar color changed to green
+                backgroundColor: 'rgba(22, 163, 74, 0.6)',
+                borderColor: 'rgba(22, 163, 74, 1)',
+                borderWidth: 1,
+                borderRadius: 4,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    title: { display: true, text: 'Average Score (%)' }
+                }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+</script>
+{% endblock %}

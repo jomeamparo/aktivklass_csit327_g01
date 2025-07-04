@@ -1,0 +1,84 @@
+{% extends 'core/main.html' %}
+
+{% block content %}
+<div class="px-8 py-6 flex flex-col items-center">
+    <h2 class="text-2xl font-bold mb-8 self-start">Your Attendance Dashboard</h2>
+
+    <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="rounded-lg shadow bg-yellow-400 text-white p-6 flex flex-col items-center">
+            <div class="text-3xl font-bold">{{ total_attendance|default:"-" }}</div>
+            <div class="text-lg mt-2">Total Records</div>
+            <a href="{% url 'student_attendance_all' %}" class="mt-4 text-sm flex items-center hover:underline">
+                View Details <span class="ml-1"><i class="fas fa-arrow-right"></i></span>
+            </a>
+        </div>
+
+        {% for card in class_cards %}
+        <div class="rounded-lg shadow bg-green-500 text-white p-6 flex flex-col items-center">
+            <div class="text-3xl font-bold">{{ card.count }}</div>
+            <div class="text-lg mt-2">{{ card.name }}</div>
+            <a href="{% url 'student_attendance_subject_detail' class_id=card.id %}" class="mt-4 text-sm flex items-center hover:underline">
+                View Details <span class="ml-1"><i class="fas fa-arrow-right"></i></span>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-1 gap-6 mb-10">
+        <div class="rounded-lg shadow bg-gray-150 p-6">
+            <div class="font-semibold mb-2 text-green-700">Attendance Statistics by Subject</div>
+            <canvas id="attendanceSubjectBarChart" class="mx-auto" height="240"></canvas>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Grouped Bar Chart for per-class stats
+        const attendanceStats = JSON.parse('{{ attendance_stats_json|safe }}');
+        const subjects = attendanceStats.map(item => item.subject);
+        const presentCounts = attendanceStats.map(item => item.present);
+        const absentCounts = attendanceStats.map(item => item.absent);
+        const ctx = document.getElementById('attendanceSubjectBarChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: subjects,
+                datasets: [
+                    {
+                        label: 'Present in Class',
+                        data: presentCounts,
+                        backgroundColor: '#22b14c',
+                        borderRadius: 6,
+                    },
+                    {
+                        label: 'Absent in Class',
+                        data: absentCounts,
+                        backgroundColor: '#ef9a9a',
+                        borderRadius: 6,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                },
+                scales: {
+                    x: {
+                        stacked: false,
+                        title: { display: false, text: 'Subject/Class' }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: { display: false, text: 'Count' },
+                        ticks: {
+                            stepSize: 1,
+                            callback: function(value) { if (Number.isInteger(value)) { return value; } return null; }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</div>
+{% endblock %}
