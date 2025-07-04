@@ -174,6 +174,27 @@ class Conversation(models.Model):
     participants = models.ManyToManyField(Student, related_name='conversations')
     created_at = models.DateTimeField(auto_now_add=True)
 
+    @classmethod
+    def get_or_create_conversation(cls, student1, student2):
+        conversations = cls.objects.filter(participants=student1).filter(participants=student2)
+        if conversations.exists():
+            return conversations.first()
+        conversation = cls.objects.create()
+        conversation.participants.add(student1, student2)
+        return conversation
+
+    def get_other_participant(self, user):
+        """Return the other participant in the conversation given the current user."""
+        return self.participants.exclude(id=user.id).first()
+
+    def get_last_message(self):
+        """Return the latest message in the conversation, or None if there are no messages."""
+        return self.messages.order_by('-timestamp').first()
+
+    def get_unread_count_for_user(self, user):
+        """Return the count of unread messages for the given user (excluding messages sent by that user)."""
+        return self.messages.filter(is_read=False).exclude(sender=user).count()
+
     def __str__(self):
         return f"Conversation ({self.id})"
 

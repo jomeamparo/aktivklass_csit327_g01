@@ -1,0 +1,49 @@
+{% extends 'core/main.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Search Students{% endblock %}
+
+{% block content %}
+<div class="container mx-auto p-4 sm:p-6 lg:p-8">
+    <!-- Breadcrumbs -->
+    <div class="text-sm text-gray-500 mb-4">
+        <a href="{% url 'student_profile' %}" class="hover:underline">Profile</a> / 
+        <span class="font-semibold">Search</span>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <h1 class="text-2xl font-bold text-gray-900 mb-4">Search for Students</h1>
+        
+        <form method="get" action="{% url 'search_student_profiles' %}" class="flex">
+            <input type="text" name="q" placeholder="Search by name or ID..." value="{{ query }}" class="flex-grow p-3 border border-gray-300 rounded-l-md shadow-sm focus:ring-blue-600 focus:border-blue-600 transition duration-150 ease-in-out">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-r-md focus:outline-none focus:shadow-outline transition duration-200 ease-in-out flex-shrink-0">
+                <i class="fas fa-search mr-2"></i>Search
+            </button>
+        </form>
+
+        {% if students %}
+            <div class="mt-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Search Results</h2>
+                <ul class="space-y-4">
+                    {% for student in students %}
+                        <li class="bg-gray-50 p-4 rounded-lg shadow-sm hover:bg-gray-100 transition flex items-center justify-between">
+                            <a href="{% url 'view_student_profile' student.student_id %}" class="flex items-center space-x-4">
+                                <img src="{{ student.profile.avatar.url }}" alt="{{ student.first_name }}'s avatar" class="w-16 h-16 rounded-full object-cover border-2 border-gray-200">
+                                <div>
+                                    <p class="text-lg font-semibold text-blue-600">{{ student.first_name }} {{ student.last_name }}</p>
+                                    <p class="text-gray-600">{{ student.student_id }}</p>
+                                </div>
+                            </a>
+                            <a href="{% url 'start_conversation' student.student_id %}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline transition duration-200 ease-in-out flex-shrink-0">
+                                <i class="fas fa-comment-dots mr-2"></i>Chat
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% elif query %}
+            <p class="mt-6 text-gray-600">No students found for "{{ query }}".</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

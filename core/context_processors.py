@@ -37,14 +37,13 @@ def user_context_processor(request):
     try:
         if role == 'student':
             from core.models import Student
-            user = Student.objects.filter(student_id=user_id).first()
+            user = Student.objects.select_related('profile').filter(student_id=user_id).first()
             if user:
                 context.update({
                     'fullname': f"{user.first_name} {user.last_name}",
                     'email': user.email,
                     'role': 'student',
-                    # Assuming students have a profile picture, adjust if needed
-                    # 'avatar_url': user.profile.avatar.url if hasattr(user, 'profile') and user.profile.avatar else None
+                    'avatar_url': user.profile.avatar.url if hasattr(user, 'profile') and user.profile.avatar else None
                 })
         elif role == 'admin':
             from core.models import AdminUser
