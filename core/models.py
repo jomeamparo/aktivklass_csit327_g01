@@ -209,6 +209,14 @@ class Attendance(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
     feedback = models.TextField(blank=True, null=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['student', 'class_obj', 'date'], 
+                name='unique_student_class_date_attendance'
+            )
+        ]
+
 # class Activity(models.Model):
 #     TYPE_CHOICES = [('Quiz', 'Quiz'), ('Assignment', 'Assignment'), ('Exam', 'Exam')]
 #     class_obj = models.ForeignKey(Class, on_delete=models.CASCADE)

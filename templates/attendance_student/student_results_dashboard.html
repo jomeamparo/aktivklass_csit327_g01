@@ -1,68 +1,69 @@
 {% extends 'core/main.html' %}
+
 {% block content %}
-<div class="px-8 py-6 flex flex-col items-center">
-    <h2 class="text-2xl font-bold mb-8 self-start">Your Results Dashboard</h2>
-    <!-- Subject Summary Cards -->
-    <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {% for card in cards %}
-        <a href="{% url 'student_view_results' %}?subject={{ card.subject|urlencode }}" class="block focus:outline-none">
-            <div class="rounded-lg shadow bg-blue-500 text-white p-6 flex flex-col items-center transition-transform transform hover:scale-105 cursor-pointer">
-                <div class="text-2xl font-bold mb-1">{{ card.subject }}</div>
-                <div class="text-4xl font-bold mt-1">{{ card.average|default:"-" }}%</div>
-                <div class="text-md mt-1">Avg. Score</div>
-                <div class="text-sm mt-1">Total Activities: <span class="font-semibold">{{ card.total }}</span></div>
-                <div class="flex flex-row gap-4 mt-2">
-                    <span class="bg-green-600 px-2 py-1 rounded text-xs">Passed: {{ card.passed }}</span>
-                    <span class="bg-red-500 px-2 py-1 rounded text-xs">Failed: {{ card.failed }}</span>
+<div class="px-8 py-6">
+    <h2 class="text-2xl font-bold mb-8">Your Results Dashboard</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        {% for card in subject_cards %}
+        <a href="{% url 'results_subject_detail' class_id=card.class_id %}" class="block focus:outline-none transition-transform transform hover:scale-105">
+            <div class="bg-green-600 text-white rounded-lg shadow-lg p-6 flex flex-col h-full">
+                <h3 class="text-xl font-bold">{{ card.subject_name }}</h3>
+                <div class="text-5xl font-bold my-4">{{ card.average_score }}%</div>
+                <div class="text-sm">Overall Average</div>
+                <div class="text-sm mt-1">Total Graded Items: {{ card.total_activities }}</div>
+                <div class="mt-auto pt-4 text-xs font-semibold opacity-80">
+                    View Details &rarr;
                 </div>
-                <div class="text-xs mt-2 opacity-80">Passing Rate: {{ card.passed|default:0|floatformat:0 }}/{{ card.total|default:1 }} ({{ card.total|yesno:"Yes,No" }})</div>
             </div>
         </a>
+        {% empty %}
+        <p class="text-gray-500">No results have been recorded yet.</p>
         {% endfor %}
     </div>
-    <!-- Passed/Failed Bar Chart by Subject -->
-    <div class="w-full max-w-5xl rounded-lg shadow bg-white p-6 mb-10">
-        <div class="font-semibold mb-4 text-blue-700">Passed vs Failed per Subject</div>
-        <canvas id="subjectPassFailChart" width="600" height="280"></canvas>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    {{ chart_subjects|json_script:"chart-subjects" }}
-{{ chart_passed|json_script:"chart-passed" }}
-{{ chart_failed|json_script:"chart-failed" }}
-    <script>
-        const chartSubjects = JSON.parse(document.getElementById('chart-subjects').textContent);
-        const chartPassed = JSON.parse(document.getElementById('chart-passed').textContent);
-        const chartFailed = JSON.parse(document.getElementById('chart-failed').textContent);
-        new Chart(document.getElementById('subjectPassFailChart').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: chartSubjects,
-                datasets: [
-                    {
-                        label: 'Passed',
-                        data: chartPassed,
-                        backgroundColor: '#22b14c'
-                    },
-                    {
-                        label: 'Failed',
-                        data: chartFailed,
-                        backgroundColor: '#e74c3c'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { position: 'top' } },
-                scales: {
-                    x: { stacked: true },
-                    y: { beginAtZero: true, stacked: true, ticks: { stepSize: 1, precision: 0 } }
-                }
-            }
-        });
-    </script>
-    <div class="w-full max-w-5xl flex justify-end mt-6">
-        <a href="{% url 'student_view_results' %}" class="text-blue-600 hover:underline text-sm flex items-center"><i class="fas fa-table mr-2"></i>View Detailed Results Table</a>
+    <div class="w-full bg-white rounded-lg shadow-lg p-6">
+        <h3 class="font-semibold text-gray-700 mb-4">Average Score per Subject</h3>
+        <div class="relative h-80">
+            <canvas id="averageScoreChart"></canvas>
+        </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const chartData = JSON.parse('{{ chart_data_json|safe }}');
+    const subjects = chartData.map(item => item.subject);
+    const averages = chartData.map(item => item.average);
+
+    new Chart(document.getElementById('averageScoreChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: subjects,
+            datasets: [{
+                label: 'Average Score',
+                data: averages,
+                // Bar color changed to green
+                backgroundColor: 'rgba(22, 163, 74, 0.6)',
+                borderColor: 'rgba(22, 163, 74, 1)',
+                borderWidth: 1,
+                borderRadius: 4,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    title: { display: true, text: 'Average Score (%)' }
+                }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+</script>
 {% endblock %}
