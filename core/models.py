@@ -3,6 +3,7 @@ import random, string
 import uuid
 from django.apps import AppConfig
 from django.conf import settings
+from django.db.models import Count
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
@@ -271,6 +272,34 @@ class FacultyProfileAdmin(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+
+class Analytics(models.Model):
+    total_faculty = models.IntegerField(default=0)
+    total_students = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = 'Analytics'
+
+    def __str__(self):
+        return f'Analytics - {self.created_at.strftime("%Y-%m-%d")}'
+
+    @classmethod
+    def update_stats(cls):
+        """Update analytics statistics"""
+        try:
+            analytics = cls.objects.first()
+            if not analytics:
+                analytics = cls()
+            
+            analytics.total_faculty = Faculty.objects.count()
+            analytics.total_students = Student.objects.count()
+            analytics.save()
+            return analytics
+        except Exception as e:
+            print(f"Error updating analytics: {e}")
+            return None
 
 class EditAdminConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'

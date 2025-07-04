@@ -9,48 +9,65 @@
         <div class="flex space-x-2 ml-auto">
             <button id="btnFaculty" type="button" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition dark:bg-green-500 dark:hover:bg-green-400 dark:text-gray-900">Faculty</button>
             <button id="btnStudent" type="button" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition dark:bg-green-500 dark:hover:bg-green-400 dark:text-gray-900">Student</button>
-            <button id="btnUniversity" type="button" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition dark:bg-green-500 dark:hover:bg-green-400 dark:text-gray-900">University</button>
         </div>
     </div>
     <div class="bg-white p-4 rounded-lg shadow mb-6 dark:bg-gray-800 dark:shadow-md">
         <div id="facultyRecords" class="analytics-section">
-            <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Faculty Records</h3>
-            <p>Display analytics for Faculty here...</p>
+            <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Faculty Statistics</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gray-50 p-6 rounded-lg dark:bg-gray-700">
+                    <h4 class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">Total Faculty Members</h4>
+                    <p class="text-3xl font-bold text-green-600 dark:text-green-400" id="facultyCount">{{ total_faculty }}</p>
+                </div>
+            </div>
         </div>
         <div id="studentRecords" class="analytics-section hidden">
-            <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Student Records</h3>
-            <p>Display analytics for Students here...</p>
-        </div>
-        <div id="universityRecords" class="analytics-section hidden">
-            <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">University Records</h3>
-            <p>Display analytics for University here...</p>
+            <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Student Statistics</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gray-50 p-6 rounded-lg dark:bg-gray-700">
+                    <h4 class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">Total Students</h4>
+                    <p class="text-3xl font-bold text-green-600 dark:text-green-400" id="studentCount">{{ total_students }}</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 <script>
     const btnFaculty = document.getElementById('btnFaculty');
     const btnStudent = document.getElementById('btnStudent');
-    const btnUniversity = document.getElementById('btnUniversity');
     const facultyRecords = document.getElementById('facultyRecords');
     const studentRecords = document.getElementById('studentRecords');
-    const universityRecords = document.getElementById('universityRecords');
 
     function showSection(section) {
         facultyRecords.classList.add('hidden');
         studentRecords.classList.add('hidden');
-        universityRecords.classList.add('hidden');
         section.classList.remove('hidden');
     }
-    btnFaculty.addEventListener('click', () => showSection(facultyRecords));
-    btnStudent.addEventListener('click', () => showSection(studentRecords));
-    btnUniversity.addEventListener('click', () => showSection(universityRecords));
+
+    btnFaculty.addEventListener('click', () => {
+        showSection(facultyRecords);
+        fetch('/analytics/get_faculty_count/')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('facultyCount').textContent = data.count;
+            });
+    });
+
+    btnStudent.addEventListener('click', () => {
+        showSection(studentRecords);
+        fetch('/analytics/get_student_count/')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('studentCount').textContent = data.count;
+            });
+    });
 
     const savedTheme = localStorage.getItem("theme");
-       if (savedTheme === "dark") {
+    if (savedTheme === "dark") {
         document.documentElement.classList.add("dark");
-      } else {
+    } else {
         document.documentElement.classList.remove("dark");
-      }
+    }
 </script>
 <style>
     .hidden { display: none; }
