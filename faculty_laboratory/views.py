@@ -43,6 +43,7 @@ def laboratory_view(request):
         'students': students,
         'summary_data': summary_data,
         'classes': classes,  # Pass dashboard data
+        'role' : 'faculty'
     })
 
 def dashboard(request):
