@@ -31,7 +31,7 @@
       }
     </script>
     <title>{% block title %}ActivKlass Management System{% endblock %}</title>
-     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
     .zoom-container {
@@ -142,29 +142,27 @@
     <div class="flex h-screen overflow-hidden">
 <!-- Sidebar -->
 <aside id="sidebar" class="w-64 bg-white shadow-xl border-r border-gray-200 p-4 flex flex-col transition-all duration-300 ease-in-out">
-  <!-- Profile Section -->
-  {% if role == 'faculty' %}
-    <a href="{% url 'faculty_profile' %}">
-  {% elif role == 'student' %}
-    <a href="{% url 'student_profile' %}">
-  {% else %}
-    <a href="#">
-  {% endif %}
+  <!-- Profile Section - Showing actual user name -->
+{% if role == 'faculty' %}
+  <a href="{% url 'faculty_profile' %}">
+{% elif role == 'student' %}
+  <a href="{% url 'student_profile' %}">
+{% else %}
+  <a href="#">
+{% endif %}
     <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 shadow-sm mb-6">
       <img
-        src="{% if avatar_url %}{{ avatar_url }}{% else %}https://ui-avatars.com/api/?name={{ request.user.get_full_name|default:request.user.username|urlencode }}&background=10b981&color=fff&size=32{% endif %}"
+        src="{% if avatar_url %}{{ avatar_url }}{% else %}https://ui-avatars.com/api/?name={{ fullname|urlencode }}&background=10b981&color=fff&size=32{% endif %}"
         alt="user"
         class="w-8 h-8 rounded-full object-cover"
       />
       <div class="ltr:ml-2 rtl:mr-2">
-        <h6 class="font-semibold text-sm text-gray-800">
-          {{ request.user.get_full_name|default:request.user.username }}
-        </h6>
-        <p class="text-xs text-gray-600">{{ request.user.email }}</p>
+        <h6 class="font-semibold text-sm text-gray-800">{{ fullname }}</h6>
+        <p class="text-xs text-gray-600">{{ email }}</p>
       </div>
     </div>
   </a>
-  
+
   <!-- Navigation -->
   <a href="{% url 'dashboard_teacher' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
     <i class="fas fa-user text-green-600"></i>
@@ -283,8 +281,6 @@
         </div>
                 <!-- Show Archived Toggle -->
                  <div class="flex items-center mt-5 md:mt-0">
-          <input type="checkbox" id="showArchived" class="mr-2">
-          <label for="showArchived" class="text-[13px] text-gray-700">Show Archived</label>
         </div>
       </div>
     </div>
@@ -324,8 +320,6 @@
           Select All
         </label>
         <button id="bulkDeleteBtn" class="bg-red-500 text-white px-2 py-1 text-sm rounded disabled:opacity-50" disabled>Delete Selected</button>
-        <button id="bulkArchiveBtn" class="bg-yellow-500 text-white px-2 py-1 text-sm rounded disabled:opacity-50" disabled>Archive Selected</button>
-      </div>
               
               <!-- Display Options -->
               <div class="flex items-center gap-2">
@@ -536,10 +530,21 @@
       }
 
       // Filter by subject
-      function filterBySubject(subject) {
-        const rows = document.querySelectorAll(".student-row");
-        const filterButtons = document.querySelectorAll(".filter-btn");
-        
+function filterBySubject(subject) {
+    const rows = document.querySelectorAll(".student-row");
+    
+    rows.forEach(row => {
+        const rowSubject = row.dataset.subject.toLowerCase();
+        if (subject === "all" || rowSubject === subject.toLowerCase()) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+    
+    updateClassStatistics();
+    updatePagination();
+}
         // Update button styles
         filterButtons.forEach(btn => {
           if (btn.dataset.subject === subject) {
@@ -553,71 +558,66 @@
         
         // Show/hide rows
         rows.forEach(row => {
-           if (subjectMatch && searchMatch && gradeMatch && archiveMatch) {
-      row.style.display = "";
-    } else {
-      row.style.display = "none";
-    }
-  });     
+          if (subject === "all" || row.dataset.subject === subject) {
+            row.style.display = "";
+          } else {
+            row.style.display = "none";
+          }
+        });
+        
         updateClassStatistics();
         updatePagination();
-      }
+      
 
       // Search functionality
-      function searchStudents(query) {
-        const rows = document.querySelectorAll(".student-row");
-        const searchTerm = query.toLowerCase();
-        
-        rows.forEach(row => {
-          const studentName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-          const isVisible = studentName.includes(searchTerm);
-          
-          if (isVisible) {
+function searchStudents(query) {
+    const rows = document.querySelectorAll(".student-row");
+    const searchTerm = query.toLowerCase().trim();
+    
+    rows.forEach(row => {
+        const studentName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+        if (studentName.includes(searchTerm)) {
             row.style.display = "";
-          } else {
+        } else {
             row.style.display = "none";
-          }
-        });
-        
-        updateClassStatistics();
-        updatePagination();
-      }
+        }
+    });
+    
+    updateClassStatistics();
+    updatePagination();
+}
 
       // Grade range filter
-      function filterByGradeRange(range) {
-        const rows = document.querySelectorAll(".student-row");
+function filterByGradeRange(range) {
+    const rows = document.querySelectorAll(".student-row");
+    
+    rows.forEach(row => {
+        const average = parseFloat(row.querySelector('.avg-cell').textContent) || 0;
+        let isVisible = true;
         
-        rows.forEach(row => {
-          const average = parseFloat(row.querySelector('.avg-cell').textContent);
-          let isVisible = true;
-          
-          switch (range) {
+        switch (range) {
             case '90-100':
-              isVisible = average >= 90 && average <= 100;
-              break;
+                isVisible = average >= 90;
+                break;
             case '80-89':
-              isVisible = average >= 80 && average < 90;
-              break;
+                isVisible = average >= 80 && average < 90;
+                break;
             case '70-79':
-              isVisible = average >= 70 && average < 80;
-              break;
+                isVisible = average >= 70 && average < 80;
+                break;
             case '0-69':
-              isVisible = average < 70;
-              break;
+                isVisible = average < 70;
+                break;
             default:
-              isVisible = true;
-          }
-          
-          if (isVisible) {
-            row.style.display = "";
-          } else {
-            row.style.display = "none";
-          }
-        });
+                isVisible = true;
+        }
         
-        updateClassStatistics();
-        updatePagination();
-      }
+        row.style.display = isVisible ? "" : "none";
+    });
+    
+    updateClassStatistics();
+    updatePagination();
+}
 
       // Toggle archived records
       function toggleArchivedRecords(showArchived) {
@@ -625,8 +625,7 @@
         
         rows.forEach(row => {
           const isArchived = row.dataset.isArchived === 'true';
-           const archiveMatch = showArchived || !isArchived;
-
+          
           if (showArchived) {
             // Show all rows when showing archived
             row.style.display = "";
@@ -842,91 +841,61 @@
         });
       }
 
-      // Delete record
-      function deleteRecord(button) {
-  // Show SweetAlert confirmation
-  Swal.fire({
-    title: 'Are you sure?',
-    text: "You won't be able to revert this!",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes, delete it!'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      const row = button.closest('tr');
-      const gradeId = row.querySelector('.score-input')?.dataset.gradeId;
-      
-      fetch('/delete-quiz-grade/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': getCookie('csrftoken')
-        },
-        body: JSON.stringify({ grade_id: gradeId })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          row.remove();
-          updateClassStatistics();
-          updatePagination();
-          Swal.fire(
-            'Deleted!',
-            'The record has been deleted.',
-            'success'
-          );
-        } else {
-          Swal.fire(
-            'Error!',
-            'Failed to delete record: ' + data.error,
-            'error'
-          );
+      // Delete record function
+function deleteRecord(button) {
+    const row = button.closest('tr');
+    const gradeId = row.querySelector('.score-input')?.dataset.gradeId;
+    
+    // SweetAlert confirmation
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('/delete-quiz-grade/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ grade_id: gradeId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    row.remove();
+                    updateClassStatistics();
+                    updatePagination();
+                    Swal.fire(
+                        'Deleted!',
+                        'The record has been deleted.',
+                        'success'
+                    );
+                } else {
+                    Swal.fire(
+                        'Error!',
+                        'Failed to delete record: ' + data.error,
+                        'error'
+                    );
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire(
+                    'Error!',
+                    'Failed to delete record',
+                    'error'
+                );
+            });
         }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        Swal.fire(
-          'Error!',
-          'Failed to delete record',
-          'error'
-        );
-      });
-    }
-  });
+    });
 }
-
-      // Archive records
-      function archiveRecords(gradeIds) {
-        fetch('/archive-quiz-grades/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: JSON.stringify({ grade_ids: gradeIds })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showToast(`${gradeIds.length} records archived successfully!`, 'success');
-                // Optionally remove or hide the rows
-                document.querySelectorAll('.row-checkbox:checked').forEach(checkbox => {
-                    checkbox.closest('tr').remove();
-                });
-                updateClassStatistics();
-                updatePagination();
-            } else {
-                showToast('Failed to archive records: ' + data.error, 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showToast('Failed to archive records', 'error');
-        });
-      }
-
+      
       // Get CSRF token
       function getCookie(name) {
         let cookieValue = null;
@@ -949,89 +918,89 @@
         
         // Set up input event listeners for all score inputs
         document.querySelectorAll(".score-input").forEach(input => {
-  const saveBtn = input.nextElementSibling;
+        const saveBtn = input.nextElementSibling;
   
-  // Store original value
-  input.dataset.originalValue = input.value;
+        // Store original value
+        input.dataset.originalValue = input.value;
   
   input.addEventListener("input", function() {
-    const maxScore = parseFloat(this.dataset.maxScore) || 100;
-    const value = parseFloat(this.value);
-    
-    if (isNaN(value) || value < 0) {
-      this.value = '';
-    } else if (value > maxScore) {
-      this.value = maxScore;
-    }
-    
-    // Show save button if value changed
-    if (this.value !== this.dataset.originalValue) {
-      saveBtn.classList.remove('hidden');
-    } else {
-      saveBtn.classList.add('hidden');
-    }
-  });
+        const maxScore = parseFloat(this.dataset.maxScore) || 100;
+        const value = parseFloat(this.value);
+        
+        if (isNaN(value) || value < 0) {
+            this.value = '';
+        } else if (value > maxScore) {
+            this.value = maxScore;
+        }
+        
+        // Show save button if value changed
+        if (this.value !== this.dataset.originalValue) {
+            saveBtn.classList.remove('hidden');
+        } else {
+            saveBtn.classList.add('hidden');
+        }
+    });
   
   // Add click handler to save button
-  saveBtn.addEventListener('click', async function() {
-    const input = this.previousElementSibling;
-    const gradeId = input.dataset.gradeId;
-    const quizId = input.dataset.quizId;
-    const studentId = input.dataset.studentId;
-    const newScore = input.value;
-    
-    if (newScore === input.dataset.originalValue) {
-      this.classList.add('hidden');
-      return;
-    }
-    
-    try {
-      this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-      this.disabled = true;
-      
-      const response = await fetch('/update-quiz-score/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': getCookie('csrftoken')
-        },
-        body: JSON.stringify({
-          grade_id: gradeId,
-          quiz_id: quizId,
-          student_id: studentId,
-          score: newScore
-        })
-      });
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        // Update the original value
-        input.dataset.originalValue = newScore;
-        input.dataset.gradeId = data.grade_id || gradeId;
+    saveBtn.addEventListener('click', async function() {
+        const input = this.previousElementSibling;
+        const gradeId = input.dataset.gradeId;
+        const quizId = input.dataset.quizId;
+        const studentId = input.dataset.studentId;
+        const newScore = input.value;
         
-        // Update the average
-        updateAverages();
+        if (newScore === input.dataset.originalValue) {
+            this.classList.add('hidden');
+            return;
+        }
         
-        // Show success toast
-        showToast('Score saved successfully!', 'success');
-        
-        // Hide save button after delay
-        setTimeout(() => {
-          this.classList.add('hidden');
-          this.innerHTML = '<i class="fas fa-save"></i>';
-          this.disabled = false;
-        }, 1500);
-      } else {
-        throw new Error(data.error || 'Failed to save score');
-      }
-    } catch (error) {
-      console.error('Error saving score:', error);
-      showToast('Failed to save score: ' + error.message, 'error');
-      this.innerHTML = '<i class="fas fa-save"></i>';
-      this.disabled = false;
-    }
-  });
+        try {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            this.disabled = true;
+            
+            const response = await fetch('/update-quiz-score/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    grade_id: gradeId,
+                    quiz_id: quizId,
+                    student_id: studentId,
+                    score: newScore
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Update the original value
+                input.dataset.originalValue = newScore;
+                input.dataset.gradeId = data.grade_id || gradeId;
+                
+                // Update the average
+                updateAverages();
+                
+                // Show success toast
+                showToast('Score saved successfully!', 'success');
+                
+                // Hide save button after delay
+                setTimeout(() => {
+                    this.classList.add('hidden');
+                    this.innerHTML = '<i class="fas fa-save"></i>';
+                    this.disabled = false;
+                }, 1500);
+            } else {
+                throw new Error(data.error || 'Failed to save score');
+            }
+        } catch (error) {
+            console.error('Error saving score:', error);
+            showToast('Failed to save score: ' + error.message, 'error');
+            this.innerHTML = '<i class="fas fa-save"></i>';
+            this.disabled = false;
+        }
+    });
 });
         
         // Set up filter buttons

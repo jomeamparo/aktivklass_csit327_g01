@@ -57,7 +57,6 @@ def quizzes_view(request):
                 'total_max_score': 0,
                 'quiz_count': 0,
                 'average': 0,  # Default average
-                'is_archived': False
             }
     
     # Then add the actual quiz grades
@@ -76,7 +75,6 @@ def quizzes_view(request):
             student_quiz_data[student_key]['total_score'] += grade.score
             student_quiz_data[student_key]['total_max_score'] += grade.max_score
             student_quiz_data[student_key]['quiz_count'] += 1
-            student_quiz_data[student_key]['is_archived'] = grade.is_archived
     
     # Calculate averages for each student
     for student_data in student_quiz_data.values():
@@ -222,20 +220,5 @@ def delete_quiz_grade(request):
             return JsonResponse({'success': True, 'message': 'Grade deleted successfully'})
         else:
             return JsonResponse({'success': False, 'error': 'No grade ID provided'})
-    except Exception as e:
-        return JsonResponse({'success': False, 'error': str(e)})
-
-@csrf_exempt
-@require_POST
-def archive_quiz_grades(request):
-    """AJAX endpoint to archive quiz grades"""
-    try:
-        data = json.loads(request.body)
-        grade_ids = data.get('grade_ids', [])
-        
-        if grade_ids:
-            QuizGrade.objects.filter(id__in=grade_ids).update(is_archived=True)
-            return JsonResponse({'success': True, 'message': f'{len(grade_ids)} records archived'})
-        return JsonResponse({'success': False, 'error': 'No grade IDs provided'})
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
