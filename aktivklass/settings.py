@@ -126,7 +126,7 @@ WSGI_APPLICATION = 'aktivklass.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'aktivklass_v3',
+        'NAME': 'aktivklass_v2',
         'USER': 'root',          # default user in XAMPP
         'PASSWORD': '',          # default password is empty
         'HOST': 'localhost',
