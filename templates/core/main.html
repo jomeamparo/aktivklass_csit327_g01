@@ -49,27 +49,17 @@
       <aside id="sidebar" class="w-64 bg-white dark:bg-gray-800 shadow-xl border-r border-gray-200 dark:border-gray-700 p-4 flex flex-col transition-all duration-300 ease-in-out">
         <!-- Profile Section -->
 
-        <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-900 shadow-sm mb-6">
+        <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 shadow-sm mb-6">
           <img
-            src="{% if sidebar_profile and sidebar_profile.profile_picture %}{{ sidebar_profile.profile_picture.url }}
-                  {% elif sidebar_profile and sidebar_profile.profile_picture_url %}{{ sidebar_profile.profile_picture_url }}
-                  {% else %}{% static 'img/default_avatar.jpg' %}{% endif %}"
+            src="{% if avatar_url %}{{ avatar_url }}{% else %}https://ui-avatars.com/api/?name={{ fullname|urlencode }}&background=10b981&color=fff&size=32{% endif %}"
             alt="user"
             class="w-8 h-8 rounded-full object-cover"
           />
           <div class="ltr:ml-2 rtl:mr-2">
-            <h6 class="font-semibold text-sm text-gray-800 dark:text-gray-300">
-              {% if sidebar_profile %}{{ sidebar_profile.first_name }} {{ sidebar_profile.last_name }}{% else %}Profile{% endif %}
-            </h6>
-            <p class="text-xs text-gray-400">{% if sidebar_profile %}{{ sidebar_profile.email }}{% endif %}</p>
-            {% if sidebar_profile %}
-                <span class="text-xs font-semibold px-2 py-1 rounded-full mt-1 block
-                    {% if sidebar_profile.status == 'Active' %}bg-green-200 text-green-800
-                    {% elif sidebar_profile.status == 'Busy' %}bg-yellow-200 text-yellow-800
-                    {% else %}bg-gray-200 text-gray-800{% endif %}">
-                    {{ sidebar_profile.status }}
-                </span>
-            {% endif %}
+            <h6 class="font-semibold text-sm text-gray-800 dark:text-gray-300">{{ fullname }}</h6>
+            <p class="text-xs text-gray-400">{{ email }}</p>
+            
+           
           </div>
         </div>
         {% if role == 'faculty' or role == 'student' %}
@@ -100,14 +90,7 @@
             <i class="fas fa-archive text-green-600"></i>
             <span>Archived Classes</span>
           </a>
-          <a href="{% url 'faculty_seatworkSubmission' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-            <i class="fas fa-users text-green-600"></i>
-            <span>Seatwork History</span>
-          </a>
-          <a href="{% url 'faculty_attendance' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-            <i class="fas fa-user text-green-600"></i>
-            <span>Attendance</span>
-          </a>
+         
           <a href="{% url 'faculty_laboratory' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-user text-green-600"></i>
             <span>Class Page</span>
@@ -120,28 +103,22 @@
             <i class="fas fa-users text-green-600"></i>
             <span>Quizzes</span>
           </a>
+
+          
+          
           <a href="{% url 'faculty_settings' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-700 dark:hover:text-green-400 transition">
             <i class="fas fa-user text-green-600"></i>
             <span>Preferences</span>
           </a>
-          <a href="{% url 'help_and_support' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
-            <i class="fas fa-info-circle text-green-600"></i>
-            <span>Help & Support</span>
-          </a>
-
         {% endif %}
      
         {% if role == 'admin' %}
           <!-- Admin Options only -->
-          <a href="{% url 'edit_faculty' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-700 dark:hover:text-green-400 transition">
+          <a href="{% url 'admin_faculty_list' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-700 dark:hover:text-green-400 transition">
             <i class="fas fa-user text-green-600"></i>
             <span>Faculty</span>
           </a>
-          <a href="{% url 'admin_course_list' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-700 dark:hover:text-green-400 transition">
-            <i class="fas fa-user text-green-600"></i>
-            <span>Course</span>
-          </a>
-          <a href="{% url 'edit_student' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
+          <a href="{% url 'student_list_view' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
             <i class="fas fa-users text-green-600"></i>
             <span>Student</span>
           </a>
@@ -157,10 +134,6 @@
             <i class="fas fa-user text-green-600"></i>
             <span>Analytics</span>
           </a>
-          <a href="{% url 'help_and_support' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
-            <i class="fas fa-info-circle text-green-600"></i>
-            <span>Help & Support</span>
-          </a>
         {% endif %}
 
         {% if role == 'student' or role == 'guest' %}
@@ -173,13 +146,9 @@
             <i class="fas fa-plus text-green-600"></i>
             <span>Class List</span>
           </a>
-          <a href="{% url 'student_attendance_dashboard' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-700 dark:hover:text-green-400 transition">
+          <a href="{% url 'attendance_student' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-700 dark:hover:text-green-400 transition">
             <i class="fas fa-user text-green-600"></i>
-            <span>Attendance</span>
-          </a>
-          <a href="{% url 'student_results_dashboard' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-700 dark:hover:text-green-400 transition">
-            <i class="fas fa-user text-green-600"></i>
-            <span>Results</span>
+            <span>Class list</span>
           </a>
           <a href="{% url 'notifications' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
             <i class="fas fa-user text-green-600"></i>
@@ -193,16 +162,23 @@
             <i class="fas fa-cog text-green-600"></i>
             <span>Settings</span>
           </a>
+          <!-- <a href="{% url 'help_and_support' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
+          </a> -->
           <a href="{% url 'help_and_support' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
             <i class="fas fa-info-circle text-green-600"></i>
             <span>Help & Support</span>
           </a>
-          
-          {% endif %}
+         
 
           
 
-        <!-- Logout -->
+        <!-- Logout
+        <div class="mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
+          <a href="{% url 'login' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition">
+            <i class="fas fa-sign-out-alt text-red-600"></i>
+            <span>Login</span>
+          </a>
+        </div> -->
         <div class="mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
           <a href="{% url 'logout' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition">
             <i class="fas fa-sign-out-alt text-red-600"></i>
