@@ -1,120 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Class Management</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Tailwind CSS CDN (for styling) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
-    <style>
-        .emboss-text { text-shadow: 1px 1px 0 #fff, 2px 2px 4px #aaa; }
-        .emboss-effect { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-        .animate-float { animation: float 0.8s; }
-        @keyframes float { from { opacity: 0; transform: translateY(24px);} to { opacity: 1; transform: none; } }
-    </style>
-</head>
-<body class="bg-gray-50 min-h-screen flex">
+{% extends 'core/main.html' %}
 
-    <!-- Sidebar -->
-    <aside class="w-64 bg-white shadow-lg min-h-screen flex flex-col">
-        <nav class="flex-1 py-6">
-            <a href="{% url 'faculty_attendance' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-                <i class="fas fa-user text-green-600"></i>
-                <span>Attendance</span>
-            </a>
-            <a href="{% url 'admin_faculty_list' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-                <i class="fas fa-user text-green-600"></i>
-                <span>Faculty</span>
-            </a>
-            <a href="{% url 'student_list_view' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-                <span>Class list</span>
-            </a>
-            <a href="{% url 'chat_home' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-                <i class="fas fa-comments text-green-600"></i>
-                <span>Chats</span>
-            </a>
-            <div class="border-t border-gray-200 my-4"></div>
-            <span class="text-xs uppercase text-gray-400 px-4">Others</span>
-            <a href="{% url 'student_settings' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-                <i class="fas fa-user text-green-600"></i>
-                <span>Settings</span>
-            </a>
-            <a href="{% url 'help_and_support' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-                <i class="fas fa-info-circle text-green-600"></i>
-                <span>Help & Support</span>
-            </a>
-        </nav>
-        <div class="mt-auto pt-4 border-t border-gray-200">
-            <a href="{% url 'login' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 transition">
-                <i class="fas fa-sign-out-alt text-red-600"></i>
-                <span>Login</span>
-            </a>
-        </div>
-    </aside>
+{% block title %}Laboratory{% endblock %}
 
-    <!-- Main Content -->
-    <div class="container mx-auto flex-1 p-8">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">Class Page</h2>
-        </div>
-        <!-- Action Buttons -->
-        <div class="flex flex-wrap gap-3 mb-6">
-            <button onclick="addAssignment()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">+ Add Assignment</button>
-            <button onclick="openAddStudentModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">+ Add Student</button>
-            <button onclick="copyClassCode()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">📋 Copy Class Code</button>
-            <button onclick="openAddClassModal()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition">+ Add Class</button>
-            <button onclick="resetAssignments()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">🗑️ Remove All Assignments</button>
-        </div>
-        <div class="flex items-center gap-4 mb-4">
-            <label for="sort" class="text-gray-700 font-medium">Sort by:</label>
-            <div class="relative">
-                <select id="sort" name="sort" onchange="handleSort(this.value)"
-                    class="block appearance-none w-44 bg-white border border-gray-300 hover:border-green-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-500 transition">
-                    <option value="">Select</option>
-                    <option value="az">Name A - Z</option>
-                    <option value="za">Name Z - A</option>
-                    <option value="high">Total High → Low</option>
-                    <option value="low">Total Low → High</option>
-                </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
-        <div class="relative border border-green-600 rounded-lg p-5 bg-white transition animate-float emboss-effect hover:shadow-lg mb-6 class-card" data-code="M101A">
-            <button onclick="openEditClassModal(this)" class="absolute top-2 right-2 text-sm text-gray-500 hover:text-black bg-gray-100 px-2 py-1 rounded">✏️ Edit</button>
-            <h3 class="text-xl font-semibold text-gray-900 emboss-text">Information Management 2</h3>
-            <p class="text-sm text-gray-600 mt-1">Code: M101A</p>
-            <p class="text-sm text-gray-600 mt-1">Description: Fundamentals of Info Management</p>
-            <p class="text-sm text-gray-600 mt-1">Schedule: MWF 12:00PM - 3:00PM</p>
-            <p class="text-sm text-gray-600 mt-1">Room: 203</p>
-            <p class="text-sm text-gray-600 mt-1">Class Code: M101A</p>
-        </div>
-        <!-- Student Table -->
-        <div class="overflow-auto">
-            <table class="min-w-full bg-white rounded-lg shadow">
-                <thead>
-                    <tr id="tableHeader">
-                        <th class="px-4 py-2 text-left">First Name</th>
-                        <th class="px-4 py-2 text-left">Last Name</th>
-                        <th class="px-4 py-2 text-left">Quiz 1</th>
-                        <th class="px-4 py-2 text-left">Quiz 2</th>
-                        <th class="px-4 py-2 text-left">Project</th>
-                        <th class="px-4 py-2 text-left">Exam</th>
-                        <th class="px-4 py-2 text-left">Total</th>
-                        <th class="px-4 py-2 text-left">Grade</th>
-                        <th class="px-4 py-2 text-left">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="studentsBody">
-                    <!-- Students will be loaded here -->
-                </tbody>
-            </table>
-        </div>
+{% block content %}
+<div class="container mx-auto flex-1 p-8">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Class Page</h2>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-wrap gap-3 mb-6">
+        <button onclick="addAssignment()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">+ Add Assignment</button>
+        <button onclick="openAddStudentModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">+ Add Student</button>
+        <button onclick="copyClassCode()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">📋 Copy Class Code</button>
+        <button onclick="openAddClassModal()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition">+ Add Class</button>
+        <button onclick="resetAssignments()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">🗑️ Remove All Assignments</button>
+    </div>
+
+    <!-- Class Card -->
+    <div class="relative border border-green-600 rounded-lg p-5 bg-white transition hover:shadow-lg mb-6 class-card" data-code="M101A">
+        <button onclick="openEditClassModal(this)" class="absolute top-2 right-2 text-sm text-gray-500 hover:text-black bg-gray-100 px-2 py-1 rounded">✏️ Edit</button>
+        <h3 class="text-xl font-semibold text-gray-900">Information Management 2</h3>
+        <p class="text-sm text-gray-600 mt-1">Code: M101A</p>
+        <p class="text-sm text-gray-600 mt-1">Description: Fundamentals of Info Management</p>
+        <p class="text-sm text-gray-600 mt-1">Schedule: MWF 12:00PM - 3:00PM</p>
+        <p class="text-sm text-gray-600 mt-1">Room: 203</p>
+        <p class="text-sm text-gray-600 mt-1">Class Code: M101A</p>
+    </div>
+
+    <!-- Student Table -->
+    <div class="overflow-auto">
+        <table class="min-w-full bg-white rounded-lg shadow">
+            <thead>
+                <tr id="tableHeader">
+                    <th class="px-4 py-2 text-left">First Name</th>
+                    <th class="px-4 py-2 text-left">Last Name</th>
+                    <th class="px-4 py-2 text-left">Quiz 1</th>
+                    <th class="px-4 py-2 text-left">Quiz 2</th>
+                    <th class="px-4 py-2 text-left">Project</th>
+                    <th class="px-4 py-2 text-left">Exam</th>
+                    <th class="px-4 py-2 text-left">Total</th>
+                    <th class="px-4 py-2 text-left">Grade</th>
+                    <th class="px-4 py-2 text-left">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="studentsBody">
+                <!-- Students will be dynamically loaded -->
+            </tbody>
+        </table>
     </div>
 
     <!-- Add Class Modal -->
@@ -132,6 +65,7 @@
             </form>
         </div>
     </div>
+
     <!-- Add Student Modal -->
     <div id="addStudentModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg relative">
@@ -144,10 +78,11 @@
             </form>
         </div>
     </div>
-    <!-- Edit Class Modal (not used, inline edit) -->
+</div>
 
-    <script>
-    // ========== Modal Controls ==========
+<!-- JavaScript logic -->
+<script>
+// ========== Modal Controls ==========
     function openAddClassModal() {
         document.getElementById("addClassModal").classList.remove("hidden");
     }
@@ -486,6 +421,12 @@
         loadAssignmentsFromLocalStorage();
         loadStudentsFromLocalStorage();
     };
-    </script>
-</body>
-</html>
+
+window.onload = function () {
+    loadAssignmentsFromLocalStorage();
+    loadStudentsFromLocalStorage();
+};
+
+</script> 
+
+{% endblock %}
