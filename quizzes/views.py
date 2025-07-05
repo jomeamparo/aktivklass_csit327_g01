@@ -14,7 +14,7 @@ def quizzes_view(request):
     # Get all quiz grades with related data
     quiz_grades = QuizGrade.objects.select_related(
         'student', 'quiz', 'quiz__class_obj', 'graded_by'
-    ).filter(is_archived=False).order_by('-graded_at')
+    ).order_by('-graded_at')
     
     # Get unique classes that have quizzes
     classes_with_quizzes = Class.objects.filter(quizzes__isnull=False).distinct()
@@ -121,12 +121,12 @@ def update_quiz_score(request):
                 })
             grade.score = new_score
             grade.percentage = (new_score / grade.max_score) * 100
+            grade.graded_by = request.user if request.user.is_authenticated else None
             grade.save()
             return JsonResponse({
                 'success': True,
                 'new_score': grade.score,
                 'new_percentage': grade.percentage,
-                'new_grade_letter': grade.grade_letter,
                 'grade_id': grade.id,
                 'message': 'Score updated successfully!'
             })
@@ -141,52 +141,31 @@ def update_quiz_score(request):
                     'error': f'Score must be between 0 and {max_score}'
                 })
             
-            # Check if attempt already exists, if not create one
-            attempt, created = QuizAttempt.objects.get_or_create(
+            # Create attempt
+            attempt = QuizAttempt.objects.create(
                 student=student,
                 quiz=quiz,
-                defaults={
-                    'score': new_score,
-                    'max_score': max_score,
-                    'is_completed': True,
-                    'completed_at': timezone.now()
-                }
+                score=new_score,
+                max_score=max_score,
+                is_completed=True,
+                completed_at=timezone.now()
             )
             
-            # If attempt already existed, update it
-            if not created:
-                attempt.score = new_score
-                attempt.max_score = max_score
-                attempt.is_completed = True
-                attempt.completed_at = timezone.now()
-                attempt.save()
-            
-            # Check if grade already exists, if not create one
-            grade, grade_created = QuizGrade.objects.get_or_create(
+            # Create grade
+            grade = QuizGrade.objects.create(
                 student=student,
                 quiz=quiz,
-                defaults={
-                    'attempt': attempt,
-                    'score': new_score,
-                    'max_score': max_score,
-                    'percentage': (new_score / max_score) * 100,
-                    'graded_by': request.user if request.user.is_authenticated else None
-                }
+                attempt=attempt,
+                score=new_score,
+                max_score=max_score,
+                percentage=(new_score / max_score) * 100,
+                graded_by=request.user if request.user.is_authenticated else None
             )
-            
-            # If grade already existed, update it
-            if not grade_created:
-                grade.attempt = attempt
-                grade.score = new_score
-                grade.max_score = max_score
-                grade.percentage = (new_score / max_score) * 100
-                grade.save()
             
             return JsonResponse({
                 'success': True,
                 'new_score': grade.score,
                 'new_percentage': grade.percentage,
-                'new_grade_letter': grade.grade_letter,
                 'grade_id': grade.id,
                 'message': 'Grade created successfully!'
             })
@@ -214,11 +193,13 @@ def delete_quiz_grade(request):
         data = json.loads(request.body)
         grade_id = data.get('grade_id')
         
-        if grade_id:
-            grade = get_object_or_404(QuizGrade, id=grade_id)
-            grade.delete()
-            return JsonResponse({'success': True, 'message': 'Grade deleted successfully'})
-        else:
+        if not grade_id:
             return JsonResponse({'success': False, 'error': 'No grade ID provided'})
+            
+        grade = get_object_or_404(QuizGrade, id=grade_id)
+        grade.delete()
+        
+        return JsonResponse({'success': True, 'message': 'Grade deleted successfully'})
+        
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
