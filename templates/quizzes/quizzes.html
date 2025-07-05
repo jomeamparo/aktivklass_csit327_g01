@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = {darkMode: 'class'}</script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
       tailwind.config = {
         darkMode: 'class',
@@ -32,8 +31,8 @@
       }
     </script>
     <title>{% block title %}ActivKlass Management System{% endblock %}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
     .zoom-container {
         transform: scale(1.25);
@@ -266,13 +265,13 @@
                 <!-- Student Search -->
                 <div>
           <label class="block text-[13px] font-semibold text-gray-800 mb-1">Search Student</label>
-          <input type="text" id="studentSearch" class="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-green-500 text-sm" placeholder="Enter student name...">
+          <input type="text" class="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-green-500 text-sm" placeholder="Enter student name...">
         </div>
 
                 <!-- Grade Range Filter -->
                 <div>
           <label class="block text-[13px] font-semibold text-gray-800 mb-1">Grade Range</label>
-          <select id="gradeRange" class="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-green-500 text-sm">
+          <select class="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-green-500 text-sm">
             <option value="all">All Grades</option>
             <option value="90-100">90-100 (Excellent)</option>
             <option value="80-89">80-89 (Good)</option>
@@ -335,13 +334,13 @@
           <option>50</option>
         </select>
         <span class="text-sm">records</span>
-        <button id="exportCSV" class="bg-green-500 text-white px-2 py-1 text-sm rounded">Export CSV</button>
-        <button id="printBtn" class="bg-blue-500 text-white px-2 py-1 text-sm rounded">Print</button>
+        <button class="bg-green-500 text-white px-2 py-1 text-sm rounded">Export CSV</button>
+        <button class="bg-blue-500 text-white px-2 py-1 text-sm rounded">Print</button>
       </div>
     </div>
             <!-- Quiz Records Table -->
-            <div class="bg-white shadow rounded-lg p-3 overflow-x-auto quiz-table-container">
-      <table class="w-full text-sm text-left quiz-table">
+            <div class="bg-white shadow rounded-lg p-3 overflow-x-auto">
+      <table class="w-full text-sm text-left">
                 <thead class="bg-green-100 text-green-800 font-semibold">
                   <tr>
                     <th class="px-4 py-2 no-print">
@@ -552,16 +551,12 @@
         
         // Show/hide rows
         rows.forEach(row => {
-          const rowSubject = row.dataset.subject;
-          const subjectMatch = subject === "all" || rowSubject === subject;
-          
-          if (subjectMatch) {
-            row.style.display = "";
-          } else {
-            row.style.display = "none";
-          }
-        });
-        
+           if (subjectMatch && searchMatch && gradeMatch && archiveMatch) {
+      row.style.display = "";
+    } else {
+      row.style.display = "none";
+    }
+  });     
         updateClassStatistics();
         updatePagination();
       }
@@ -628,7 +623,8 @@
         
         rows.forEach(row => {
           const isArchived = row.dataset.isArchived === 'true';
-          
+           const archiveMatch = showArchived || !isArchived;
+
           if (showArchived) {
             // Show all rows when showing archived
             row.style.display = "";
@@ -846,110 +842,86 @@
 
       // Delete record
       function deleteRecord(button) {
-        const row = button.closest('tr');
-        const gradeId = row.querySelector('.score-input')?.dataset.gradeId;
-        
-        Swal.fire({
-          title: 'Are you sure?',
-          text: "You won't be able to revert this!",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            fetch('/delete-quiz-grade/', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
-              },
-              body: JSON.stringify({ grade_id: gradeId })
-            })
-            .then(response => response.json())
-            .then(data => {
-              if (data.success) {
-                row.remove();
-                updateClassStatistics();
-                updatePagination();
-                Swal.fire(
-                  'Deleted!',
-                  'The record has been deleted.',
-                  'success'
-                );
-              } else {
-                Swal.fire(
-                  'Error!',
-                  'Failed to delete record: ' + data.error,
-                  'error'
-                );
-              }
-            })
-            .catch(error => {
-              console.error('Error:', error);
-              Swal.fire(
-                'Error!',
-                'Failed to delete record',
-                'error'
-              );
-            });
-          }
-        });
-      }
+  // Show SweetAlert confirmation
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const row = button.closest('tr');
+      const gradeId = row.querySelector('.score-input')?.dataset.gradeId;
+      
+      fetch('/delete-quiz-grade/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({ grade_id: gradeId })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          row.remove();
+          updateClassStatistics();
+          updatePagination();
+          Swal.fire(
+            'Deleted!',
+            'The record has been deleted.',
+            'success'
+          );
+        } else {
+          Swal.fire(
+            'Error!',
+            'Failed to delete record: ' + data.error,
+            'error'
+          );
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        Swal.fire(
+          'Error!',
+          'Failed to delete record',
+          'error'
+        );
+      });
+    }
+  });
+}
 
       // Archive records
       function archiveRecords(gradeIds) {
-        Swal.fire({
-          title: 'Are you sure?',
-          text: `You are about to archive ${gradeIds.length} records.`,
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, archive them!'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            fetch('/archive-quiz-grades/', {
-              method: 'POST',
-              headers: {
+        fetch('/archive-quiz-grades/', {
+            method: 'POST',
+            headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCookie('csrftoken')
-              },
-              body: JSON.stringify({ grade_ids: gradeIds })
-            })
-            .then(response => response.json())
-            .then(data => {
-              if (data.success) {
+            },
+            body: JSON.stringify({ grade_ids: gradeIds })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
                 showToast(`${gradeIds.length} records archived successfully!`, 'success');
-                // Remove the archived rows
+                // Optionally remove or hide the rows
                 document.querySelectorAll('.row-checkbox:checked').forEach(checkbox => {
-                  checkbox.closest('tr').remove();
+                    checkbox.closest('tr').remove();
                 });
                 updateClassStatistics();
                 updatePagination();
-                Swal.fire(
-                  'Archived!',
-                  'The records have been archived.',
-                  'success'
-                );
-              } else {
-                Swal.fire(
-                  'Error!',
-                  'Failed to archive records: ' + data.error,
-                  'error'
-                );
-              }
-            })
-            .catch(error => {
-              console.error('Error:', error);
-              Swal.fire(
-                'Error!',
-                'Failed to archive records',
-                'error'
-              );
-            });
-          }
+            } else {
+                showToast('Failed to archive records: ' + data.error, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('Failed to archive records', 'error');
         });
       }
 
@@ -975,100 +947,90 @@
         
         // Set up input event listeners for all score inputs
         document.querySelectorAll(".score-input").forEach(input => {
-          const saveBtn = input.nextElementSibling;
-          
-          // Store original value
-          input.dataset.originalValue = input.value;
-          
-          input.addEventListener("input", function() {
-            const maxScore = parseFloat(this.dataset.maxScore) || 100;
-            const value = parseFloat(this.value);
-            
-            if (isNaN(value) || value < 0) {
-              this.value = '';
-            } else if (value > maxScore) {
-              this.value = maxScore;
-            }
-            
-            // Show save button if value changed
-            if (this.value !== this.dataset.originalValue) {
-              saveBtn.classList.remove('hidden');
-            } else {
-              saveBtn.classList.add('hidden');
-            }
-          });
-          
-          // Add click handler to save button
-          saveBtn.addEventListener('click', async function() {
-            const input = this.previousElementSibling;
-            const gradeId = input.dataset.gradeId;
-            const quizId = input.dataset.quizId;
-            const studentId = input.dataset.studentId;
-            const newScore = input.value;
-            
-            if (newScore === input.dataset.originalValue) {
-              this.classList.add('hidden');
-              return;
-            }
-            
-            try {
-              this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-              this.disabled = true;
-              
-              const response = await fetch('/update-quiz-score/', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: JSON.stringify({
-                  grade_id: gradeId,
-                  quiz_id: quizId,
-                  student_id: studentId,
-                  score: newScore
-                })
-              });
-              
-              const data = await response.json();
-              
-              if (data.success) {
-                // Update the original value
-                input.dataset.originalValue = newScore;
-                input.dataset.gradeId = data.grade_id || gradeId;
-                
-                // Update the average
-                updateAverages();
-                
-                // Show success toast
-                Swal.fire({
-                  position: 'top-end',
-                  icon: 'success',
-                  title: 'Score saved successfully!',
-                  showConfirmButton: false,
-                  timer: 1500
-                });
-                
-                // Hide save button after delay
-                setTimeout(() => {
-                  this.classList.add('hidden');
-                  this.innerHTML = '<i class="fas fa-save"></i>';
-                  this.disabled = false;
-                }, 1500);
-              } else {
-                throw new Error(data.error || 'Failed to save score');
-              }
-            } catch (error) {
-              console.error('Error saving score:', error);
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Failed to save score: ' + error.message
-              });
-              this.innerHTML = '<i class="fas fa-save"></i>';
-              this.disabled = false;
-            }
-          });
-        });
+  const saveBtn = input.nextElementSibling;
+  
+  // Store original value
+  input.dataset.originalValue = input.value;
+  
+  input.addEventListener("input", function() {
+    const maxScore = parseFloat(this.dataset.maxScore) || 100;
+    const value = parseFloat(this.value);
+    
+    if (isNaN(value) || value < 0) {
+      this.value = '';
+    } else if (value > maxScore) {
+      this.value = maxScore;
+    }
+    
+    // Show save button if value changed
+    if (this.value !== this.dataset.originalValue) {
+      saveBtn.classList.remove('hidden');
+    } else {
+      saveBtn.classList.add('hidden');
+    }
+  });
+  
+  // Add click handler to save button
+  saveBtn.addEventListener('click', async function() {
+    const input = this.previousElementSibling;
+    const gradeId = input.dataset.gradeId;
+    const quizId = input.dataset.quizId;
+    const studentId = input.dataset.studentId;
+    const newScore = input.value;
+    
+    if (newScore === input.dataset.originalValue) {
+      this.classList.add('hidden');
+      return;
+    }
+    
+    try {
+      this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      this.disabled = true;
+      
+      const response = await fetch('/update-quiz-score/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({
+          grade_id: gradeId,
+          quiz_id: quizId,
+          student_id: studentId,
+          score: newScore
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        // Update the original value
+        input.dataset.originalValue = newScore;
+        input.dataset.gradeId = data.grade_id || gradeId;
+        
+        // Update the average
+        updateAverages();
+        
+        // Show success toast
+        showToast('Score saved successfully!', 'success');
+        
+        // Hide save button after delay
+        setTimeout(() => {
+          this.classList.add('hidden');
+          this.innerHTML = '<i class="fas fa-save"></i>';
+          this.disabled = false;
+        }, 1500);
+      } else {
+        throw new Error(data.error || 'Failed to save score');
+      }
+    } catch (error) {
+      console.error('Error saving score:', error);
+      showToast('Failed to save score: ' + error.message, 'error');
+      this.innerHTML = '<i class="fas fa-save"></i>';
+      this.disabled = false;
+    }
+  });
+});
         
         // Set up filter buttons
         document.querySelectorAll(".filter-btn").forEach(button => {
@@ -1130,65 +1092,40 @@
         // Bulk actions
         document.getElementById('bulkDeleteBtn').addEventListener('click', () => {
           const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
-          if (checkedBoxes.length > 0) {
+          if (checkedBoxes.length > 0 && confirm(`Are you sure you want to delete ${checkedBoxes.length} records?`)) {
             const gradeIds = Array.from(checkedBoxes).map(checkbox => {
               return checkbox.closest('tr').querySelector('.score-input')?.dataset.gradeId;
             }).filter(id => id);
             
-            Swal.fire({
-              title: 'Are you sure?',
-              text: `You are about to delete ${gradeIds.length} records.`,
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonColor: '#3085d6',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'Yes, delete them!'
-            }).then((result) => {
-              if (result.isConfirmed) {
-                fetch('/delete-quiz-grade/', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
-                  },
-                  body: JSON.stringify({ grade_ids: gradeIds })
-                })
-                .then(response => response.json())
-                .then(data => {
-                  if (data.success) {
-                    showToast(`${gradeIds.length} records deleted successfully!`, 'success');
-                    checkedBoxes.forEach(checkbox => checkbox.closest('tr').remove());
-                    updateClassStatistics();
-                    updatePagination();
-                    Swal.fire(
-                      'Deleted!',
-                      'The records have been deleted.',
-                      'success'
-                    );
-                  } else {
-                    Swal.fire(
-                      'Error!',
-                      'Failed to delete records: ' + data.error,
-                      'error'
-                    );
-                  }
-                })
-                .catch(error => {
-                  console.error('Error:', error);
-                  Swal.fire(
-                    'Error!',
-                    'Failed to delete records',
-                    'error'
-                  );
-                });
+            fetch('/delete-quiz-grade/', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+              },
+              body: JSON.stringify({ grade_ids: gradeIds })
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                showToast(`${gradeIds.length} records deleted successfully!`, 'success');
+                checkedBoxes.forEach(checkbox => checkbox.closest('tr').remove());
+                updateClassStatistics();
+                updatePagination();
+              } else {
+                showToast('Failed to delete records: ' + data.error, 'error');
               }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              showToast('Failed to delete records', 'error');
             });
           }
         });
         
         document.getElementById('bulkArchiveBtn').addEventListener('click', () => {
           const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
-          if (checkedBoxes.length > 0) {
+          if (checkedBoxes.length > 0 && confirm(`Are you sure you want to archive ${checkedBoxes.length} records?`)) {
             const gradeIds = Array.from(checkedBoxes).map(checkbox => {
               return checkbox.closest('tr').querySelector('.score-input')?.dataset.gradeId;
             }).filter(id => id);
@@ -1209,7 +1146,9 @@
         
         // Refresh button
         document.getElementById('refreshBtn').addEventListener('click', () => {
-          location.reload();
+          updateLastRefreshed();
+          updateAverages();
+          showToast('Data refreshed successfully!', 'success');
         });
         
         // Calculate initial averages and show all by default
