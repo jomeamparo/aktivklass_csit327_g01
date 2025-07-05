@@ -2,110 +2,134 @@
 {% load static %}
 {% load quiz_extras %}
 <html lang="en">
-    <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>{% block title %}ActivKlass Management System{% endblock %}</title>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <style>
-      .score-input {
-        width: 4rem;
-        text-align: center;
-        border: 1px solid #d1d5db;
-        border-radius: 0.25rem;
-        padding: 0.25rem 0.5rem;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            green: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+            }
+          }
+        }
       }
-      .score-input:focus {
-        outline: 2px solid #059669;
-        border-color: transparent;
+    }
+  </script>
+  <title>{% block title %}ActivKlass Management System{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    .score-input {
+      width: 4rem;
+      text-align: center;
+      border: 1px solid #d1d5db;
+      border-radius: 0.25rem;
+      padding: 0.25rem 0.5rem;
+    }
+    .score-input:focus {
+      outline: 2px solid #059669;
+      border-color: transparent;
+    }
+    .grade-excellent { background-color: #dcfce7; }
+    .grade-good { background-color: #fef3c7; }
+    .grade-needs-improvement { background-color: #fee2e2; }
+    .sortable { cursor: pointer; user-select: none; }
+    .sortable:hover { background-color: #f3f4f6; }
+    .sort-icon { margin-left: 0.5rem; opacity: 0.5; }
+    .sort-asc .sort-icon::before { content: "▲"; }
+    .sort-desc .sort-icon::before { content: "▼"; }
+    .checkbox-custom {
+      width: 1.25rem;
+      height: 1.25rem;
+      cursor: pointer;
+    }
+    /* Table responsive improvements */
+    .quiz-table-container {
+      overflow-x: auto;
+      max-width: 100%;
+      border-radius: 0.5rem;
+    }
+    .quiz-table {
+      min-width: max-content;
+      width: 100%;
+    }
+    .quiz-table th,
+    .quiz-table td {
+      white-space: nowrap;
+      min-width: 120px;
+    }
+    .quiz-table th:first-child,
+    .quiz-table td:first-child {
+      position: sticky;
+      left: 0;
+      background: white;
+      z-index: 10;
+    }
+    .quiz-table th:nth-child(2),
+    .quiz-table td:nth-child(2) {
+      position: sticky;
+      left: 60px;
+      background: white;
+      z-index: 10;
+    }
+    .quiz-table th:nth-child(3),
+    .quiz-table td:nth-child(3) {
+      position: sticky;
+      left: 200px;
+      background: white;
+      z-index: 10;
+    }
+    @media print {
+      body * {
+        visibility: hidden;
       }
-      .grade-excellent { background-color: #dcfce7; }
-      .grade-good { background-color: #fef3c7; }
-      .grade-needs-improvement { background-color: #fee2e2; }
-      .sortable { cursor: pointer; user-select: none; }
-      .sortable:hover { background-color: #f3f4f6; }
-      .sort-icon { margin-left: 0.5rem; opacity: 0.5; }
-      .sort-asc .sort-icon::before { content: "▲"; }
-      .sort-desc .sort-icon::before { content: "▼"; }
-      .checkbox-custom {
-        width: 1.25rem;
-        height: 1.25rem;
-        cursor: pointer;
+      .quiz-table-container, .quiz-table-container * {
+        visibility: visible;
       }
-      /* Table responsive improvements */
       .quiz-table-container {
-        overflow-x: auto;
-        max-width: 100%;
-        border-radius: 0.5rem;
-      }
-      .quiz-table {
-        min-width: max-content;
+        position: absolute;
+        left: 0;
+        top: 0;
         width: 100%;
       }
-      .quiz-table th,
-      .quiz-table td {
-        white-space: nowrap;
-        min-width: 120px;
+      .no-print {
+        display: none !important;
       }
-      .quiz-table th:first-child,
-      .quiz-table td:first-child {
-        position: sticky;
-        left: 0;
-        background: white;
-        z-index: 10;
-      }
-      .quiz-table th:nth-child(2),
-      .quiz-table td:nth-child(2) {
-        position: sticky;
-        left: 60px;
-        background: white;
-        z-index: 10;
-      }
-      .quiz-table th:nth-child(3),
-      .quiz-table td:nth-child(3) {
-        position: sticky;
-        left: 200px;
-        background: white;
-        z-index: 10;
-      }
-      @media print {
-        body * {
-          visibility: hidden;
-        }
-        .quiz-table-container, .quiz-table-container * {
-          visibility: visible;
-        }
-        .quiz-table-container {
-          position: absolute;
-          left: 0;
-          top: 0;
-          width: 100%;
-        }
-        .no-print {
-          display: none !important;
-        }
-      }
-      /* Toast notification */
-      .toast {
-        position: fixed;
-        bottom: 1rem;
-        right: 1rem;
-        padding: 0.75rem 1.5rem;
-        border-radius: 0.375rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        color: white;
-        z-index: 50;
-        transition: opacity 0.3s ease;
-      }
-      .toast-success {
-        background-color: #10B981;
-      }
-      .toast-error {
-        background-color: #EF4444;
-      }
-    </style>
-  </head>
+    }
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.375rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      color: white;
+      z-index: 50;
+      transition: opacity 0.3s ease;
+    }
+    .toast-success {
+      background-color: #10B981;
+    }
+    .toast-error {
+      background-color: #EF4444;
+    }
+  </style>
+</head>
   <body class="min-h-screen bg-gray-100 font-sans antialiased text-gray-800">
     <div class="flex h-screen overflow-hidden">
 <!-- Sidebar -->
