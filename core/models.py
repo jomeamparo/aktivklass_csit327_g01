@@ -331,8 +331,16 @@ class PasswordResetToken(models.Model):
     is_used = models.BooleanField(default=False)
 
 
+from django.conf import settings
+from django.db import models
+
 class FacultyProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,  # ✅ allow nulls
+        blank=True  # ✅ allow blank in forms
+    )
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     department = models.CharField(max_length=100)
