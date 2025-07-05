@@ -14,7 +14,7 @@ def quizzes_view(request):
     # Get all quiz grades with related data
     quiz_grades = QuizGrade.objects.select_related(
         'student', 'quiz', 'quiz__class_obj', 'graded_by'
-    ).order_by('-graded_at')
+    ).filter(is_archived=False).order_by('-graded_at')
     
     # Get unique classes that have quizzes
     classes_with_quizzes = Class.objects.filter(quizzes__isnull=False).distinct()
@@ -56,7 +56,8 @@ def quizzes_view(request):
                 'total_score': 0,
                 'total_max_score': 0,
                 'quiz_count': 0,
-                'average': 0  # Default average
+                'average': 0,  # Default average
+                'is_archived': False
             }
     
     # Then add the actual quiz grades
@@ -75,6 +76,7 @@ def quizzes_view(request):
             student_quiz_data[student_key]['total_score'] += grade.score
             student_quiz_data[student_key]['total_max_score'] += grade.max_score
             student_quiz_data[student_key]['quiz_count'] += 1
+            student_quiz_data[student_key]['is_archived'] = grade.is_archived
     
     # Calculate averages for each student
     for student_data in student_quiz_data.values():
@@ -93,7 +95,8 @@ def quizzes_view(request):
         'highest_score': round(highest_score, 2),
         'lowest_score': round(lowest_score, 2),
         'passing_rate': round(passing_rate, 1),
-        'fullname': 'Faculty User',  # This should come from session/authentication
+        'fullname': request.user.get_full_name() if request.user.is_authenticated else 'Faculty User',
+        'email': request.user.email if request.user.is_authenticated else '',
     }
     
     return render(request, 'quizzes/quizzes.html', context)
@@ -119,6 +122,7 @@ def update_quiz_score(request):
                     'error': f'Score must be between 0 and {grade.max_score}'
                 })
             grade.score = new_score
+            grade.percentage = (new_score / grade.max_score) * 100
             grade.save()
             return JsonResponse({
                 'success': True,
@@ -168,7 +172,7 @@ def update_quiz_score(request):
                     'score': new_score,
                     'max_score': max_score,
                     'percentage': (new_score / max_score) * 100,
-                    'graded_by': None
+                    'graded_by': request.user if request.user.is_authenticated else None
                 }
             )
             
@@ -224,6 +228,7 @@ def delete_quiz_grade(request):
 @csrf_exempt
 @require_POST
 def archive_quiz_grades(request):
+    """AJAX endpoint to archive quiz grades"""
     try:
         data = json.loads(request.body)
         grade_ids = data.get('grade_ids', [])
