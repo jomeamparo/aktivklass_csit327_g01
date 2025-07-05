@@ -220,3 +220,17 @@ def delete_quiz_grade(request):
             return JsonResponse({'success': False, 'error': 'No grade ID provided'})
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
+
+@csrf_exempt
+@require_POST
+def archive_quiz_grades(request):
+    try:
+        data = json.loads(request.body)
+        grade_ids = data.get('grade_ids', [])
+        
+        if grade_ids:
+            QuizGrade.objects.filter(id__in=grade_ids).update(is_archived=True)
+            return JsonResponse({'success': True, 'message': f'{len(grade_ids)} records archived'})
+        return JsonResponse({'success': False, 'error': 'No grade IDs provided'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})

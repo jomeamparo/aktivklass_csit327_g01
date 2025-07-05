@@ -501,6 +501,7 @@ class QuizGrade(models.Model):
     feedback = models.TextField(blank=True, null=True)
     graded_by = models.ForeignKey(Faculty, on_delete=models.SET_NULL, null=True, blank=True)
     graded_at = models.DateTimeField(auto_now_add=True)
+    is_archived = models.BooleanField(default=False)
     
     def save(self, *args, **kwargs):
         # Calculate percentage
