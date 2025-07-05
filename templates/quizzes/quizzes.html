@@ -34,6 +34,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
+    .zoom-container {
+        transform: scale(1.25);
+        transform-origin: top left;
+        width: 80%; /* Compensate for the zoom */
+        margin-left: 5%; /* Center the zoomed content */
+      }
     .score-input {
       width: 4rem;
       text-align: center;
@@ -60,10 +66,11 @@
     }
     /* Table responsive improvements */
     .quiz-table-container {
-      overflow-x: auto;
-      max-width: 100%;
-      border-radius: 0.5rem;
-    }
+        overflow-x: auto;
+        max-width: 100%;
+        border-radius: 0.5rem;
+        transform-origin: top left;
+      }
     .quiz-table {
       min-width: max-content;
       width: 100%;
@@ -242,7 +249,8 @@
 
         <!-- Page Content -->
         <main class="flex-1 p-6 overflow-y-auto">
-          <div class="max-w-7xl mx-auto">
+          <div class="zoom-container">
+            <div class="max-w-7xl mx-auto">
             <!-- Enhanced Filter and Search Section -->
             <div class="bg-white shadow-md rounded-lg p-4 mb-4">
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
