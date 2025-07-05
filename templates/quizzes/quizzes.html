@@ -248,52 +248,51 @@
         </header>
 
         <!-- Page Content -->
-        <main class="flex-1 p-6 overflow-y-auto">
-          <div class="zoom-container">
-            <div class="max-w-7xl mx-auto">
+       <main class="flex-1 p-6 md:p-8 overflow-y-auto">
+        <div class="max-w-7xl mx-auto px-4">
             <!-- Enhanced Filter and Search Section -->
             <div class="bg-white shadow-md rounded-lg p-4 mb-4">
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Subject Filter -->
                 <div>
-                  <h3 class="text-sm font-semibold text-gray-800 mb-2">Filter by Subject</h3>
-                  <div class="flex flex-wrap gap-1" id="subjectFilters">
-                    <button class="filter-btn px-3 py-1 text-sm rounded-lg bg-green-600 text-white" data-subject="all">
-                      All Subjects
-                    </button>
-                    {% for class_obj in classes_with_quizzes %}
-                    <button class="filter-btn px-3 py-1 text-sm rounded-lg bg-gray-200 hover:bg-gray-300" data-subject="{{ class_obj.subject_code|lower }}">
-                      {{ class_obj.subject_code }}
-                    </button>
-                    {% endfor %}
-                  </div>
-                </div>
+          <h3 class="text-sm font-semibold text-gray-800 mb-2">Filter by Subject</h3>
+          <div class="flex flex-wrap gap-1" id="subjectFilters">
+            <button class="filter-btn px-3 py-1 text-sm rounded-lg bg-green-600 text-white" data-subject="all">
+              All Subjects
+            </button>
+            {% for class_obj in classes_with_quizzes %}
+            <button class="filter-btn px-3 py-1 text-sm rounded-lg bg-gray-200 hover:bg-gray-300" data-subject="{{ class_obj.subject_code|lower }}">
+              {{ class_obj.subject_code }}
+            </button>
+            {% endfor %}
+          </div>
+        </div>
 
                 <!-- Student Search -->
                 <div>
-                  <label for="studentSearch" class="block text-sm font-semibold text-gray-800 mb-2">Search Student</label>
-                  <input type="text" id="studentSearch" placeholder="Enter student name..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
-                </div>
+          <label for="studentSearch" class="block text-sm font-semibold text-gray-800 mb-2">Search Student</label>
+          <input type="text" id="studentSearch" placeholder="Enter student name..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+        </div>
 
                 <!-- Grade Range Filter -->
                 <div>
-                  <label for="gradeRange" class="block text-sm font-semibold text-gray-800 mb-2">Grade Range</label>
-                  <select id="gradeRange" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
-                    <option value="all">All Grades</option>
-                    <option value="90-100">90-100 (Excellent)</option>
-                    <option value="80-89">80-89 (Good)</option>
-                    <option value="70-79">70-79 (Satisfactory)</option>
-                    <option value="0-69">Below 70 (Needs Improvement)</option>
-                  </select>
-                </div>
+          <label for="gradeRange" class="block text-sm font-semibold text-gray-800 mb-2">Grade Range</label>
+          <select id="gradeRange" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+            <option value="all">All Grades</option>
+            <option value="90-100">90-100 (Excellent)</option>
+            <option value="80-89">80-89 (Good)</option>
+            <option value="70-79">70-79 (Satisfactory)</option>
+            <option value="0-69">Below 70 (Needs Improvement)</option>
+          </select>
+        </div>
 
                 <!-- Show Archived Toggle -->
                 <div class="flex items-center">
-                  <input type="checkbox" id="showArchived" class="checkbox-custom">
-                  <label for="showArchived" class="ml-2 text-sm font-medium text-gray-700">Show Archived</label>
-                </div>
-              </div>
-            </div>
+          <input type="checkbox" id="showArchived" class="checkbox-custom">
+          <label for="showArchived" class="ml-2 text-sm font-medium text-gray-700">Show Archived</label>
+        </div>
+      </div>
+    </div>
 
             <!-- Class Statistics -->
             <div class="bg-white shadow-md rounded-lg p-4 mb-4">
