@@ -5,6 +5,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = {darkMode: 'class'}</script>
     <script>
@@ -222,912 +223,967 @@
   </div>
 </aside>
       <!-- Main Content -->
-      <div id="mainContent" class="flex-1 flex flex-col bg-gray-50 transition-all duration-300 ease-in-out">
-        <!-- Header -->
-        <header class="bg-white shadow-sm p-4 flex items-center justify-between">
-          <button id="toggleSidebar" class="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
-          </button>
-          <div class="w-full flex justify-center items-center">
-            <h1 class="text-2xl font-bold tracking-tight">
-              <span class="text-green-600">Aktivklass</span><span class="text-gray-800">Management</span>
-            </h1>
-          </div>
-          <div class="flex items-center space-x-2 no-print">
-            <button id="refreshBtn" class="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" title="Refresh Data">
-              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 3v5h5m-5-5a9 9 0 1 1 0 18 9 9 0 0 1 0-18z" />
-              </svg>
-            </button>
-            <span id="lastUpdated" class="text-xs text-gray-500"></span>
-          </div>
-        </header>
+        <div id="mainContent" class="flex-1 flex flex-col bg-gray-50 transition-all duration-300 ease-in-out">
+            <!-- Header -->
+            <header class="bg-white shadow-sm p-4 flex items-center justify-between">
+                <button id="toggleSidebar" class="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+                <div class="w-full flex justify-center items-center">
+                    <h1 class="text-2xl font-bold tracking-tight">
+                        <span class="text-green-600">Aktivklass</span><span class="text-gray-800">Management</span>
+                    </h1>
+                </div>
+                <div class="flex items-center space-x-2 no-print">
+                    <button id="refreshBtn" class="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" title="Refresh Data">
+                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 3v5h5m-5-5a9 9 0 1 1 0 18 9 9 0 0 1 0-18z" />
+                        </svg>
+                    </button>
+                    <span id="lastUpdated" class="text-xs text-gray-500"></span>
+                </div>
+            </header>
 
-        <!-- Page Content -->
-       <main class="flex-1 p-2 xl:p-4 overflow-y-auto text-[15px]">
-  <div class="w-full px-2 xl:px-4 max-w-[100%]">
-            <!-- FILTER & SEARCH SECTION -->
-    <div class="bg-white shadow rounded-lg p-3 mb-3">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
-        <div>
-          <h3 class="text-[13px] font-semibold text-gray-800 mb-1">Filter by Subject</h3>
-          <div class="flex flex-wrap gap-1">
-            <button class="filter-btn px-2 py-1 text-sm rounded bg-green-600 text-white" data-subject="all">All Subjects</button>
-            {% for class_obj in classes_with_quizzes %}
-            <button class="filter-btn px-2 py-1 text-sm rounded bg-gray-200 hover:bg-gray-300" data-subject="{{ class_obj.subject_code|lower }}">{{ class_obj.subject_code }}</button>
-            {% endfor %}
-          </div>
-        </div>
-                <!-- Student Search -->
-                <div>
-          <label class="block text-[13px] font-semibold text-gray-800 mb-1">Search Student</label>
-          <input type="text" class="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-green-500 text-sm" placeholder="Enter student name...">
-        </div>
+            <!-- Page Content -->
+            <main class="flex-1 p-2 xl:p-4 overflow-y-auto text-[15px]">
+                <div class="w-full px-2 xl:px-4 max-w-[100%]">
+                    <!-- FILTER & SEARCH SECTION -->
+                    <div class="bg-white shadow rounded-lg p-3 mb-3">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
+                            <div>
+                                <h3 class="text-[13px] font-semibold text-gray-800 mb-1">Filter by Subject</h3>
+                                <div class="flex flex-wrap gap-1">
+                                    <button class="filter-btn px-2 py-1 text-sm rounded bg-green-600 text-white" data-subject="all">All Subjects</button>
+                                    {% for class_obj in classes_with_quizzes %}
+                                    <button class="filter-btn px-2 py-1 text-sm rounded bg-gray-200 hover:bg-gray-300" data-subject="{{ class_obj.subject_code|lower }}">{{ class_obj.subject_code }}</button>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <!-- Student Search -->
+                            <div>
+                                <label class="block text-[13px] font-semibold text-gray-800 mb-1">Search Student</label>
+                                <input type="text" id="studentSearch" class="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-green-500 text-sm" placeholder="Enter student name...">
+                            </div>
 
-                <!-- Grade Range Filter -->
-                <div>
-          <label class="block text-[13px] font-semibold text-gray-800 mb-1">Grade Range</label>
-          <select class="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-green-500 text-sm">
-            <option value="all">All Grades</option>
-            <option value="90-100">90-100 (Excellent)</option>
-            <option value="80-89">80-89 (Good)</option>
-            <option value="70-79">70-79 (Satisfactory)</option>
-            <option value="0-69">Below 70 (Needs Improvement)</option>
-          </select>
-        </div>
-                <!-- Show Archived Toggle -->
-                 <div class="flex items-center mt-5 md:mt-0">
-        </div>
-      </div>
-    </div>
-
-            <!-- Class Statistics -->
-            <div class="bg-white shadow rounded-lg p-3 mb-3">
-      <h3 class="text-[15px] font-semibold text-gray-800 mb-2">Class Performance Summary</h3>
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-2 text-center">
-        <div class="bg-blue-50 p-2 rounded">
-          <div class="text-lg font-bold text-blue-600" id="totalStudents">{{ total_students }}</div>
-          <div class="text-xs text-gray-600">Total Students</div>
-        </div>
-        <div class="bg-green-50 p-2 rounded">
-          <div class="text-lg font-bold text-green-600" id="classAverage">{{ class_average }}</div>
-          <div class="text-xs text-gray-600">Class Average</div>
-        </div>
-        <div class="bg-yellow-50 p-2 rounded">
-          <div class="text-lg font-bold text-yellow-600" id="highestScore">{{ highest_score }}</div>
-          <div class="text-xs text-gray-600">Highest Score</div>
-        </div>
-        <div class="bg-red-50 p-2 rounded">
-          <div class="text-lg font-bold text-red-600" id="lowestScore">{{ lowest_score }}</div>
-          <div class="text-xs text-gray-600">Lowest Score</div>
-        </div>
-        <div class="bg-purple-50 p-2 rounded">
-          <div class="text-lg font-bold text-purple-600" id="passingRate">{{ passing_rate }}%</div>
-          <div class="text-xs text-gray-600">Passing Rate (≥75)</div>
-        </div>
-      </div>
-    </div>
-
-            <!-- Action Buttons -->
-     <div class="bg-white shadow rounded-lg p-3 mb-3 flex flex-wrap justify-between items-center gap-3">
-      <div class="flex items-center gap-3">
-        <label class="flex items-center gap-1 text-sm text-gray-700">
-          <input type="checkbox" id="selectAll">
-          Select All
-        </label>
-        <button id="bulkDeleteBtn" class="bg-red-500 text-white px-2 py-1 text-sm rounded disabled:opacity-50" disabled>Delete Selected</button>
-              
-              <!-- Display Options -->
-              <div class="flex items-center gap-2">
-        <label for="recordsPerPage" class="text-sm text-gray-700">Show:</label>
-        <select id="recordsPerPage" class="px-2 py-1 border border-gray-300 rounded text-sm">
-          <option>10</option>
-          <option selected>25</option>
-          <option>50</option>
-        </select>
-        <span class="text-sm">records</span>
-        <button class="bg-green-500 text-white px-2 py-1 text-sm rounded">Export CSV</button>
-        <button class="bg-blue-500 text-white px-2 py-1 text-sm rounded">Print</button>
-      </div>
-    </div>
-            <!-- Quiz Records Table -->
-            <div class="bg-white shadow rounded-lg p-3 overflow-x-auto">
-      <table class="w-full text-sm text-left">
-                <thead class="bg-green-100 text-green-800 font-semibold">
-                  <tr>
-                    <th class="px-4 py-2 no-print">
-                      <input type="checkbox" class="checkbox-custom" id="headerCheckbox">
-                    </th>
-                    <th class="px-4 py-2 sortable" data-sort="name">
-                      Student Name
-                      <span class="sort-icon"></span>
-                    </th>
-                    <th class="px-4 py-2 sortable" data-sort="subject">
-                      Subject
-                      <span class="sort-icon"></span>
-                    </th>
-                    {% for quiz in all_quizzes %}
-                    <th class="px-4 py-2 sortable" data-sort="quiz{{ forloop.counter }}">
-                      {{ quiz.title }}
-                      <span class="sort-icon"></span>
-                    </th>
-                    {% endfor %}
-                    <th class="px-4 py-2 sortable" data-sort="average">
-                      Average
-                      <span class="sort-icon"></span>
-                    </th>
-                    <th class="px-4 py-2 no-print">Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="quizTableBody">
-                  {% for student_data in student_quiz_data %}
-                  <tr class="border-t student-row" data-subject="{{ student_data.class_obj.subject_code|lower }}" data-is-archived="{{ student_data.is_archived|default:'false' }}">
-                    <td class="px-4 py-2 no-print sticky left-0 bg-white z-10">
-                      <input type="checkbox" class="row-checkbox checkbox-custom">
-                    </td>
-                    <td class="px-4 py-2 font-medium sticky left-12 bg-white z-10">{{ student_data.student.first_name }} {{ student_data.student.last_name }}</td>
-                    <td class="px-4 py-2 sticky left-48 bg-white z-10">{{ student_data.class_obj.subject_code }}</td>
-                    
-                    {% for quiz in all_quizzes %}
-                      <td class="px-4 py-2 min-w-32">
-                        <div class="flex items-center space-x-2">
-                          {% if quiz.title in student_data.quiz_scores %}
-                            {% with quiz_score=student_data.quiz_scores|get_item:quiz.title %}
-                              <input type="number" 
-                                     class="score-input" 
-                                     value="{{ quiz_score.score }}" 
-                                     min="0" 
-                                     max="{{ quiz_score.max_score }}" 
-                                     data-grade-id="{{ quiz_score.grade_id }}"
-                                     data-max-score="{{ quiz_score.max_score }}"
-                                     data-quiz-title="{{ quiz.title }}"
-                                     data-quiz-id="{{ quiz.id }}"
-                                     data-student-id="{{ student_data.student.id }}">
-                              <button class="save-score-btn px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 hidden" title="Save Score">
-                                <i class="fas fa-save"></i>
-                              </button>
-                            {% endwith %}
-                          {% else %}
-                            <input type="number" 
-                                   class="score-input" 
-                                   value="" 
-                                   min="0" 
-                                   max="100" 
-                                   data-grade-id=""
-                                   data-max-score="100"
-                                   data-quiz-title="{{ quiz.title }}"
-                                   data-quiz-id="{{ quiz.id }}"
-                                   data-student-id="{{ student_data.student.id }}"
-                                   placeholder="No grade">
-                            <button class="save-score-btn px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 hidden" title="Save Score">
-                              <i class="fas fa-save"></i>
-                            </button>
-                          {% endif %}
+                            <!-- Grade Range Filter -->
+                            <div>
+                                <label class="block text-[13px] font-semibold text-gray-800 mb-1">Grade Range</label>
+                                <select id="gradeRange" class="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-green-500 text-sm">
+                                    <option value="all">All Grades</option>
+                                    <option value="90-100">90-100 (Excellent)</option>
+                                    <option value="80-89">80-89 (Good)</option>
+                                    <option value="70-79">70-79 (Satisfactory)</option>
+                                    <option value="0-69">Below 70 (Needs Improvement)</option>
+                                </select>
+                            </div>
+                            <!-- Show Archived Toggle -->
+                            <div class="flex items-center mt-5 md:mt-0">
+                                <input type="checkbox" id="showArchived" class="mr-2">
+                                <label for="showArchived" class="text-sm text-gray-700">Show Archived</label>
+                            </div>
                         </div>
-                      </td>
-                    {% endfor %}
-                    
-                    <td class="px-4 py-2 font-semibold text-center avg-cell grade-good sticky right-20 bg-white z-10">{{ student_data.average|floatformat:2 }}</td>
-                    <td class="px-4 py-2 no-print sticky right-0 bg-white z-10">
-                      <button class="delete-btn px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600" title="Delete Record">
-                        <i class="fas fa-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  {% empty %}
-                  <tr class="border-t">
-                    <td colspan="{{ all_quizzes|length|add:4 }}" class="px-4 py-8 text-center text-gray-500">
-                      No quiz records found. Create some quizzes and grades to see data here.
-                    </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </main>
-      </div>
+                    </div>
+
+                    <!-- Class Statistics -->
+                    <div class="bg-white shadow rounded-lg p-3 mb-3">
+                        <h3 class="text-[15px] font-semibold text-gray-800 mb-2">Class Performance Summary</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-5 gap-2 text-center">
+                            <div class="bg-blue-50 p-2 rounded">
+                                <div class="text-lg font-bold text-blue-600" id="totalStudents">{{ total_students }}</div>
+                                <div class="text-xs text-gray-600">Total Students</div>
+                            </div>
+                            <div class="bg-green-50 p-2 rounded">
+                                <div class="text-lg font-bold text-green-600" id="classAverage">{{ class_average }}</div>
+                                <div class="text-xs text-gray-600">Class Average</div>
+                            </div>
+                            <div class="bg-yellow-50 p-2 rounded">
+                                <div class="text-lg font-bold text-yellow-600" id="highestScore">{{ highest_score }}</div>
+                                <div class="text-xs text-gray-600">Highest Score</div>
+                            </div>
+                            <div class="bg-red-50 p-2 rounded">
+                                <div class="text-lg font-bold text-red-600" id="lowestScore">{{ lowest_score }}</div>
+                                <div class="text-xs text-gray-600">Lowest Score</div>
+                            </div>
+                            <div class="bg-purple-50 p-2 rounded">
+                                <div class="text-lg font-bold text-purple-600" id="passingRate">{{ passing_rate }}%</div>
+                                <div class="text-xs text-gray-600">Passing Rate (≥75)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="bg-white shadow rounded-lg p-3 mb-3 flex flex-wrap justify-between items-center gap-3">
+                        <div class="flex items-center gap-3">
+                            <label class="flex items-center gap-1 text-sm text-gray-700">
+                                <input type="checkbox" id="selectAll">
+                                Select All
+                            </label>
+                            <button id="bulkDeleteBtn" class="bg-red-500 text-white px-2 py-1 text-sm rounded disabled:opacity-50" disabled>Delete Selected</button>
+                            <button id="bulkArchiveBtn" class="bg-gray-500 text-white px-2 py-1 text-sm rounded disabled:opacity-50" disabled>Archive Selected</button>
+                        </div>
+                        
+                        <!-- Display Options -->
+                        <div class="flex items-center gap-2">
+                            <label for="recordsPerPage" class="text-sm text-gray-700">Show:</label>
+                            <select id="recordsPerPage" class="px-2 py-1 border border-gray-300 rounded text-sm">
+                                <option>10</option>
+                                <option selected>25</option>
+                                <option>50</option>
+                            </select>
+                            <span class="text-sm">records</span>
+                            <button id="exportCSV" class="bg-green-500 text-white px-2 py-1 text-sm rounded">Export CSV</button>
+                            <button id="printBtn" class="bg-blue-500 text-white px-2 py-1 text-sm rounded">Print</button>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Records Table -->
+                    <div class="bg-white shadow rounded-lg p-3 overflow-x-auto quiz-table-container">
+                        <table class="w-full text-sm text-left quiz-table">
+                            <thead class="bg-green-100 text-green-800 font-semibold">
+                                <tr>
+                                    <th class="px-4 py-2 no-print">
+                                        <input type="checkbox" class="checkbox-custom" id="headerCheckbox">
+                                    </th>
+                                    <th class="px-4 py-2 sortable" data-sort="name">
+                                        Student Name
+                                        <span class="sort-icon"></span>
+                                    </th>
+                                    <th class="px-4 py-2 sortable" data-sort="subject">
+                                        Subject
+                                        <span class="sort-icon"></span>
+                                    </th>
+                                    {% for quiz in all_quizzes %}
+                                    <th class="px-4 py-2 sortable" data-sort="quiz{{ forloop.counter }}">
+                                        {{ quiz.title }}
+                                        <span class="sort-icon"></span>
+                                    </th>
+                                    {% endfor %}
+                                    <th class="px-4 py-2 sortable" data-sort="average">
+                                        Average
+                                        <span class="sort-icon"></span>
+                                    </th>
+                                    <th class="px-4 py-2 no-print">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="quizTableBody">
+                                {% for student_data in student_quiz_data %}
+                                <tr class="border-t student-row" data-subject="{{ student_data.class_obj.subject_code|lower }}" data-average="{{ student_data.average }}" data-is-archived="false">
+                                    <td class="px-4 py-2 no-print sticky left-0 bg-white z-10">
+                                        <input type="checkbox" class="row-checkbox checkbox-custom">
+                                    </td>
+                                    <td class="px-4 py-2 font-medium sticky left-12 bg-white z-10">{{ student_data.student.first_name }} {{ student_data.student.last_name }}</td>
+                                    <td class="px-4 py-2 sticky left-48 bg-white z-10">{{ student_data.class_obj.subject_code }}</td>
+                                    
+                                    {% for quiz in all_quizzes %}
+                                        <td class="px-4 py-2 min-w-32">
+                                            <div class="flex items-center space-x-2">
+                                                {% if quiz.title in student_data.quiz_scores %}
+                                                    {% with quiz_score=student_data.quiz_scores|get_item:quiz.title %}
+                                                        <input type="number" 
+                                                               class="score-input" 
+                                                               value="{{ quiz_score.score }}" 
+                                                               min="0" 
+                                                               max="{{ quiz_score.max_score }}" 
+                                                               data-grade-id="{{ quiz_score.grade_id }}"
+                                                               data-max-score="{{ quiz_score.max_score }}"
+                                                               data-quiz-title="{{ quiz.title }}"
+                                                               data-quiz-id="{{ quiz.id }}"
+                                                               data-student-id="{{ student_data.student.id }}">
+                                                        <button class="save-score-btn px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 hidden" title="Save Score">
+                                                            <i class="fas fa-save"></i>
+                                                        </button>
+                                                    {% endwith %}
+                                                {% else %}
+                                                    <input type="number" 
+                                                           class="score-input" 
+                                                           value="" 
+                                                           min="0" 
+                                                           max="100" 
+                                                           data-grade-id=""
+                                                           data-max-score="100"
+                                                           data-quiz-title="{{ quiz.title }}"
+                                                           data-quiz-id="{{ quiz.id }}"
+                                                           data-student-id="{{ student_data.student.id }}"
+                                                           placeholder="No grade">
+                                                    <button class="save-score-btn px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 hidden" title="Save Score">
+                                                        <i class="fas fa-save"></i>
+                                                    </button>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    {% endfor %}
+                                    
+                                    <td class="px-4 py-2 font-semibold text-center avg-cell grade-good sticky right-20 bg-white z-10">{{ student_data.average|floatformat:2 }}</td>
+                                    <td class="px-4 py-2 no-print sticky right-0 bg-white z-10">
+                                        <button class="delete-btn px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600" title="Delete Record">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr class="border-t">
+                                    <td colspan="{{ all_quizzes|length|add:4 }}" class="px-4 py-8 text-center text-gray-500">
+                                        No quiz records found. Create some quizzes and grades to see data here.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
     </div>
 
     <script>
-      // Global variables
-      let currentSort = { column: null, direction: 'asc' };
-      let currentPage = 1;
-      let recordsPerPage = 25;
-      let allStudentRows = [];
+        // Global variables
+        let currentSort = { column: null, direction: 'asc' };
+        let currentPage = 1;
+        let recordsPerPage = 25;
+        let allStudentRows = [];
 
-      // Toggle sidebar
-      const toggleButton = document.getElementById("toggleSidebar");
-      const sidebar = document.getElementById("sidebar");
-      toggleButton.addEventListener("click", () => {
-        sidebar.classList.toggle("hidden");
-      });
-
-      // Show toast notification
-      function showToast(message, type = 'success') {
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
-        toast.textContent = message;
-        document.body.appendChild(toast);
-        
-        setTimeout(() => {
-          toast.classList.add('opacity-0');
-          setTimeout(() => toast.remove(), 300);
-        }, 3000);
-      }
-
-      // Update last refreshed time
-      function updateLastRefreshed() {
-        const now = new Date();
-        document.getElementById('lastUpdated').textContent = `Last updated: ${now.toLocaleTimeString()}`;
-      }
-
-      // Apply grade color coding
-      function applyGradeColoring() {
-        document.querySelectorAll('.avg-cell').forEach(cell => {
-          const score = parseFloat(cell.textContent);
-          cell.classList.remove('grade-excellent', 'grade-good', 'grade-needs-improvement');
-          
-          if (score >= 90) {
-            cell.classList.add('grade-excellent');
-          } else if (score >= 80) {
-            cell.classList.add('grade-good');
-          } else if (score < 75) {
-            cell.classList.add('grade-needs-improvement');
-          }
+        // Toggle sidebar
+        const toggleButton = document.getElementById("toggleSidebar");
+        const sidebar = document.getElementById("sidebar");
+        toggleButton.addEventListener("click", () => {
+            sidebar.classList.toggle("hidden");
         });
-      }
 
-      // Calculate averages
-      function updateAverages() {
-        document.querySelectorAll("#quizTableBody tr.student-row").forEach(row => {
-          const scores = row.querySelectorAll(".score-input");
-          let total = 0;
-          let count = 0;
-          
-          scores.forEach(input => {
-            const val = parseFloat(input.value);
-            if (!isNaN(val) && val >= 0 && val <= 100) {
-              total += val;
-              count++;
-            }
-          });
-          
-          const avgCell = row.querySelector(".avg-cell");
-          if (count > 0) {
-            const average = (total / count).toFixed(2);
-            avgCell.textContent = average;
-          } else {
-            avgCell.textContent = "0.00";
-          }
-        });
-        
-        applyGradeColoring();
-        updateClassStatistics();
-      }
-
-      // Update class statistics
-      function updateClassStatistics() {
-        const visibleRows = document.querySelectorAll("#quizTableBody tr.student-row:not([style*='display: none'])");
-        const averages = Array.from(visibleRows).map(row => parseFloat(row.querySelector('.avg-cell').textContent));
-        
-        const totalStudents = averages.length;
-        const classAverage = totalStudents > 0 ? (averages.reduce((a, b) => a + b, 0) / totalStudents).toFixed(2) : 0;
-        const highestScore = totalStudents > 0 ? Math.max(...averages).toFixed(2) : 0;
-        const lowestScore = totalStudents > 0 ? Math.min(...averages).toFixed(2) : 0;
-        const passingCount = averages.filter(avg => avg >= 75).length;
-        const passingRate = totalStudents > 0 ? Math.round((passingCount / totalStudents) * 100) : 0;
-        
-        document.getElementById('totalStudents').textContent = totalStudents;
-        document.getElementById('classAverage').textContent = classAverage;
-        document.getElementById('highestScore').textContent = highestScore;
-        document.getElementById('lowestScore').textContent = lowestScore;
-        document.getElementById('passingRate').textContent = passingRate + '%';
-      }
-
-      // Filter by subject
-function filterBySubject(subject) {
-    const rows = document.querySelectorAll(".student-row");
-    
-    rows.forEach(row => {
-        const rowSubject = row.dataset.subject.toLowerCase();
-        if (subject === "all" || rowSubject === subject.toLowerCase()) {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            Swal.fire({
+                position: 'top-end',
+                icon: type === 'success' ? 'success' : 'error',
+                title: message,
+                showConfirmButton: false,
+                timer: 1500
+            });
         }
-    });
-    
-    updateClassStatistics();
-    updatePagination();
-}
-        // Update button styles
-        filterButtons.forEach(btn => {
-          if (btn.dataset.subject === subject) {
-            btn.classList.remove("bg-gray-200", "hover:bg-gray-300");
-            btn.classList.add("bg-green-600", "text-white");
-          } else {
-            btn.classList.remove("bg-green-600", "text-white");
-            btn.classList.add("bg-gray-200", "hover:bg-gray-300");
-          }
-        });
-        
-        // Show/hide rows
-        rows.forEach(row => {
-          if (subject === "all" || row.dataset.subject === subject) {
-            row.style.display = "";
-          } else {
-            row.style.display = "none";
-          }
-        });
-        
-        updateClassStatistics();
-        updatePagination();
-      
 
-      // Search functionality
-function searchStudents(query) {
-    const rows = document.querySelectorAll(".student-row");
-    const searchTerm = query.toLowerCase().trim();
-    
-    rows.forEach(row => {
-        const studentName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-        if (studentName.includes(searchTerm)) {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
+        // Update last refreshed time
+        function updateLastRefreshed() {
+            const now = new Date();
+            document.getElementById('lastUpdated').textContent = `Last updated: ${now.toLocaleTimeString()}`;
         }
-    });
-    
-    updateClassStatistics();
-    updatePagination();
-}
 
-      // Grade range filter
-function filterByGradeRange(range) {
-    const rows = document.querySelectorAll(".student-row");
-    
-    rows.forEach(row => {
-        const average = parseFloat(row.querySelector('.avg-cell').textContent) || 0;
-        let isVisible = true;
-        
-        switch (range) {
-            case '90-100':
-                isVisible = average >= 90;
-                break;
-            case '80-89':
-                isVisible = average >= 80 && average < 90;
-                break;
-            case '70-79':
-                isVisible = average >= 70 && average < 80;
-                break;
-            case '0-69':
-                isVisible = average < 70;
-                break;
-            default:
-                isVisible = true;
+        // Apply grade color coding
+        function applyGradeColoring() {
+            document.querySelectorAll('.avg-cell').forEach(cell => {
+                const score = parseFloat(cell.textContent);
+                cell.classList.remove('grade-excellent', 'grade-good', 'grade-needs-improvement');
+                
+                if (score >= 90) {
+                    cell.classList.add('grade-excellent');
+                } else if (score >= 80) {
+                    cell.classList.add('grade-good');
+                } else if (score < 75) {
+                    cell.classList.add('grade-needs-improvement');
+                }
+            });
         }
-        
-        row.style.display = isVisible ? "" : "none";
-    });
-    
-    updateClassStatistics();
-    updatePagination();
-}
 
-      // Toggle archived records
-      function toggleArchivedRecords(showArchived) {
-        const rows = document.querySelectorAll(".student-row");
-        
-        rows.forEach(row => {
-          const isArchived = row.dataset.isArchived === 'true';
-          
-          if (showArchived) {
-            // Show all rows when showing archived
-            row.style.display = "";
-          } else {
-            // Hide archived rows when not showing archived
-            if (isArchived) {
-              row.style.display = "none";
+        // Calculate averages
+        function updateAverages() {
+            document.querySelectorAll("#quizTableBody tr.student-row").forEach(row => {
+                const scores = row.querySelectorAll(".score-input");
+                let total = 0;
+                let count = 0;
+                
+                scores.forEach(input => {
+                    const val = parseFloat(input.value);
+                    if (!isNaN(val) && val >= 0 && val <= 100) {
+                        total += val;
+                        count++;
+                    }
+                });
+                
+                const avgCell = row.querySelector(".avg-cell");
+                if (count > 0) {
+                    const average = (total / count).toFixed(2);
+                    avgCell.textContent = average;
+                    row.dataset.average = average;
+                } else {
+                    avgCell.textContent = "0.00";
+                    row.dataset.average = 0;
+                }
+            });
+            
+            applyGradeColoring();
+            updateClassStatistics();
+        }
+
+        // Update class statistics
+        function updateClassStatistics() {
+            const visibleRows = document.querySelectorAll("#quizTableBody tr.student-row:not([style*='display: none'])");
+            const averages = Array.from(visibleRows).map(row => parseFloat(row.dataset.average) || 0);
+            
+            const totalStudents = averages.length;
+            const classAverage = totalStudents > 0 ? (averages.reduce((a, b) => a + b, 0) / totalStudents).toFixed(2) : 0;
+            const highestScore = totalStudents > 0 ? Math.max(...averages).toFixed(2) : 0;
+            const lowestScore = totalStudents > 0 ? Math.min(...averages).toFixed(2) : 0;
+            const passingCount = averages.filter(avg => avg >= 75).length;
+            const passingRate = totalStudents > 0 ? Math.round((passingCount / totalStudents) * 100) : 0;
+            
+            document.getElementById('totalStudents').textContent = totalStudents;
+            document.getElementById('classAverage').textContent = classAverage;
+            document.getElementById('highestScore').textContent = highestScore;
+            document.getElementById('lowestScore').textContent = lowestScore;
+            document.getElementById('passingRate').textContent = passingRate + '%';
+        }
+
+        // Filter by subject
+        function filterBySubject(subject) {
+            const rows = document.querySelectorAll(".student-row");
+            
+            rows.forEach(row => {
+                const rowSubject = row.dataset.subject.toLowerCase();
+                if (subject === "all" || rowSubject === subject.toLowerCase()) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+            
+            updateClassStatistics();
+            updatePagination();
+        }
+
+        // Search functionality
+        function searchStudents(query) {
+            const rows = document.querySelectorAll(".student-row");
+            const searchTerm = query.toLowerCase().trim();
+            
+            rows.forEach(row => {
+                const studentName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                if (studentName.includes(searchTerm)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+            
+            updateClassStatistics();
+            updatePagination();
+        }
+
+        // Grade range filter
+        function filterByGradeRange(range) {
+            const rows = document.querySelectorAll(".student-row");
+            
+            rows.forEach(row => {
+                const average = parseFloat(row.dataset.average) || 0;
+                let isVisible = true;
+                
+                switch (range) {
+                    case '90-100':
+                        isVisible = average >= 90;
+                        break;
+                    case '80-89':
+                        isVisible = average >= 80 && average < 90;
+                        break;
+                    case '70-79':
+                        isVisible = average >= 70 && average < 80;
+                        break;
+                    case '0-69':
+                        isVisible = average < 70;
+                        break;
+                    default:
+                        isVisible = true;
+                }
+                
+                row.style.display = isVisible ? "" : "none";
+            });
+            
+            updateClassStatistics();
+            updatePagination();
+        }
+
+        // Toggle archived records
+        function toggleArchivedRecords(showArchived) {
+            const rows = document.querySelectorAll(".student-row");
+            
+            rows.forEach(row => {
+                const isArchived = row.dataset.isArchived === 'true';
+                
+                if (showArchived) {
+                    // Show all rows when showing archived
+                    row.style.display = "";
+                } else {
+                    // Hide archived rows when not showing archived
+                    if (isArchived) {
+                        row.style.display = "none";
+                    } else {
+                        row.style.display = "";
+                    }
+                }
+            });
+            
+            updateClassStatistics();
+            updatePagination();
+        }
+
+        // Sorting functionality
+        function sortTable(column) {
+            const tbody = document.getElementById('quizTableBody');
+            const rows = Array.from(tbody.querySelectorAll('tr.student-row'));
+            const direction = currentSort.column === column && currentSort.direction === 'asc' ? 'desc' : 'asc';
+            
+            // Update sort indicators
+            document.querySelectorAll('.sortable').forEach(th => {
+                th.classList.remove('sort-asc', 'sort-desc');
+            });
+            document.querySelector(`[data-sort="${column}"]`).classList.add(`sort-${direction}`);
+            
+            currentSort = { column, direction };
+            
+            rows.sort((a, b) => {
+                let aVal, bVal;
+                
+                switch (column) {
+                    case 'name':
+                        aVal = a.querySelector('td:nth-child(2)').textContent;
+                        bVal = b.querySelector('td:nth-child(2)').textContent;
+                        break;
+                    case 'subject':
+                        aVal = a.querySelector('td:nth-child(3)').textContent;
+                        bVal = b.querySelector('td:nth-child(3)').textContent;
+                        break;
+                    case 'average':
+                        aVal = parseFloat(a.dataset.average) || 0;
+                        bVal = parseFloat(b.dataset.average) || 0;
+                        break;
+                    default:
+                        // Handle quiz columns dynamically
+                        if (column.startsWith('quiz')) {
+                            const quizIndex = parseInt(column.replace('quiz', ''));
+                            const inputA = a.querySelector(`td:nth-child(${3 + quizIndex}) input`);
+                            const inputB = b.querySelector(`td:nth-child(${3 + quizIndex}) input`);
+                            aVal = parseFloat(inputA ? inputA.value : 0) || 0;
+                            bVal = parseFloat(inputB ? inputB.value : 0) || 0;
+                        } else {
+                            aVal = 0;
+                            bVal = 0;
+                        }
+                }
+                
+                if (typeof aVal === 'string') {
+                    return direction === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+                } else {
+                    return direction === 'asc' ? aVal - bVal : bVal - aVal;
+                }
+            });
+            
+            // Rebuild table with sorted rows
+            rows.forEach(row => {
+                tbody.appendChild(row);
+            });
+        }
+
+        // Bulk selection
+        function updateBulkActions() {
+            const checkboxes = document.querySelectorAll('.row-checkbox');
+            const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
+            const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+            const bulkArchiveBtn = document.getElementById('bulkArchiveBtn');
+            
+            if (checkedBoxes.length > 0) {
+                bulkDeleteBtn.disabled = false;
+                bulkArchiveBtn.disabled = false;
             } else {
-              row.style.display = "";
+                bulkDeleteBtn.disabled = true;
+                bulkArchiveBtn.disabled = true;
             }
-          }
-        });
-        
-        updateClassStatistics();
-        updatePagination();
-      }
-
-      // Sorting functionality
-      function sortTable(column) {
-        const tbody = document.getElementById('quizTableBody');
-        const rows = Array.from(tbody.querySelectorAll('tr.student-row'));
-        const direction = currentSort.column === column && currentSort.direction === 'asc' ? 'desc' : 'asc';
-        
-        // Update sort indicators
-        document.querySelectorAll('.sortable').forEach(th => {
-          th.classList.remove('sort-asc', 'sort-desc');
-        });
-        document.querySelector(`[data-sort="${column}"]`).classList.add(`sort-${direction}`);
-        
-        currentSort = { column, direction };
-        
-        rows.sort((a, b) => {
-          let aVal, bVal;
-          
-          switch (column) {
-            case 'name':
-              aVal = a.querySelector('td:nth-child(2)').textContent;
-              bVal = b.querySelector('td:nth-child(2)').textContent;
-              break;
-            case 'subject':
-              aVal = a.querySelector('td:nth-child(3)').textContent;
-              bVal = b.querySelector('td:nth-child(3)').textContent;
-              break;
-            case 'average':
-              aVal = parseFloat(a.querySelector('.avg-cell').textContent) || 0;
-              bVal = parseFloat(b.querySelector('.avg-cell').textContent) || 0;
-              break;
-            default:
-              // Handle quiz columns dynamically
-              if (column.startsWith('quiz')) {
-                const quizIndex = parseInt(column.replace('quiz', ''));
-                const inputA = a.querySelector(`td:nth-child(${3 + quizIndex}) input`);
-                const inputB = b.querySelector(`td:nth-child(${3 + quizIndex}) input`);
-                aVal = parseFloat(inputA ? inputA.value : 0) || 0;
-                bVal = parseFloat(inputB ? inputB.value : 0) || 0;
-              } else {
-                aVal = 0;
-                bVal = 0;
-              }
-          }
-          
-          if (typeof aVal === 'string') {
-            return direction === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-          } else {
-            return direction === 'asc' ? aVal - bVal : bVal - aVal;
-          }
-        });
-        
-        // Rebuild table with sorted rows
-        rows.forEach(row => {
-          tbody.appendChild(row);
-        });
-      }
-
-      // Bulk selection
-      function updateBulkActions() {
-        const checkboxes = document.querySelectorAll('.row-checkbox');
-        const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
-        const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
-        const bulkArchiveBtn = document.getElementById('bulkArchiveBtn');
-        
-        if (checkedBoxes.length > 0) {
-          bulkDeleteBtn.disabled = false;
-          bulkArchiveBtn.disabled = false;
-        } else {
-          bulkDeleteBtn.disabled = true;
-          bulkArchiveBtn.disabled = true;
+            
+            // Update select all checkbox
+            const selectAllCheckbox = document.getElementById('selectAll');
+            const headerCheckbox = document.getElementById('headerCheckbox');
+            
+            if (checkedBoxes.length === checkboxes.length && checkboxes.length > 0) {
+                selectAllCheckbox.checked = true;
+                headerCheckbox.checked = true;
+                selectAllCheckbox.indeterminate = false;
+                headerCheckbox.indeterminate = false;
+            } else if (checkedBoxes.length > 0) {
+                selectAllCheckbox.checked = false;
+                headerCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = true;
+                headerCheckbox.indeterminate = true;
+            } else {
+                selectAllCheckbox.checked = false;
+                headerCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = false;
+                headerCheckbox.indeterminate = false;
+            }
         }
-        
-        // Update select all checkbox
-        const selectAllCheckbox = document.getElementById('selectAll');
-        const headerCheckbox = document.getElementById('headerCheckbox');
-        
-        if (checkedBoxes.length === checkboxes.length && checkboxes.length > 0) {
-          selectAllCheckbox.checked = true;
-          headerCheckbox.checked = true;
-          selectAllCheckbox.indeterminate = false;
-          headerCheckbox.indeterminate = false;
-        } else if (checkedBoxes.length > 0) {
-          selectAllCheckbox.checked = false;
-          headerCheckbox.checked = false;
-          selectAllCheckbox.indeterminate = true;
-          headerCheckbox.indeterminate = true;
-        } else {
-          selectAllCheckbox.checked = false;
-          headerCheckbox.checked = false;
-          selectAllCheckbox.indeterminate = false;
-          headerCheckbox.indeterminate = false;
+
+        // Export to CSV
+        function exportToCSV() {
+            const rows = document.querySelectorAll("#quizTableBody tr.student-row:not([style*='display: none'])");
+            let csv = "Student Name,Subject";
+            
+            // Add quiz headers
+            const quizHeaders = document.querySelectorAll('thead th[data-sort^="quiz"]');
+            quizHeaders.forEach(header => {
+                csv += `,"${header.textContent.trim()}"`;
+            });
+            csv += ",Average\n";
+            
+            rows.forEach(row => {
+                const name = row.querySelector('td:nth-child(2)').textContent;
+                const subject = row.querySelector('td:nth-child(3)').textContent;
+                const average = row.querySelector('.avg-cell').textContent;
+                
+                csv += `"${name}","${subject}"`;
+                
+                // Add quiz scores
+                const scoreInputs = row.querySelectorAll('.score-input');
+                scoreInputs.forEach(input => {
+                    csv += `,"${input.value || ''}"`;
+                });
+                
+                csv += `,"${average}"\n`;
+            });
+            
+            // Create download link
+            const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `quiz_records_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
-      }
 
-      // Export to CSV
-      function exportToCSV() {
-        const rows = document.querySelectorAll("#quizTableBody tr.student-row:not([style*='display: none'])");
-        let csv = "Student Name,Subject";
-        
-        // Add quiz headers
-        const quizHeaders = document.querySelectorAll('thead th[data-sort^="quiz"]');
-        quizHeaders.forEach(header => {
-          csv += `,"${header.textContent.trim()}"`;
-        });
-        csv += ",Average\n";
-        
-        rows.forEach(row => {
-          const name = row.querySelector('td:nth-child(2)').textContent;
-          const subject = row.querySelector('td:nth-child(3)').textContent;
-          const average = row.querySelector('.avg-cell').textContent;
-          
-          csv += `"${name}","${subject}"`;
-          
-          // Add quiz scores
-          const scoreInputs = row.querySelectorAll('.score-input');
-          scoreInputs.forEach(input => {
-            csv += `,"${input.value || ''}"`;
-          });
-          
-          csv += `,"${average}"\n`;
-        });
-        
-        // Create download link
-        const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', `quiz_records_${new Date().toISOString().split('T')[0]}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
+        // Print functionality
+        function printTable() {
+            // Clone the table container
+            const printContent = document.querySelector('.quiz-table-container').cloneNode(true);
+            
+            // Remove action buttons and checkboxes
+            printContent.querySelectorAll('.no-print').forEach(el => el.remove());
+            
+            // Create a new window for printing
+            const printWindow = window.open('', '', 'width=800,height=600');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Quiz Records</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; }
+                            table { width: 100%; border-collapse: collapse; }
+                            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                            th { background-color: #f2f2f2; }
+                            .grade-excellent { background-color: #dcfce7; }
+                            .grade-good { background-color: #fef3c7; }
+                            .grade-needs-improvement { background-color: #fee2e2; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>Quiz Records</h1>
+                        <p>Printed on ${new Date().toLocaleString()}</p>
+                        ${printContent.innerHTML}
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            
+            // Wait for content to load before printing
+            printWindow.onload = function() {
+                printWindow.focus();
+                printWindow.print();
+                printWindow.close();
+            };
+        }
 
-      // Print functionality
-      document.getElementById('printBtn').addEventListener('click', () => {
-        // Clone the table container
-        const printContent = document.querySelector('.quiz-table-container').cloneNode(true);
-        
-        // Remove action buttons and checkboxes
-        printContent.querySelectorAll('.no-print').forEach(el => el.remove());
-        
-        // Create a new window for printing
-        const printWindow = window.open('', '', 'width=800,height=600');
-        printWindow.document.write(`
-            <html>
-                <head>
-                    <title>Quiz Records</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; }
-                        table { width: 100%; border-collapse: collapse; }
-                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                        th { background-color: #f2f2f2; }
-                        .grade-excellent { background-color: #dcfce7; }
-                        .grade-good { background-color: #fef3c7; }
-                        .grade-needs-improvement { background-color: #fee2e2; }
-                    </style>
-                </head>
-                <body>
-                    <h1>Quiz Records</h1>
-                    <p>Printed on ${new Date().toLocaleString()}</p>
-                    ${printContent.innerHTML}
-                </body>
-            </html>
-        `);
-        printWindow.document.close();
-        
-        // Wait for content to load before printing
-        printWindow.onload = function() {
-            printWindow.focus();
-            printWindow.print();
-            printWindow.close();
-        };
-      });
+        // Pagination
+        function updatePagination() {
+            const visibleRows = Array.from(document.querySelectorAll("#quizTableBody tr.student-row")).filter(row => 
+                row.style.display !== 'none'
+            );
+            const totalRecords = visibleRows.length;
+            const totalPages = Math.ceil(totalRecords / recordsPerPage);
+            
+            const showingFrom = totalRecords > 0 ? ((currentPage - 1) * recordsPerPage) + 1 : 0;
+            const showingTo = Math.min(currentPage * recordsPerPage, totalRecords);
+            
+            // Show/hide rows based on pagination
+            visibleRows.forEach((row, index) => {
+                const start = (currentPage - 1) * recordsPerPage;
+                const end = start + recordsPerPage;
+                
+                if (index >= start && index < end) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
 
-      // Pagination
-      function updatePagination() {
-        const visibleRows = Array.from(document.querySelectorAll("#quizTableBody tr.student-row")).filter(row => 
-            row.style.display !== 'none'
-        );
-        const totalRecords = visibleRows.length;
-        const totalPages = Math.ceil(totalRecords / recordsPerPage);
-        
-        const showingFrom = totalRecords > 0 ? ((currentPage - 1) * recordsPerPage) + 1 : 0;
-        const showingTo = Math.min(currentPage * recordsPerPage, totalRecords);
-        
-        // Show/hide rows based on pagination
-        visibleRows.forEach((row, index) => {
-          const start = (currentPage - 1) * recordsPerPage;
-          const end = start + recordsPerPage;
-          
-          if (index >= start && index < end) {
-            row.style.display = "";
-          } else {
-            row.style.display = "none";
-          }
-        });
-      }
+        // Delete record
+        function deleteRecord(button) {
+            const row = button.closest('tr');
+            const gradeId = row.querySelector('.score-input')?.dataset.gradeId;
+            
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/delete-quiz-grade/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        body: JSON.stringify({ grade_id: gradeId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            row.remove();
+                            updateClassStatistics();
+                            updatePagination();
+                            Swal.fire(
+                                'Deleted!',
+                                'The record has been deleted.',
+                                'success'
+                            );
+                        } else {
+                            Swal.fire(
+                                'Error!',
+                                'Failed to delete record: ' + data.error,
+                                'error'
+                            );
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire(
+                            'Error!',
+                            'Failed to delete record',
+                            'error'
+                        );
+                    });
+                }
+            });
+        }
 
-      // Delete record function
-function deleteRecord(button) {
-    const row = button.closest('tr');
-    const gradeId = row.querySelector('.score-input')?.dataset.gradeId;
-    
-    // SweetAlert confirmation
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            fetch('/delete-quiz-grade/', {
+        // Archive records
+        function archiveRecords(gradeIds) {
+            fetch('/archive-quiz-grades/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': getCookie('csrftoken')
                 },
-                body: JSON.stringify({ grade_id: gradeId })
+                body: JSON.stringify({ grade_ids: gradeIds })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    row.remove();
+                    showToast(`${gradeIds.length} records archived successfully!`, 'success');
+                    // Optionally remove or hide the rows
+                    document.querySelectorAll('.row-checkbox:checked').forEach(checkbox => {
+                        checkbox.closest('tr').remove();
+                    });
                     updateClassStatistics();
                     updatePagination();
-                    Swal.fire(
-                        'Deleted!',
-                        'The record has been deleted.',
-                        'success'
-                    );
                 } else {
-                    Swal.fire(
-                        'Error!',
-                        'Failed to delete record: ' + data.error,
-                        'error'
-                    );
+                    showToast('Failed to archive records: ' + data.error, 'error');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                Swal.fire(
-                    'Error!',
-                    'Failed to delete record',
-                    'error'
-                );
+                showToast('Failed to archive records', 'error');
             });
         }
-    });
-}
-      
-      // Get CSRF token
-      function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-          const cookies = document.cookie.split(';');
-          for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-              break;
-            }
-          }
-        }
-        return cookieValue;
-      }
 
-      // Initialize and set up event listeners
-      document.addEventListener("DOMContentLoaded", () => {
-        allStudentRows = Array.from(document.querySelectorAll('.student-row'));
-        
-        // Set up input event listeners for all score inputs
-        document.querySelectorAll(".score-input").forEach(input => {
-        const saveBtn = input.nextElementSibling;
-  
-        // Store original value
-        input.dataset.originalValue = input.value;
-  
-  input.addEventListener("input", function() {
-        const maxScore = parseFloat(this.dataset.maxScore) || 100;
-        const value = parseFloat(this.value);
-        
-        if (isNaN(value) || value < 0) {
-            this.value = '';
-        } else if (value > maxScore) {
-            this.value = maxScore;
-        }
-        
-        // Show save button if value changed
-        if (this.value !== this.dataset.originalValue) {
-            saveBtn.classList.remove('hidden');
-        } else {
-            saveBtn.classList.add('hidden');
-        }
-    });
-  
-  // Add click handler to save button
-    saveBtn.addEventListener('click', async function() {
-        const input = this.previousElementSibling;
-        const gradeId = input.dataset.gradeId;
-        const quizId = input.dataset.quizId;
-        const studentId = input.dataset.studentId;
-        const newScore = input.value;
-        
-        if (newScore === input.dataset.originalValue) {
-            this.classList.add('hidden');
-            return;
-        }
-        
-        try {
-            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            this.disabled = true;
-            
-            const response = await fetch('/update-quiz-score/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: JSON.stringify({
-                    grade_id: gradeId,
-                    quiz_id: quizId,
-                    student_id: studentId,
-                    score: newScore
-                })
-            });
-            
-            const data = await response.json();
-            
-            if (data.success) {
-                // Update the original value
-                input.dataset.originalValue = newScore;
-                input.dataset.gradeId = data.grade_id || gradeId;
-                
-                // Update the average
-                updateAverages();
-                
-                // Show success toast
-                showToast('Score saved successfully!', 'success');
-                
-                // Hide save button after delay
-                setTimeout(() => {
-                    this.classList.add('hidden');
-                    this.innerHTML = '<i class="fas fa-save"></i>';
-                    this.disabled = false;
-                }, 1500);
-            } else {
-                throw new Error(data.error || 'Failed to save score');
+        // Get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
             }
-        } catch (error) {
-            console.error('Error saving score:', error);
-            showToast('Failed to save score: ' + error.message, 'error');
-            this.innerHTML = '<i class="fas fa-save"></i>';
-            this.disabled = false;
+            return cookieValue;
         }
-    });
-});
-        
-        // Set up filter buttons
-        document.querySelectorAll(".filter-btn").forEach(button => {
-          button.addEventListener("click", () => {
-            filterBySubject(button.dataset.subject);
-          });
-        });
-        
-        // Search functionality
-        document.getElementById('studentSearch').addEventListener('input', (e) => {
-          searchStudents(e.target.value);
-        });
-        
-        // Grade range filter
-        document.getElementById('gradeRange').addEventListener('change', (e) => {
-          filterByGradeRange(e.target.value);
-        });
-        
-        // Show archived toggle
-        document.getElementById('showArchived').addEventListener('change', function() {
-          toggleArchivedRecords(this.checked);
-        });
-        
-        // Sorting
-        document.querySelectorAll('.sortable').forEach(th => {
-          th.addEventListener('click', () => {
-            sortTable(th.dataset.sort);
-          });
-        });
-        
-        // Delete buttons
-        document.querySelectorAll('.delete-btn').forEach(button => {
-          button.addEventListener('click', () => {
-            deleteRecord(button);
-          });
-        });
-        
-        // Bulk selection
-        document.getElementById('selectAll').addEventListener('change', (e) => {
-          const checkboxes = document.querySelectorAll('.row-checkbox');
-          checkboxes.forEach(checkbox => {
-            checkbox.checked = e.target.checked;
-          });
-          updateBulkActions();
-        });
-        
-        document.getElementById('headerCheckbox').addEventListener('change', (e) => {
-          const checkboxes = document.querySelectorAll('.row-checkbox');
-          checkboxes.forEach(checkbox => {
-            checkbox.checked = e.target.checked;
-          });
-          updateBulkActions();
-        });
-        
-        document.querySelectorAll('.row-checkbox').forEach(checkbox => {
-          checkbox.addEventListener('change', updateBulkActions);
-        });
-        
-        // Bulk actions
-        document.getElementById('bulkDeleteBtn').addEventListener('click', () => {
-          const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
-          if (checkedBoxes.length > 0 && confirm(`Are you sure you want to delete ${checkedBoxes.length} records?`)) {
-            const gradeIds = Array.from(checkedBoxes).map(checkbox => {
-              return checkbox.closest('tr').querySelector('.score-input')?.dataset.gradeId;
-            }).filter(id => id);
-            
-            fetch('/delete-quiz-grade/', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
-              },
-              body: JSON.stringify({ grade_ids: gradeIds })
-            })
-            .then(response => response.json())
-            .then(data => {
-              if (data.success) {
-                showToast(`${gradeIds.length} records deleted successfully!`, 'success');
-                checkedBoxes.forEach(checkbox => checkbox.closest('tr').remove());
-                updateClassStatistics();
-                updatePagination();
-              } else {
-                showToast('Failed to delete records: ' + data.error, 'error');
-              }
-            })
-            .catch(error => {
-              console.error('Error:', error);
-              showToast('Failed to delete records', 'error');
+
+        // Initialize score inputs
+        function initializeScoreInputs() {
+            document.querySelectorAll(".score-input").forEach(input => {
+                const saveBtn = input.nextElementSibling;
+                
+                // Only initialize if not already initialized
+                if (!input.dataset.initialized) {
+                    input.dataset.originalValue = input.value;
+                    input.dataset.initialized = "true";
+                    
+                    input.addEventListener("input", function() {
+                        const maxScore = parseFloat(this.dataset.maxScore) || 100;
+                        const value = parseFloat(this.value);
+                        
+                        if (isNaN(value) || value < 0) {
+                            this.value = '';
+                        } else if (value > maxScore) {
+                            this.value = maxScore;
+                        }
+                        
+                        // Show save button if value changed
+                        if (this.value !== this.dataset.originalValue) {
+                            saveBtn.classList.remove('hidden');
+                        } else {
+                            saveBtn.classList.add('hidden');
+                        }
+                    });
+                    
+                    saveBtn.addEventListener("click", async function() {
+                        const input = this.previousElementSibling;
+                        const gradeId = input.dataset.gradeId;
+                        const quizId = input.dataset.quizId;
+                        const studentId = input.dataset.studentId;
+                        const newScore = input.value;
+                        
+                        if (newScore === input.dataset.originalValue) {
+                            this.classList.add('hidden');
+                            return;
+                        }
+                        
+                        try {
+                            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                            this.disabled = true;
+                            
+                            const response = await fetch('/update-quiz-score/', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': getCookie('csrftoken')
+                                },
+                                body: JSON.stringify({
+                                    grade_id: gradeId,
+                                    quiz_id: quizId,
+                                    student_id: studentId,
+                                    score: newScore
+                                })
+                            });
+                            
+                            const data = await response.json();
+                            
+                            if (data.success) {
+                                // Update the original value
+                                input.dataset.originalValue = newScore;
+                                input.dataset.gradeId = data.grade_id || gradeId;
+                                
+                                // Update the average
+                                updateAverages();
+                                
+                                // Show success toast
+                                showToast('Score saved successfully!', 'success');
+                                
+                                // Hide save button after delay
+                                setTimeout(() => {
+                                    this.classList.add('hidden');
+                                    this.innerHTML = '<i class="fas fa-save"></i>';
+                                    this.disabled = false;
+                                }, 1500);
+                            } else {
+                                throw new Error(data.error || 'Failed to save score');
+                            }
+                        } catch (error) {
+                            console.error('Error saving score:', error);
+                            showToast('Failed to save score: ' + error.message, 'error');
+                            this.innerHTML = '<i class="fas fa-save"></i>';
+                            this.disabled = false;
+                        }
+                    });
+                }
             });
-          }
-        });
-        
-        document.getElementById('bulkArchiveBtn').addEventListener('click', () => {
-          const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
-          if (checkedBoxes.length > 0 && confirm(`Are you sure you want to archive ${checkedBoxes.length} records?`)) {
-            const gradeIds = Array.from(checkedBoxes).map(checkbox => {
-              return checkbox.closest('tr').querySelector('.score-input')?.dataset.gradeId;
-            }).filter(id => id);
+        }
+
+        // Initialize and set up event listeners
+        document.addEventListener("DOMContentLoaded", () => {
+            allStudentRows = Array.from(document.querySelectorAll('.student-row'));
             
-            archiveRecords(gradeIds);
-          }
+            // Initialize score inputs
+            initializeScoreInputs();
+            
+            // Set up filter buttons
+            document.querySelectorAll(".filter-btn").forEach(button => {
+                button.addEventListener("click", () => {
+                    filterBySubject(button.dataset.subject);
+                });
+            });
+            
+            // Search functionality
+            document.getElementById('studentSearch').addEventListener('input', (e) => {
+                searchStudents(e.target.value);
+            });
+            
+            // Grade range filter
+            document.getElementById('gradeRange').addEventListener('change', (e) => {
+                filterByGradeRange(e.target.value);
+            });
+            
+            // Show archived toggle
+            document.getElementById('showArchived').addEventListener('change', function() {
+                toggleArchivedRecords(this.checked);
+            });
+            
+            // Sorting
+            document.querySelectorAll('.sortable').forEach(th => {
+                th.addEventListener('click', () => {
+                    sortTable(th.dataset.sort);
+                });
+            });
+            
+            // Delete buttons
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    deleteRecord(button);
+                });
+            });
+            
+            // Bulk selection
+            document.getElementById('selectAll').addEventListener('change', (e) => {
+                const checkboxes = document.querySelectorAll('.row-checkbox');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = e.target.checked;
+                });
+                updateBulkActions();
+            });
+            
+            document.getElementById('headerCheckbox').addEventListener('change', (e) => {
+                const checkboxes = document.querySelectorAll('.row-checkbox');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = e.target.checked;
+                });
+                updateBulkActions();
+            });
+            
+            document.querySelectorAll('.row-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', updateBulkActions);
+            });
+            
+            // Bulk actions
+            document.getElementById('bulkDeleteBtn').addEventListener('click', () => {
+                const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
+                if (checkedBoxes.length > 0) {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: `You're about to delete ${checkedBoxes.length} records!`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete them!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            const gradeIds = Array.from(checkedBoxes).map(checkbox => {
+                                return checkbox.closest('tr').querySelector('.score-input')?.dataset.gradeId;
+                            }).filter(id => id);
+                            
+                            fetch('/delete-quiz-grade/', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': getCookie('csrftoken')
+                                },
+                                body: JSON.stringify({ grade_ids: gradeIds })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire(
+                                        'Deleted!',
+                                        `${gradeIds.length} records have been deleted.`,
+                                        'success'
+                                    );
+                                    checkedBoxes.forEach(checkbox => checkbox.closest('tr').remove());
+                                    updateClassStatistics();
+                                    updatePagination();
+                                } else {
+                                    Swal.fire(
+                                        'Error!',
+                                        'Failed to delete records: ' + data.error,
+                                        'error'
+                                    );
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                Swal.fire(
+                                    'Error!',
+                                    'Failed to delete records',
+                                    'error'
+                                );
+                            });
+                        }
+                    });
+                }
+            });
+            
+            document.getElementById('bulkArchiveBtn').addEventListener('click', () => {
+                const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
+                if (checkedBoxes.length > 0) {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: `You're about to archive ${checkedBoxes.length} records!`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, archive them!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            const gradeIds = Array.from(checkedBoxes).map(checkbox => {
+                                return checkbox.closest('tr').querySelector('.score-input')?.dataset.gradeId;
+                            }).filter(id => id);
+                            
+                            archiveRecords(gradeIds);
+                        }
+                    });
+                }
+            });
+            
+            // Records per page
+            document.getElementById('recordsPerPage').addEventListener('change', (e) => {
+                recordsPerPage = parseInt(e.target.value) || 999999;
+                currentPage = 1;
+                updatePagination();
+            });
+            
+            // Export and print
+            document.getElementById('exportCSV').addEventListener('click', exportToCSV);
+            document.getElementById('printBtn').addEventListener('click', printTable);
+            
+            // Refresh button
+            document.getElementById('refreshBtn').addEventListener('click', () => {
+                updateLastRefreshed();
+                updateAverages();
+                showToast('Data refreshed successfully!', 'success');
+            });
+            
+            // Calculate initial averages and show all by default
+            updateAverages();
+            filterBySubject("all"); 
+            updateLastRefreshed();
+            updatePagination();
         });
-        
-        // Records per page
-        document.getElementById('recordsPerPage').addEventListener('change', (e) => {
-          recordsPerPage = parseInt(e.target.value) || 999999;
-          currentPage = 1;
-          updatePagination();
-        });
-        
-        // Export and print
-        document.getElementById('exportCSV').addEventListener('click', exportToCSV);
-        
-        // Refresh button
-        document.getElementById('refreshBtn').addEventListener('click', () => {
-          updateLastRefreshed();
-          updateAverages();
-          showToast('Data refreshed successfully!', 'success');
-        });
-        
-        // Calculate initial averages and show all by default
-        updateAverages();
-        filterBySubject("all"); 
-        updateLastRefreshed();
-        updatePagination();
-      });
     </script>
-  </body>
+</body>
 </html>
