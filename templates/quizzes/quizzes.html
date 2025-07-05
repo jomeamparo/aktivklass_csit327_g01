@@ -249,18 +249,17 @@
 
         <!-- Page Content -->
        <main class="flex-1 p-6 md:p-8 overflow-y-auto">
-        <div class="max-w-7xl mx-auto px-4">
+  <div class="w-full px-6 xl:px-12">
             <!-- Enhanced Filter and Search Section -->
             <div class="bg-white shadow-md rounded-lg p-4 mb-4">
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <!-- Subject Filter -->
-                <div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div>
           <h3 class="text-sm font-semibold text-gray-800 mb-2">Filter by Subject</h3>
           <div class="flex flex-wrap gap-1" id="subjectFilters">
             <button class="filter-btn px-3 py-1 text-sm rounded-lg bg-green-600 text-white" data-subject="all">
               All Subjects
             </button>
-            {% for class_obj in classes_with_quizzes %}
+           {% for class_obj in classes_with_quizzes %}
             <button class="filter-btn px-3 py-1 text-sm rounded-lg bg-gray-200 hover:bg-gray-300" data-subject="{{ class_obj.subject_code|lower }}">
               {{ class_obj.subject_code }}
             </button>
@@ -285,7 +284,6 @@
             <option value="0-69">Below 70 (Needs Improvement)</option>
           </select>
         </div>
-
                 <!-- Show Archived Toggle -->
                 <div class="flex items-center">
           <input type="checkbox" id="showArchived" class="checkbox-custom">
@@ -296,77 +294,76 @@
 
             <!-- Class Statistics -->
             <div class="bg-white shadow-md rounded-lg p-4 mb-4">
-              <h3 class="text-lg font-semibold text-gray-800 mb-3">Class Performance Summary</h3>
-              <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
-                <div class="bg-blue-50 p-3 rounded-lg">
-                  <div class="text-2xl font-bold text-blue-600" id="totalStudents">{{ total_students }}</div>
-                  <div class="text-sm text-gray-600">Total Students</div>
-                </div>
-                <div class="bg-green-50 p-3 rounded-lg">
-                  <div class="text-2xl font-bold text-green-600" id="classAverage">{{ class_average }}</div>
-                  <div class="text-sm text-gray-600">Class Average</div>
-                </div>
-                <div class="bg-yellow-50 p-3 rounded-lg">
-                  <div class="text-2xl font-bold text-yellow-600" id="highestScore">{{ highest_score }}</div>
-                  <div class="text-sm text-gray-600">Highest Score</div>
-                </div>
-                <div class="bg-red-50 p-3 rounded-lg">
-                  <div class="text-2xl font-bold text-red-600" id="lowestScore">{{ lowest_score }}</div>
-                  <div class="text-sm text-gray-600">Lowest Score</div>
-                </div>
-                <div class="bg-purple-50 p-3 rounded-lg">
-                  <div class="text-2xl font-bold text-purple-600" id="passingRate">{{ passing_rate }}%</div>
-                  <div class="text-sm text-gray-600">Passing Rate (≥75)</div>
-                </div>
-              </div>
-            </div>
+      <h3 class="text-lg font-semibold text-gray-800 mb-3">Class Performance Summary</h3>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
+        <div class="bg-blue-50 p-3 rounded-lg">
+          <div class="text-2xl font-bold text-blue-600" id="totalStudents">{{ total_students }}</div>
+          <div class="text-sm text-gray-600">Total Students</div>
+        </div>
+        <div class="bg-green-50 p-3 rounded-lg">
+          <div class="text-2xl font-bold text-green-600" id="classAverage">{{ class_average }}</div>
+          <div class="text-sm text-gray-600">Class Average</div>
+        </div>
+        <div class="bg-yellow-50 p-3 rounded-lg">
+          <div class="text-2xl font-bold text-yellow-600" id="highestScore">{{ highest_score }}</div>
+          <div class="text-sm text-gray-600">Highest Score</div>
+        </div>
+        <div class="bg-red-50 p-3 rounded-lg">
+          <div class="text-2xl font-bold text-red-600" id="lowestScore">{{ lowest_score }}</div>
+          <div class="text-sm text-gray-600">Lowest Score</div>
+        </div>
+        <div class="bg-purple-50 p-3 rounded-lg">
+          <div class="text-2xl font-bold text-purple-600" id="passingRate">{{ passing_rate }}%</div>
+          <div class="text-sm text-gray-600">Passing Rate (≥75)</div>
+        </div>
+      </div>
+    </div>
 
             <!-- Action Bar -->
             <div class="bg-white shadow-md rounded-lg p-4 mb-4 flex flex-wrap items-center justify-between gap-4">
-              <div class="flex items-center space-x-4">
-                <!-- Bulk Actions -->
-                <div class="flex items-center space-x-2">
-                  <input type="checkbox" id="selectAll" class="checkbox-custom">
-                  <label for="selectAll" class="text-sm font-medium text-gray-700">Select All</label>
-                </div>
-                <div class="flex space-x-2">
-                  <button id="bulkDeleteBtn" class="px-3 py-2 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                    <i class="fas fa-trash mr-1"></i> Delete Selected
-                  </button>
-                  <button id="bulkArchiveBtn" class="px-3 py-2 bg-yellow-500 text-white text-sm rounded-lg hover:bg-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                    <i class="fas fa-archive mr-1"></i> Archive Selected
-                  </button>
-                </div>
-              </div>
+      <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-2">
+          <input type="checkbox" id="selectAll" class="checkbox-custom">
+          <label for="selectAll" class="text-sm font-medium text-gray-700">Select All</label>
+        </div>
+        <div class="flex space-x-2">
+          <button id="bulkDeleteBtn" class="px-3 py-2 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+            <i class="fas fa-trash mr-1"></i> Delete Selected
+          </button>
+          <button id="bulkArchiveBtn" class="px-3 py-2 bg-yellow-500 text-white text-sm rounded-lg hover:bg-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+            <i class="fas fa-archive mr-1"></i> Archive Selected
+          </button>
+        </div>
+      </div>
               
               <!-- Display Options -->
               <div class="flex items-center space-x-4">
-                <div class="flex items-center space-x-2">
-                  <label for="recordsPerPage" class="text-sm text-gray-700">Show:</label>
-                  <select id="recordsPerPage" class="px-2 py-1 border border-gray-300 rounded text-sm">
-                    <option value="10">10</option>
-                    <option value="25" selected>25</option>
-                    <option value="50">50</option>
-                    <option value="100">All</option>
-                  </select>
-                  <span class="text-sm text-gray-700">records</span>
-                </div>
+        <div class="flex items-center space-x-2">
+          <label for="recordsPerPage" class="text-sm text-gray-700">Show:</label>
+          <select id="recordsPerPage" class="px-2 py-1 border border-gray-300 rounded text-sm">
+            <option value="10">10</option>
+            <option value="25" selected>25</option>
+            <option value="50">50</option>
+            <option value="100">All</option>
+          </select>
+          <span class="text-sm text-gray-700">records</span>
+        </div>
                 
                 <!-- Export Options -->
-                <div class="flex space-x-2">
-                  <button id="exportCSV" class="px-3 py-2 bg-green-500 text-white text-sm rounded-lg hover:bg-green-600">
-                    <i class="fas fa-file-csv mr-1"></i> Export CSV
-                  </button>
-                  <button id="printBtn" class="px-3 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
-                    <i class="fas fa-print mr-1"></i> Print
-                  </button>
-                </div>
-              </div>
-            </div>
+                 <div class="flex space-x-2">
+          <button id="exportCSV" class="px-3 py-2 bg-green-500 text-white text-sm rounded-lg hover:bg-green-600">
+            <i class="fas fa-file-csv mr-1"></i> Export CSV
+          </button>
+          <button id="printBtn" class="px-3 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
+            <i class="fas fa-print mr-1"></i> Print
+          </button>
+        </div>
+      </div>
+    </div>
 
             <!-- Quiz Records Table -->
-            <div class="quiz-table-container bg-white shadow-md rounded-lg p-4">
-              <table class="quiz-table table-auto text-sm text-left text-gray-700">
+            <div class="quiz-table-container bg-white shadow-md rounded-lg p-4 w-full">
+      <table class="quiz-table w-full table-auto text-sm text-left text-gray-700">
                 <thead class="bg-green-100 text-green-800 font-semibold">
                   <tr>
                     <th class="px-4 py-2 no-print">
