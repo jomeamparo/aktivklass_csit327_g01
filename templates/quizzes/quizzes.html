@@ -248,35 +248,30 @@
         </header>
 
         <!-- Page Content -->
-       <main class="flex-1 p-4 md:p-6 xl:p-8 overflow-y-auto text-[15px]">
-  <div class="w-full px-4 xl:px-6">
-            <!-- Filter & Search -->
-    <div class="bg-white shadow-md rounded-lg p-4 mb-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+       <main class="flex-1 p-2 xl:p-4 overflow-y-auto text-[15px]">
+  <div class="w-full px-2 xl:px-4 max-w-[100%]">
+            <!-- FILTER & SEARCH SECTION -->
+    <div class="bg-white shadow rounded-lg p-3 mb-3">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
         <div>
-          <h3 class="text-[14px] font-semibold text-gray-800 mb-1">Filter by Subject</h3>
-          <div class="flex flex-wrap gap-1" id="subjectFilters">
-            <button class="filter-btn px-3 py-1 text-sm rounded-lg bg-green-600 text-white" data-subject="all">
-              All Subjects
-            </button>
+          <h3 class="text-[13px] font-semibold text-gray-800 mb-1">Filter by Subject</h3>
+          <div class="flex flex-wrap gap-1">
+            <button class="filter-btn px-2 py-1 text-sm rounded bg-green-600 text-white" data-subject="all">All Subjects</button>
             {% for class_obj in classes_with_quizzes %}
-            <button class="filter-btn px-3 py-1 text-sm rounded-lg bg-gray-200 hover:bg-gray-300" data-subject="{{ class_obj.subject_code|lower }}">
-              {{ class_obj.subject_code }}
-            </button>
+            <button class="filter-btn px-2 py-1 text-sm rounded bg-gray-200 hover:bg-gray-300" data-subject="{{ class_obj.subject_code|lower }}">{{ class_obj.subject_code }}</button>
             {% endfor %}
           </div>
         </div>
-
                 <!-- Student Search -->
                 <div>
-          <label for="studentSearch" class="block text-[14px] font-semibold text-gray-800 mb-1">Search Student</label>
-          <input type="text" id="studentSearch" placeholder="Enter student name..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+          <label class="block text-[13px] font-semibold text-gray-800 mb-1">Search Student</label>
+          <input type="text" class="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-green-500 text-sm" placeholder="Enter student name...">
         </div>
 
                 <!-- Grade Range Filter -->
                 <div>
-          <label for="gradeRange" class="block text-[14px] font-semibold text-gray-800 mb-1">Grade Range</label>
-          <select id="gradeRange" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+          <label class="block text-[13px] font-semibold text-gray-800 mb-1">Grade Range</label>
+          <select class="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-green-500 text-sm">
             <option value="all">All Grades</option>
             <option value="90-100">90-100 (Excellent)</option>
             <option value="80-89">80-89 (Good)</option>
@@ -285,69 +280,64 @@
           </select>
         </div>
                 <!-- Show Archived Toggle -->
-                <div class="flex items-center mt-6 md:mt-0">
-          <input type="checkbox" id="showArchived" class="checkbox-custom">
-          <label for="showArchived" class="ml-2 text-[14px] font-medium text-gray-700">Show Archived</label>
+                 <div class="flex items-center mt-5 md:mt-0">
+          <input type="checkbox" id="showArchived" class="mr-2">
+          <label for="showArchived" class="text-[13px] text-gray-700">Show Archived</label>
         </div>
       </div>
     </div>
 
             <!-- Class Statistics -->
-            <<div class="bg-white shadow-md rounded-lg p-4 mb-4">
-      <h3 class="text-[16px] font-semibold text-gray-800 mb-3">Class Performance Summary</h3>
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
-        <div class="bg-blue-50 p-3 rounded-lg">
-          <div class="text-xl font-bold text-blue-600" id="totalStudents">{{ total_students }}</div>
-          <div class="text-sm text-gray-600">Total Students</div>
+            <div class="bg-white shadow rounded-lg p-3 mb-3">
+      <h3 class="text-[15px] font-semibold text-gray-800 mb-2">Class Performance Summary</h3>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-2 text-center">
+        <div class="bg-blue-50 p-2 rounded">
+          <div class="text-lg font-bold text-blue-600" id="totalStudents">{{ total_students }}</div>
+          <div class="text-xs text-gray-600">Total Students</div>
         </div>
-        <div class="bg-green-50 p-3 rounded-lg">
-          <div class="text-xl font-bold text-green-600" id="classAverage">{{ class_average }}</div>
-          <div class="text-sm text-gray-600">Class Average</div>
+        <div class="bg-green-50 p-2 rounded">
+          <div class="text-lg font-bold text-green-600" id="classAverage">{{ class_average }}</div>
+          <div class="text-xs text-gray-600">Class Average</div>
         </div>
-        <div class="bg-yellow-50 p-3 rounded-lg">
-          <div class="text-xl font-bold text-yellow-600" id="highestScore">{{ highest_score }}</div>
-          <div class="text-sm text-gray-600">Highest Score</div>
+        <div class="bg-yellow-50 p-2 rounded">
+          <div class="text-lg font-bold text-yellow-600" id="highestScore">{{ highest_score }}</div>
+          <div class="text-xs text-gray-600">Highest Score</div>
         </div>
-        <div class="bg-red-50 p-3 rounded-lg">
-          <div class="text-xl font-bold text-red-600" id="lowestScore">{{ lowest_score }}</div>
-          <div class="text-sm text-gray-600">Lowest Score</div>
+        <div class="bg-red-50 p-2 rounded">
+          <div class="text-lg font-bold text-red-600" id="lowestScore">{{ lowest_score }}</div>
+          <div class="text-xs text-gray-600">Lowest Score</div>
         </div>
-        <div class="bg-purple-50 p-3 rounded-lg">
-          <div class="text-xl font-bold text-purple-600" id="passingRate">{{ passing_rate }}%</div>
-          <div class="text-sm text-gray-600">Passing Rate (≥75)</div>
+        <div class="bg-purple-50 p-2 rounded">
+          <div class="text-lg font-bold text-purple-600" id="passingRate">{{ passing_rate }}%</div>
+          <div class="text-xs text-gray-600">Passing Rate (≥75)</div>
         </div>
       </div>
     </div>
 
             <!-- Action Buttons -->
-    <div class="bg-white shadow-md rounded-lg p-4 mb-4 flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center space-x-4">
-        <div class="flex items-center space-x-2">
-          <input type="checkbox" id="selectAll" class="checkbox-custom">
-          <label for="selectAll" class="text-sm font-medium text-gray-700">Select All</label>
-        </div>
-        <div class="flex space-x-2">
-          <button id="bulkDeleteBtn" class="px-3 py-2 bg-red-500 text-white text-sm rounded hover:bg-red-600 disabled:opacity-50" disabled>
-            <i class="fas fa-trash mr-1"></i> Delete Selected
-          </button>
-          <button id="bulkArchiveBtn" class="px-3 py-2 bg-yellow-500 text-white text-sm rounded hover:bg-yellow-600 disabled:opacity-50" disabled>
-            <i class="fas fa-archive mr-1"></i> Archive Selected
-          </button>
-        </div>
+     <div class="bg-white shadow rounded-lg p-3 mb-3 flex flex-wrap justify-between items-center gap-3">
+      <div class="flex items-center gap-3">
+        <label class="flex items-center gap-1 text-sm text-gray-700">
+          <input type="checkbox" id="selectAll">
+          Select All
+        </label>
+        <button id="bulkDeleteBtn" class="bg-red-500 text-white px-2 py-1 text-sm rounded disabled:opacity-50" disabled>Delete Selected</button>
+        <button id="bulkArchiveBtn" class="bg-yellow-500 text-white px-2 py-1 text-sm rounded disabled:opacity-50" disabled>Archive Selected</button>
       </div>
               
               <!-- Display Options -->
-              <div class="flex items-center space-x-3">
-        <div class="flex items-center space-x-1">
-          <label for="recordsPerPage" class="text-sm text-gray-700">Show:</label>
-          <select id="recordsPerPage" class="px-2 py-1 border border-gray-300 rounded text-sm">
-            <option value="10">10</option>
-            <option value="25" selected>25</option>
-            <option value="50">50</option>
-            <option value="100">All</option>
-          </select>
-          <span class="text-sm text-gray-700">records</span>
-        </div>
+              <div class="flex items-center gap-2">
+        <label for="recordsPerPage" class="text-sm text-gray-700">Show:</label>
+        <select id="recordsPerPage" class="px-2 py-1 border border-gray-300 rounded text-sm">
+          <option>10</option>
+          <option selected>25</option>
+          <option>50</option>
+        </select>
+        <span class="text-sm">records</span>
+        <button class="bg-green-500 text-white px-2 py-1 text-sm rounded">Export CSV</button>
+        <button class="bg-blue-500 text-white px-2 py-1 text-sm rounded">Print</button>
+      </div>
+    </div>
                 
                 <!-- Export Options -->
                  <div class="flex space-x-2">
@@ -361,8 +351,8 @@
     </div>
 
             <!-- Quiz Records Table -->
-            <div class="quiz-table-container bg-white shadow-md rounded-lg p-4 w-full overflow-x-auto">
-      <table class="quiz-table w-full table-auto text-sm text-left text-gray-700">
+            <div class="bg-white shadow rounded-lg p-3 overflow-x-auto">
+      <table class="w-full text-sm text-left">
                 <thead class="bg-green-100 text-green-800 font-semibold">
                   <tr>
                     <th class="px-4 py-2 no-print">
