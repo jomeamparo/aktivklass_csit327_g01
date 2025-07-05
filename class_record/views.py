@@ -126,9 +126,16 @@ def search_students(request):
                 Q(first_name__icontains=first_name_part) &
                 Q(last_name__icontains=last_name_part)
             )
-        students = students_qs.values('id', 'student_id', 'first_name', 'middle_name', 'last_name').distinct()[:20]
+        students = list(students_qs.values('id', 'student_id', 'first_name', 'middle_name', 'last_name').distinct()[:20])
 
-    return JsonResponse({'students': list(students)})
+    # If AJAX or expects JSON, return JSON
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.GET.get('format') == 'json':
+        return JsonResponse({'students': students})
+    # Otherwise, render an HTML template
+    return render(request, 'class_record/search_students.html', {
+        'students': students,
+        'query': query
+    })
 
 @require_POST
 def upload_class_list(request, class_id):
@@ -370,7 +377,7 @@ def save_class_records(request):
 
 
             # Remarks - if needed, store it in a separate model or Enrollment
-            # Here’s an example assuming you want to add remarks as text somewhere:
+            # Here's an example assuming you want to add remarks as text somewhere:
             # enrollment.remarks = record.get('remarks', '')
             # enrollment.save()
 

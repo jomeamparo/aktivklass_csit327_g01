@@ -118,3 +118,20 @@ def reset_password_view(request, token):
             messages.error(request, 'Please fill in all fields.')
 
     return render(request, 'forgot_password/forgot_password_reset.html', {'token': token})
+
+def test_email_view(request):
+    result = None
+    if request.method == 'POST':
+        to_email = request.POST.get('email')
+        try:
+            send_mail(
+                'Test Email',
+                'This is a test email from your Django app.',
+                settings.DEFAULT_FROM_EMAIL,
+                [to_email],
+                fail_silently=False,
+            )
+            result = f"Test email sent to {to_email}. Check your inbox and spam folder."
+        except Exception as e:
+            result = f"Error sending test email: {e}"
+    return render(request, 'forgot_password/test_email.html', {'result': result})

@@ -1,0 +1,23 @@
+{% extends 'core/main.html' %}
+{% block title %}Test Email{% endblock %}
+{% block content %}
+<div class="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
+  <h2 class="text-2xl font-bold mb-4">Send Test Email</h2>
+  <form method="post">
+    {% csrf_token %}
+    <input type="email" name="email" placeholder="Enter your email address" required class="w-full border px-3 py-2 rounded mb-4">
+    <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">Send Test Email</button>
+  </form>
+  {% if result %}
+    {% if 'sent' in result %}
+      <div class="mt-4 p-3 rounded bg-green-100 text-green-800">
+        {{ result }}
+      </div>
+    {% else %}
+      <div class="mt-4 p-3 rounded bg-red-100 text-red-800">
+        {{ result }}
+      </div>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %} 

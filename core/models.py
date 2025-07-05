@@ -27,6 +27,7 @@ STUDENT_STATUS_CHOICES = [
 
 class Class(models.Model):
     course = models.ForeignKey('Course', on_delete=models.CASCADE, null=True, blank=True)
+    faculty = models.ForeignKey('Faculty', on_delete=models.CASCADE, null=True, blank=True, related_name='teaching_classes')
     subject_name = models.CharField(max_length=100)
     subject_code = models.CharField(max_length=20)
     description = models.TextField()
@@ -176,6 +177,7 @@ class Notification(models.Model):
 
 class Conversation(models.Model):
     participants = models.ManyToManyField(Student, related_name='conversations')
+    muted_by = models.ManyToManyField(Student, related_name='muted_conversations', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     @classmethod

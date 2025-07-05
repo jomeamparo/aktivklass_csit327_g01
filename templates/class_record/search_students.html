@@ -1,0 +1,35 @@
+{% extends 'core/main.html' %}
+
+{% block title %}Search Students{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto py-8">
+  <h2 class="text-2xl font-bold mb-4 text-green-700">Search for Students</h2>
+  <form method="get" action="" class="flex mb-6 gap-2">
+    <input type="text" name="q" value="{{ query }}" placeholder="Enter name, ID, or email..." class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400">
+    <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">Search</button>
+  </form>
+
+  {% if query %}
+    <h3 class="text-lg font-semibold mb-2">Results for "{{ query }}":</h3>
+    {% if students %}
+      <ul class="divide-y divide-gray-200">
+        {% for student in students %}
+          <li class="py-4 flex items-center justify-between">
+            <div>
+              <span class="font-medium text-gray-800">{{ student.first_name }} {{ student.last_name }}</span>
+              <span class="text-gray-500 text-sm ml-2">({{ student.student_id }})</span>
+              <span class="text-gray-400 text-xs ml-2">{{ student.email }}</span>
+            </div>
+            <a href="{% url 'start_conversation' student.student_id %}" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">Chat</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-gray-500">No students found matching your search.</p>
+    {% endif %}
+  {% else %}
+    <p class="text-gray-400">Enter a name, ID, or email to search for students to chat with.</p>
+  {% endif %}
+</div>
+{% endblock %} 

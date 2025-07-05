@@ -7,13 +7,36 @@ from django.contrib.auth.decorators import login_required
 def dashboard_view(request):
     student_id = request.session.get('user_id')
     student = get_object_or_404(Student, student_id=student_id)
-    enrolled_classes = student.enrolled_classes.all()
-    print(student)
-    print(enrolled_classes)
+    
+    # Get enrollment records for this student
+    enrollments = Enrollment.objects.filter(student=student)
+    
+    # Separate visible and hidden classes based on enrollment
+    visible_classes = []
+    hidden_classes = []
+    
+    for enrollment in enrollments:
+        if enrollment.enrolled_class.is_archived:
+            hidden_classes.append(enrollment)
+        else:
+            visible_classes.append(enrollment)
+    
+    print(f'Student: {student}')
+    print(f'Visible classes: {[cls.enrolled_class.subject_name for cls in visible_classes]}')
+    print(f'Hidden classes: {[cls.enrolled_class.subject_name for cls in hidden_classes]}')
+    
+    # Get pending join requests
+    pending_requests = ClassJoinRequest.objects.filter(
+        student=student,
+        status='pending'
+    ).select_related('class_requested')
+    
     context = {
         'role': 'student', 
-        'classes': enrolled_classes,
+        'visible_classes': visible_classes,
+        'hidden_classes': hidden_classes,
         'student': student,
+        'pending_requests': pending_requests,
     }
     return render(request, 'dashboard_student/dashboard.html', context)
 
@@ -66,6 +89,6 @@ def join_class(request):
 
 def toggle_archive_view(request, enrollment_id):
     enrollment = get_object_or_404(Enrollment, id=enrollment_id, student__student_id=request.session.get('user_id'))
-    enrollment.is_archived = not enrollment.is_archived
-    enrollment.save()
+    enrollment.enrolled_class.is_archived = not enrollment.enrolled_class.is_archived
+    enrollment.enrolled_class.save()
     return redirect('dashboard_student')

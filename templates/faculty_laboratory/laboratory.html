@@ -1,10 +1,10 @@
 {% extends 'core/main.html' %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}Class Page{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-6">
+<div class="max-w-5xl mx-auto py-8">
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">Class Page</h2>
+        <h2 class="text-2xl font-bold text-green-700">Class Page</h2>
     </div>
 
     <!-- Sort Filter -->
@@ -24,8 +24,8 @@
     </div>
 
     <!-- Class Info Card -->
-    <div class="relative border border-green-600 rounded-lg p-5 bg-white transition animate-float emboss-effect hover:shadow-lg mb-6">
-        <h3 class="text-xl font-semibold text-gray-900 emboss-text">Information Management 2</h3>
+    <div class="border border-green-600 rounded-lg p-6 bg-white shadow mb-6">
+        <h3 class="text-xl font-semibold text-gray-900">Information Management 2</h3>
         <p class="text-sm text-gray-600 mt-1">Code: CSIT327</p>
         <p class="text-sm text-gray-600 mt-1">Description: Basic principles and practices of collecting, organizing, storing, and using information effectively within organizations.</p>
         <p class="text-sm text-gray-600 mt-1">Schedule: MWF 12:00PM - 3:00PM</p>
@@ -34,7 +34,7 @@
     </div>
 
     <!-- Student Table -->
-    <div class="overflow-auto bg-white rounded-lg shadow-md border border-gray-300">
+    <div class="overflow-auto bg-white rounded-lg shadow border border-gray-300">
         <table class="min-w-full divide-y divide-gray-200 text-sm text-left text-gray-700">
             <thead class="bg-green-100 text-gray-800">
                 <tr>
@@ -58,7 +58,7 @@
                     <td class="px-4 py-2 student-total font-semibold">355</td>
                     <td class="px-4 py-2">89%</td>
                     <td class="px-4 py-2">
-                        <button class="text-blue-500 hover:underline">Edit</button>
+                        <button class="text-blue-600 hover:underline">Edit</button>
                     </td>
                 </tr>
                 <tr class="border-b">
@@ -70,7 +70,7 @@
                     <td class="px-4 py-2 student-total font-semibold">318</td>
                     <td class="px-4 py-2">79.5%</td>
                     <td class="px-4 py-2">
-                        <button class="text-blue-500 hover:underline">Edit</button>
+                        <button class="text-blue-600 hover:underline">Edit</button>
                     </td>
                 </tr>
                 <tr class="border-b">
@@ -82,7 +82,7 @@
                     <td class="px-4 py-2 student-total font-semibold">370</td>
                     <td class="px-4 py-2">92.5%</td>
                     <td class="px-4 py-2">
-                        <button class="text-blue-500 hover:underline">Edit</button>
+                        <button class="text-blue-600 hover:underline">Edit</button>
                     </td>
                 </tr>
             </tbody>
@@ -90,7 +90,6 @@
     </div>
 </div>
 
-<!-- JavaScript Sorting -->
 <script>
 function getRows() {
     return Array.from(document.querySelectorAll("#studentsBody tr"));
@@ -129,36 +128,7 @@ function handleSort(value) {
     );
 }
 
-
     updateTable(rows);
 }
 </script>
-
-<!-- Styles -->
-<style>
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-.emboss-effect {
-  box-shadow:
-    inset 2px 2px 5px rgba(255, 255, 255, 0.7),
-    inset -2px -2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.emboss-text {
-  text-shadow:
-    1px 1px 0 #fff,
-    -1px -1px 0 #999;
-}
-</style>
 {% endblock %}
