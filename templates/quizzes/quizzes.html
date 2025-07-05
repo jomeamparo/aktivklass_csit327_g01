@@ -2,29 +2,110 @@
 {% load static %}
 {% load quiz_extras %}
 <html lang="en">
-    <header class="bg-white dark:bg-gray-800 shadow-sm p-4 flex items-center justify-between">
-    <button id="toggleSidebar" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500">
-      <svg class="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="3" y1="6" x2="21" y2="6" />
-        <line x1="3" y1="12" x2="21" y2="12" />
-        <line x1="3" y1="18" x2="21" y2="18" />
-      </svg>
-    </button>
-    <div class="w-full flex justify-center items-center">
-      <h1 class="text-3xl font-bold tracking-tight" style="font-family: 'Poppins', sans-serif;">
-        <span class="text-green-600">Aktiv</span><span class="text-gray-800 dark:text-white">Klass</span>
-        <span class="font-medium text-gray-500 dark:text-gray-400">Management</span>
-      </h1>
-    </div>
-    <div class="flex items-center space-x-2 no-print">
-      <button id="refreshBtn" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500" title="Refresh Data">
-        <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 3v5h5m-5-5a9 9 0 1 1 0 18 9 9 0 0 1 0-18z" />
-        </svg>
-      </button>
-      <span id="lastUpdated" class="text-xs text-gray-500 dark:text-gray-400"></span>
-    </div>
-  </header>
+    <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>{% block title %}ActivKlass Management System{% endblock %}</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+      .score-input {
+        width: 4rem;
+        text-align: center;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+        padding: 0.25rem 0.5rem;
+      }
+      .score-input:focus {
+        outline: 2px solid #059669;
+        border-color: transparent;
+      }
+      .grade-excellent { background-color: #dcfce7; }
+      .grade-good { background-color: #fef3c7; }
+      .grade-needs-improvement { background-color: #fee2e2; }
+      .sortable { cursor: pointer; user-select: none; }
+      .sortable:hover { background-color: #f3f4f6; }
+      .sort-icon { margin-left: 0.5rem; opacity: 0.5; }
+      .sort-asc .sort-icon::before { content: "▲"; }
+      .sort-desc .sort-icon::before { content: "▼"; }
+      .checkbox-custom {
+        width: 1.25rem;
+        height: 1.25rem;
+        cursor: pointer;
+      }
+      /* Table responsive improvements */
+      .quiz-table-container {
+        overflow-x: auto;
+        max-width: 100%;
+        border-radius: 0.5rem;
+      }
+      .quiz-table {
+        min-width: max-content;
+        width: 100%;
+      }
+      .quiz-table th,
+      .quiz-table td {
+        white-space: nowrap;
+        min-width: 120px;
+      }
+      .quiz-table th:first-child,
+      .quiz-table td:first-child {
+        position: sticky;
+        left: 0;
+        background: white;
+        z-index: 10;
+      }
+      .quiz-table th:nth-child(2),
+      .quiz-table td:nth-child(2) {
+        position: sticky;
+        left: 60px;
+        background: white;
+        z-index: 10;
+      }
+      .quiz-table th:nth-child(3),
+      .quiz-table td:nth-child(3) {
+        position: sticky;
+        left: 200px;
+        background: white;
+        z-index: 10;
+      }
+      @media print {
+        body * {
+          visibility: hidden;
+        }
+        .quiz-table-container, .quiz-table-container * {
+          visibility: visible;
+        }
+        .quiz-table-container {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+        }
+        .no-print {
+          display: none !important;
+        }
+      }
+      /* Toast notification */
+      .toast {
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.375rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        color: white;
+        z-index: 50;
+        transition: opacity 0.3s ease;
+      }
+      .toast-success {
+        background-color: #10B981;
+      }
+      .toast-error {
+        background-color: #EF4444;
+      }
+    </style>
+  </head>
   <body class="min-h-screen bg-gray-100 font-sans antialiased text-gray-800">
     <div class="flex h-screen overflow-hidden">
 <!-- Sidebar -->
@@ -109,32 +190,33 @@
   </div>
 </aside>
       <!-- Main Content -->
-      <div id="mainContent" class="flex-1 flex flex-col bg-gray-50 dark:bg-gray-900 transition-all duration-300 ease-in-out">
-        <!-- Header -->
-        <header class="bg-white shadow-sm p-4 flex items-center justify-between">
-          <button id="toggleSidebar" class="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
-          </button>
-          <div class="w-full flex justify-center items-center">
-            <h1 class="text-2xl font-bold tracking-tight">
-              <span class="text-green-600">Aktivklass</span><span class="text-gray-800">Management</span>
-            </h1>
-          </div>
-          <div class="flex items-center space-x-2 no-print">
-            <button id="refreshBtn" class="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" title="Refresh Data">
-              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 3v5h5m-5-5a9 9 0 1 1 0 18 9 9 0 0 1 0-18z" />
-              </svg>
-            </button>
-            <span id="lastUpdated" class="text-xs text-gray-500"></span>
-          </div>
-        </header>
+<div id="mainContent" class="flex-1 flex flex-col bg-gray-50 dark:bg-gray-900 transition-all duration-300 ease-in-out">
+  <!-- Header - Updated to match main.html -->
+  <header class="bg-white dark:bg-gray-800 shadow-sm p-4 flex items-center justify-between">
+    <button id="toggleSidebar" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+      <svg class="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="18" x2="21" y2="18" />
+      </svg>
+    </button>
+    <div class="w-full flex justify-center items-center">
+      <h1 class="text-3xl font-bold tracking-tight" style="font-family: 'Poppins', sans-serif;">
+        <span class="text-green-600">Aktiv</span><span class="text-gray-800 dark:text-white">Klass</span>
+        <span class="font-medium text-gray-500 dark:text-gray-400">Management</span>
+      </h1>
+    </div>
+    <div class="flex items-center space-x-2 no-print">
+      <button id="refreshBtn" class="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500" title="Refresh Data">
+        <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 3v5h5m-5-5a9 9 0 1 1 0 18 9 9 0 0 1 0-18z" />
+        </svg>
+      </button>
+      <span id="lastUpdated" class="text-xs text-gray-500 dark:text-gray-400"></span>
+    </div>
+  </header>
 
-       <!-- Page Content - Optimized layout -->
+         <!-- Page Content - Optimized layout -->
   <main class="flex-1 overflow-y-auto p-0">
     <div class="w-full h-full flex flex-col px-4"> <!-- Added side padding -->
       <!-- Class Performance Summary -->
@@ -149,6 +231,7 @@
           {% endfor %}
         </div>
       </div>
+
                 <!-- Student Search -->
                 <div>
                   <label for="studentSearch" class="block text-sm font-semibold text-gray-800 mb-2">Search Student</label>
