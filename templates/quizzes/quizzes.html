@@ -1103,6 +1103,141 @@
           }, 3000);
         });
       }
+        // Enhanced score saving functionality
+document.querySelectorAll('.score-input').forEach(input => {
+    const row = input.closest('tr');
+    const saveBtn = input.nextElementSibling;
+    
+    input.addEventListener('input', function() {
+        // Validate input
+        const maxScore = parseFloat(this.dataset.maxScore) || 100;
+        const value = parseFloat(this.value);
+        
+        if (isNaN(value) || value < 0) {
+            this.value = '';
+        } else if (value > maxScore) {
+            this.value = maxScore;
+        }
+        
+        // Show save button if value changed
+        if (this.value !== this.defaultValue) {
+            saveBtn.classList.remove('hidden');
+        } else {
+            saveBtn.classList.add('hidden');
+        }
+    });
+    
+    // Add click handler to save button
+    saveBtn.addEventListener('click', async function() {
+        const input = this.previousElementSibling;
+        const gradeId = input.dataset.gradeId;
+        const quizId = input.dataset.quizId;
+        const studentId = input.dataset.studentId;
+        const newScore = input.value;
+        
+        try {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            this.disabled = true;
+            
+            const response = await fetch('/update-quiz-score/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    grade_id: gradeId,
+                    quiz_id: quizId,
+                    student_id: studentId,
+                    score: newScore
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Update the UI with new data
+                input.defaultValue = input.value;
+                input.dataset.gradeId = data.grade_id; // Update grade ID if new record was created
+                
+                // Update the average
+                updateAverages();
+                
+                // Show success state
+                this.innerHTML = '<i class="fas fa-check"></i>';
+                this.classList.remove('bg-blue-500');
+                this.classList.add('bg-green-500');
+                
+                // Hide after 2 seconds
+                setTimeout(() => {
+                    this.classList.add('hidden');
+                    this.classList.remove('bg-green-500');
+                    this.classList.add('bg-blue-500');
+                    this.innerHTML = '<i class="fas fa-save"></i>';
+                    this.disabled = false;
+                }, 2000);
+            } else {
+                throw new Error(data.error || 'Failed to save score');
+            }
+        } catch (error) {
+            console.error('Error saving score:', error);
+            this.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+            this.classList.remove('bg-blue-500');
+            this.classList.add('bg-red-500');
+            this.disabled = false;
+            
+            // Revert after 3 seconds
+            setTimeout(() => {
+                this.classList.remove('bg-red-500');
+                this.classList.add('bg-blue-500');
+                this.innerHTML = '<i class="fas fa-save"></i>';
+            }, 3000);
+        }
+    });
+});
+
+// Helper function to update averages when scores change
+function updateAverages() {
+    document.querySelectorAll('tr.student-row').forEach(row => {
+        const inputs = row.querySelectorAll('.score-input');
+        let total = 0;
+        let count = 0;
+        
+        inputs.forEach(input => {
+            const value = parseFloat(input.value);
+            if (!isNaN(value)) {
+                total += value;
+                count++;
+            }
+        });
+        
+        const avgCell = row.querySelector('.avg-cell');
+        if (count > 0) {
+            const average = (total / count).toFixed(2);
+            avgCell.textContent = average;
+            
+            // Update cell color based on grade
+            avgCell.className = 'px-4 py-2 font-semibold text-center avg-cell sticky right-20 bg-white z-10';
+            if (average >= 90) {
+                avgCell.classList.add('grade-excellent');
+            } else if (average >= 80) {
+                avgCell.classList.add('grade-good');
+            } else if (average >= 70) {
+                avgCell.classList.add('grade-satisfactory');
+            } else {
+                avgCell.classList.add('grade-needs-improvement');
+            }
+        }
+    });
+    
+    // Update class statistics
+    updateClassStatistics();
+}
+
+// Initialize the averages on page load
+document.addEventListener('DOMContentLoaded', () => {
+    updateAverages();
+});
     </script>
   </body>
 </html>
