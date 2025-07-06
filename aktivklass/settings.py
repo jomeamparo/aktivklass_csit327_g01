@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path
+import smtplib
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -52,7 +53,6 @@ INSTALLED_APPS = [
     'archived_classes',
     'class_join_request',
     'faculty_seatwork',
-    'faculty_seatworkSubmission',
     'faculty_attendance',
     'notifications',
     'faculty_settings',
@@ -185,9 +185,30 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+<<<<<<< HEAD
 EMAIL_BACKEND = 'core.custom_email_backend.PatchedEmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'minecrafterusergame@gmail.com'
 EMAIL_HOST_PASSWORD = 'lukojehfetcplftj'  # This must be your 16-character Gmail App Password
+=======
+EMAIL_BACKEND = 'core.email_backend.PatchedEmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'minecrafterusergame@gmail.com'  # Replace with your Gmail address
+EMAIL_HOST_PASSWORD = 'lukojehfetcplftj'  # Paste the 16-character app password here
+# Login URL configuration
+LOGIN_URL = '/'  # This points to your custom login view at the root URL
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+def safe_starttls(self, *args, **kwargs):
+    kwargs.pop('keyfile', None)
+    kwargs.pop('certfile', None)
+    return self._orig_starttls(*args, **kwargs)
+
+if not hasattr(smtplib.SMTP, '_orig_starttls'):
+    smtplib.SMTP._orig_starttls = smtplib.SMTP.starttls
+    smtplib.SMTP.starttls = safe_starttls
+>>>>>>> 9971f36dc1d24c7e79c4774c072bc6747f200786
