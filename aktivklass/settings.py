@@ -185,14 +185,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-<<<<<<< HEAD
-EMAIL_BACKEND = 'core.custom_email_backend.PatchedEmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'minecrafterusergame@gmail.com'
-EMAIL_HOST_PASSWORD = 'lukojehfetcplftj'  # This must be your 16-character Gmail App Password
-=======
 EMAIL_BACKEND = 'core.email_backend.PatchedEmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -211,4 +203,3 @@ def safe_starttls(self, *args, **kwargs):
 if not hasattr(smtplib.SMTP, '_orig_starttls'):
     smtplib.SMTP._orig_starttls = smtplib.SMTP.starttls
     smtplib.SMTP.starttls = safe_starttls
->>>>>>> 9971f36dc1d24c7e79c4774c072bc6747f200786
