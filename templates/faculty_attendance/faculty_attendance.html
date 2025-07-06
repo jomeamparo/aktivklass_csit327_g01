@@ -1,147 +1,93 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <title>AktivKlass Management System - Attendance</title>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
-</head>
-<body class="min-h-screen bg-gray-100 font-sans antialiased text-gray-800">
-  <div class="flex h-screen overflow-hidden">
-    <!-- Sidebar -->
-    <aside id="sidebar" class="w-64 bg-white shadow-xl border-r border-gray-200 p-4 flex flex-col transition-all duration-300 ease-in-out">
-      <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 shadow-sm mb-6">
-        <img src="https://placehold.co/56x56/f0f0f0/333?text=P" alt="Profile Photo" class="w-14 h-14 rounded-full border-2 border-green-500 object-cover" />
-        <div>
-          <p class="text-xs text-gray-500">email@example.com</p>
-        </div>
-      </div>
+{% extends 'core/main.html' %}
 
-      <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition"><i class="fas fa-user text-green-600"></i><span>Class Record</span></a>
-      <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition"><i class="fas fa-users text-green-600"></i><span>Students</span></a>
-      <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition"><i class="fas fa-users text-green-600"></i><span>Class Join Request</span></a>
-      <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition"><i class="fas fa-users text-green-600"></i><span>Archived Classes</span></a>
-      <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg bg-green-50 text-green-700 transition"><i class="fas fa-clipboard-list text-green-600"></i><span>Attendance</span></a>
+{% block title %}Laboratory{% endblock %}
 
-      <div class="border-t border-gray-200 my-4"></div>
-      <span class="text-xs uppercase text-gray-400 px-4">Settings</span>
-      <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition"><i class="fas fa-cog text-green-600"></i><span>Preferences</span></a>
-      <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition"><i class="fas fa-info-circle text-green-600"></i><span>Help & Support</span></a>
-
-      <div class="mt-auto pt-4 border-t border-gray-200">
-        <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 transition"><i class="fas fa-sign-out-alt text-red-600"></i><span>Logout</span></a>
-      </div>
-    </aside>
-
-    <!-- Main Content -->
-    <div id="mainContent" class="flex-1 flex flex-col bg-gray-50 transition-all duration-300 ease-in-out">
-      <header class="bg-white shadow-sm p-4 flex items-center justify-between">
-        <button id="toggleSidebar" class="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-          <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="18" x2="21" y2="18" />
-          </svg>
-        </button>
-        <div class="w-full flex justify-center items-center mt-4">
-          <h1 class="text-3xl font-bold tracking-tight" style="font-family: 'Poppins', sans-serif;">
-            <span class="text-green-600">Aktiv</span><span class="text-gray-800">Klass</span>
-            <span class="font-medium text-gray-500">Management</span>
-          </h1>
-        </div>
-        <div></div>
-      </header>
-
-      <!-- Page Content -->
-      <main class="flex-1 p-6 overflow-y-auto">
-        <div class="container mx-auto">
-          <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">Attendance Records</h2>
-            <button class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition shadow-md">
-              <i class="fas fa-download mr-2"></i> Download Report
-            </button>
-          </div>
-
-          <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-4">
-              <select class="filter-dropdown px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm w-fit">
-                <option value="">Select Class</option>
-                <option value="math">Mathematics 101</option>
-                <option value="science">Science 202</option>
-                <option value="history">World History</option>
-              </select>
-              <input type="date" class="filter-date px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm w-fit">
-            </div>
-          </div>
-
-          <div class="overflow-x-auto bg-white p-4 rounded-lg shadow-md">
-            <table class="min-w-full border-collapse">
-              <thead>
-                <tr class="bg-gray-100">
-                  <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm font-semibold border-b border-gray-200">First Name</th>
-                  <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm font-semibold border-b border-gray-200">Last Name</th>
-                  <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm font-semibold border-b border-gray-200">Date</th>
-                  <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm font-semibold border-b border-gray-200">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="hover:bg-gray-50 transition duration-150 ease-in-out">
-                  <td class="py-3 px-4 border-b border-gray-200 text-sm text-gray-700">Juan</td>
-                  <td class="py-3 px-4 border-b border-gray-200 text-sm text-gray-700">Dela Cruz</td>
-                  <td class="py-3 px-4 border-b border-gray-200 text-sm text-gray-700">2025-06-10</td>
-                  <td class="py-3 px-4 border-b border-gray-200 text-sm text-green-600 font-semibold">Present</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </main>
+{% block content %}
+<div class="container mx-auto flex-1 p-8">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Class Page</h2>
     </div>
-  </div>
 
-  <script>
-    const toggleButton = document.getElementById("toggleSidebar");
-    const sidebar = document.getElementById("sidebar");
-    toggleButton.addEventListener("click", () => {
-      sidebar.classList.toggle("hidden");
-    });
-  </script>
+    <!-- Action Buttons -->
+    <div class="flex flex-wrap gap-3 mb-6">
+        <button onclick="addAssignment()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">+ Add Assignment</button>
+        <button onclick="openAddStudentModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">+ Add Student</button>
+        <button onclick="copyClassCode()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">📋 Copy Class Code</button>
+        <button onclick="openAddClassModal()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition">+ Add Class</button>
+        <button onclick="resetAssignments()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">🗑️ Remove All Assignments</button>
+    </div>
 
-  <style>
-    .scrollbar-thin::-webkit-scrollbar {
-      width: 6px;
-    }
-    .scrollbar-thin::-webkit-scrollbar-thumb {
-      background-color: #10b981;
-      border-radius: 9999px;
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
-    }
-    .animate-float {
-      animation: float 3s ease-in-out infinite;
-    }
-    @media (max-width: 768px) {
-      #sidebar {
-        position: absolute;
-        left: -256px;
-        z-index: 50;
-        height: 100vh;
-      }
-      #sidebar.hidden {
-        left: 0;
-      }
-    }
-    @media (max-width: 640px) {
-      .filter-dropdown, .filter-date {
-        width: 100%;
-        flex-basis: 100%;
-      }
-    }
-  </style>
-</body>
-</html>
+    <!-- Class Card -->
+    <div class="relative border border-green-600 rounded-lg p-5 bg-white transition hover:shadow-lg mb-6 class-card" data-code="M101A">
+        <button onclick="openEditClassModal(this)" class="absolute top-2 right-2 text-sm text-gray-500 hover:text-black bg-gray-100 px-2 py-1 rounded">✏️ Edit</button>
+        <h3 class="text-xl font-semibold text-gray-900">Information Management 2</h3>
+        <p class="text-sm text-gray-600 mt-1">Code: M101A</p>
+        <p class="text-sm text-gray-600 mt-1">Description: Fundamentals of Info Management</p>
+        <p class="text-sm text-gray-600 mt-1">Schedule: MWF 12:00PM - 3:00PM</p>
+        <p class="text-sm text-gray-600 mt-1">Room: 203</p>
+        <p class="text-sm text-gray-600 mt-1">Class Code: M101A</p>
+    </div>
+
+    <!-- Student Table -->
+    <div class="overflow-auto">
+        <table class="min-w-full bg-white rounded-lg shadow">
+            <thead>
+                <tr id="tableHeader">
+                    <th class="px-4 py-2 text-left">First Name</th>
+                    <th class="px-4 py-2 text-left">Last Name</th>
+                    <th class="px-4 py-2 text-left">Quiz 1</th>
+                    <th class="px-4 py-2 text-left">Quiz 2</th>
+                    <th class="px-4 py-2 text-left">Project</th>
+                    <th class="px-4 py-2 text-left">Exam</th>
+                    <th class="px-4 py-2 text-left">Total</th>
+                    <th class="px-4 py-2 text-left">Grade</th>
+                    <th class="px-4 py-2 text-left">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="studentsBody">
+                <!-- Students will be dynamically loaded -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add Class Modal -->
+    <div id="addClassModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg relative">
+            <button onclick="closeAddClassModal()" class="absolute top-2 right-3 text-gray-500 hover:text-black text-xl">&times;</button>
+            <h3 class="text-xl font-bold mb-4 text-gray-800">Add New Class</h3>
+            <form id="addClassForm" onsubmit="submitAddClassForm(event)" class="space-y-4">
+                <input id="className" type="text" placeholder="Class Name" class="w-full border px-4 py-2 rounded" required>
+                <input id="classCode" type="text" placeholder="Class Code" class="w-full border px-4 py-2 rounded" required>
+                <input id="classDescription" type="text" placeholder="Description" class="w-full border px-4 py-2 rounded" required>
+                <input id="classSchedule" type="text" placeholder="Schedule (e.g., MWF 12:00PM - 3:00PM)" class="w-full border px-4 py-2 rounded" required>
+                <input id="classRoom" type="text" placeholder="Room" class="w-full border px-4 py-2 rounded" required>
+                <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">Add Class</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Student Modal -->
+    <div id="addStudentModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg relative">
+            <button onclick="closeAddStudentModal()" class="absolute top-2 right-3 text-gray-500 hover:text-black text-xl">&times;</button>
+            <h3 class="text-xl font-bold mb-4 text-gray-800">Add New Student</h3>
+            <form id="addStudentForm" onsubmit="submitAddStudentForm(event)" class="space-y-4">
+                <input id="studentFirstName" type="text" placeholder="First Name" class="w-full border px-4 py-2 rounded" required>
+                <input id="studentLastName" type="text" placeholder="Last Name" class="w-full border px-4 py-2 rounded" required>
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Add Student</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript logic -->
+<script>
+
+</script> 
+
+window.onload = function () {
+    loadAssignmentsFromLocalStorage();
+    loadStudentsFromLocalStorage();
+};
+</script>
+{% endblock %}
