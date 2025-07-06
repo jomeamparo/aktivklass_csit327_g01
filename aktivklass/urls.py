@@ -61,7 +61,8 @@ urlpatterns = [
     path('attendance_student/', include('attendance_student.urls')),
     path('core/', include('core.urls')),
     path('class_lists/', include('class_lists.urls')),
-    path('class_record/', include('class_record.urls')),
+    path('class_record/', include('class_record.urls')), 
+    path('quizzes/', include('quizzes.urls')),
 
     
     # Password reset URLs
