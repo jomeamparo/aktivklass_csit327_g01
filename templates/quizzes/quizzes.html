@@ -1,444 +1,211 @@
-﻿<!doctype html>
+﻿{% extends 'core/main.html' %}
 {% load static %}
 {% load quiz_extras %}
-<html lang="en" class="{{ theme_class }}">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config = {darkMode: 'class'}</script>
-    <script>
-      tailwind.config = {
-        darkMode: 'class',
-        theme: {
-          extend: {
-            colors: {
-              green: {
-                50: '#f0fdf4',
-                100: '#dcfce7',
-                200: '#bbf7d0',
-                300: '#86efac',
-                400: '#4ade80',
-                500: '#22c55e',
-                600: '#16a34a',
-                700: '#15803d',
-                800: '#166534',
-                900: '#14532d',
-              }
-            }
-          }
-        }
-      }
-    </script>
-    <title>{% block title %}ActivKlass Management System{% endblock %}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-  <style>
-    .zoom-container {
-        transform: scale(1.25);
-        transform-origin: top left;
-        width: 80%; /* Compensate for the zoom */
-        margin-left: 5%; /* Center the zoomed content */
-      }
-    .score-input {
-      width: 4rem;
-      text-align: center;
-      border: 1px solid #d1d5db;
-      border-radius: 0.25rem;
-      padding: 0.25rem 0.5rem;
-    }
-    .score-input:focus {
-      outline: 2px solid #059669;
-      border-color: transparent;
-    }
-    .grade-excellent { background-color: #dcfce7; }
-    .grade-good { background-color: #fef3c7; }
-    .grade-needs-improvement { background-color: #fee2e2; }
-    .sortable { cursor: pointer; user-select: none; }
-    .sortable:hover { background-color: #f3f4f6; }
-    .sort-icon { margin-left: 0.5rem; opacity: 0.5; }
-    .sort-asc .sort-icon::before { content: "▲"; }
-    .sort-desc .sort-icon::before { content: "▼"; }
-    .checkbox-custom {
-      width: 1.25rem;
-      height: 1.25rem;
-      cursor: pointer;
-    }
-    /* Table responsive improvements */
-    .quiz-table-container {
-        overflow-x: auto;
-        max-width: 100%;
-        border-radius: 0.5rem;
-        transform-origin: top left;
-      }
-    .quiz-table {
-      min-width: max-content;
-      width: 100%;
-    }
-    .quiz-table th,
-    .quiz-table td {
-      white-space: nowrap;
-      min-width: 120px;
-    }
-    .quiz-table th:first-child,
-    .quiz-table td:first-child {
-      position: sticky;
-      left: 0;
-      background: white;
-      z-index: 10;
-    }
-    .quiz-table th:nth-child(2),
-    .quiz-table td:nth-child(2) {
-      position: sticky;
-      left: 60px;
-      background: white;
-      z-index: 10;
-    }
-    .quiz-table th:nth-child(3),
-    .quiz-table td:nth-child(3) {
-      position: sticky;
-      left: 200px;
-      background: white;
-      z-index: 10;
-    }
-    @media print {
-      body * {
-        visibility: hidden;
-      }
-      .quiz-table-container, .quiz-table-container * {
-        visibility: visible;
-      }
-      .quiz-table-container {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-      }
-      .no-print {
-        display: none !important;
-      }
-    }
-    /* Toast notification */
-    .toast {
-      position: fixed;
-      bottom: 1rem;
-      right: 1rem;
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.375rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      color: white;
-      z-index: 50;
-      transition: opacity 0.3s ease;
-    }
-    .toast-success {
-      background-color: #10B981;
-    }
-    .toast-error {
-      background-color: #EF4444;
-    }
-  </style>
-</head>
-  <body class="min-h-screen bg-gray-100 font-sans antialiased text-gray-800">
-    <div class="flex h-screen overflow-hidden">
-<!-- Sidebar -->
-<aside id="sidebar" class="w-64 bg-white shadow-xl border-r border-gray-200 p-4 flex flex-col transition-all duration-300 ease-in-out">
-  <!-- Profile Section - Showing actual user name -->
-{% if role == 'faculty' %}
-  <a href="{% url 'faculty_profile' %}">
-{% elif role == 'student' %}
-  <a href="{% url 'student_profile' %}">
-{% else %}
-  <a href="#">
-{% endif %}
-    <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50 shadow-sm mb-6">
-      <img
-        src="{% if avatar_url %}{{ avatar_url }}{% else %}https://ui-avatars.com/api/?name={{ fullname|urlencode }}&background=10b981&color=fff&size=32{% endif %}"
-        alt="user"
-        class="w-8 h-8 rounded-full object-cover"
-      />
-      <div class="ltr:ml-2 rtl:mr-2">
-        <h6 class="font-semibold text-sm text-gray-800">{{ fullname }}</h6>
-        <p class="text-xs text-gray-600">{{ email }}</p>
+
+{% block title %}Quiz Records{% endblock %}
+
+{% block content %}
+<div class="container mx-auto">
+  <!-- Header Section -->
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-gray-800">Quiz Records</h2>
+    <div class="flex items-center space-x-2 no-print">
+      <button id="refreshBtn" class="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" title="Refresh Data">
+        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 3v5h5m-5-5a9 9 0 1 1 0 18 9 9 0 0 1 0-18z" />
+        </svg>
+      </button>
+      <span id="lastUpdated" class="text-xs text-gray-500"></span>
+    </div>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Subject Filter -->
+      <div>
+        <h3 class="text-sm font-semibold text-gray-800 mb-2">Filter by Subject</h3>
+        <div class="flex flex-wrap gap-2">
+          <button class="filter-btn px-3 py-1 text-sm rounded bg-green-600 text-white" data-subject="all">All</button>
+          {% for class_obj in classes_with_quizzes %}
+          <button class="filter-btn px-3 py-1 text-sm rounded bg-gray-200 hover:bg-gray-300" data-subject="{{ class_obj.subject_code|lower }}">
+            {{ class_obj.subject_code }}
+          </button>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Student Search -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-800 mb-2">Search Student</label>
+        <input type="text" id="studentSearch" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 text-sm" placeholder="Enter student name or ID...">
+      </div>
+
+      <!-- Grade Range Filter -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-800 mb-2">Grade Range</label>
+        <select id="gradeRange" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500 text-sm">
+          <option value="all">All Grades</option>
+          <option value="90-100">90-100 (Excellent)</option>
+          <option value="80-89">80-89 (Good)</option>
+          <option value="70-79">70-79 (Satisfactory)</option>
+          <option value="0-69">Below 70 (Needs Improvement)</option>
+        </select>
       </div>
     </div>
-  </a>
-
-  <!-- Navigation -->
-  <a href="{% url 'dashboard_teacher' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
-    <i class="fas fa-user text-green-600"></i>
-    <span>Class Record</span>
-  </a>
-  <a href="{% url 'teacher_student_list' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
-    <i class="fas fa-users text-green-600"></i>
-    <span>Students</span>
-  </a>
-  <a href="{% url 'class_join_request' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
-    <i class="fas fa-users text-green-600"></i>
-    <span>Class Join Request</span>
-  </a>
-  <a href="{% url 'faculty_seatwork' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-    <i class="fas fa-file-alt text-green-600"></i>
-    <span>Seatwork</span>
-  </a>
-  <a href="{% url 'archived_classes' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
-    <i class="fas fa-archive text-green-600"></i>
-    <span>Archived Classes</span>
-  </a>
-  <a href="{% url 'faculty_seatworkSubmission' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-    <i class="fas fa-users text-green-600"></i>
-    <span>Seatwork History</span>
-  </a>
-  <a href="{% url 'faculty_attendance:faculty_attendance' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-    <i class="fas fa-user text-green-600"></i>
-    <span>Attendance</span>
-  </a>
-  <a href="{% url 'faculty_laboratory' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-    <i class="fas fa-user text-green-600"></i>
-    <span>Class Page</span>
-  </a>
-  <a href="{% url 'faculty_notifications' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-    <i class="fas fa-users text-green-600"></i>
-    <span>Notifications</span>
-  </a>
-  <a href="{% url 'quizzes' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg bg-green-100 text-green-700">
-    <i class="fas fa-users text-green-600"></i>
-    <span>Quizzes</span>
-  </a>
-  <a href="{% url 'faculty_settings' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition">
-    <i class="fas fa-user text-green-600"></i>
-    <span>Preferences</span>
-  </a>
-  <a href="{% url 'help_and_support' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-green-50 hover:text-green-700 transition duration-200">
-    <i class="fas fa-info-circle text-green-600"></i>
-    <span>Help & Support</span>
-  </a>
-
-  <!-- Logout -->
-  <div class="mt-auto pt-4 border-t border-gray-200">
-    <a href="{% url 'logout' %}" class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 transition">
-      <i class="fas fa-sign-out-alt text-red-600"></i>
-      <span>Logout</span>
-    </a>
   </div>
-</aside>
-      <!-- Main Content -->
-        <div id="mainContent" class="flex-1 flex flex-col bg-gray-50 transition-all duration-300 ease-in-out">
-            <!-- Header -->
-            <header class="bg-white shadow-sm p-4 flex items-center justify-between">
-                <button id="toggleSidebar" class="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
-                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="3" y1="6" x2="21" y2="6" />
-                        <line x1="3" y1="12" x2="21" y2="12" />
-                        <line x1="3" y1="18" x2="21" y2="18" />
-                    </svg>
-                </button>
-                <div class="w-full flex justify-center items-center">
-                    <h1 class="text-2xl font-bold tracking-tight">
-                        <span class="text-green-600">Aktivklass</span><span class="text-gray-800">Management</span>
-                    </h1>
-                </div>
-                <div class="flex items-center space-x-2 no-print">
-                    <button id="refreshBtn" class="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" title="Refresh Data">
-                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M3 3v5h5m-5-5a9 9 0 1 1 0 18 9 9 0 0 1 0-18z" />
-                        </svg>
-                    </button>
-                    <span id="lastUpdated" class="text-xs text-gray-500"></span>
-                </div>
-            </header>
 
-            <!-- Page Content -->
-            <main class="flex-1 p-2 xl:p-4 overflow-y-auto text-[15px]">
-                <div class="w-full px-2 xl:px-4 max-w-[100%]">
-                    <!-- FILTER & SEARCH SECTION -->
-                    <div class="bg-white shadow rounded-lg p-3 mb-3">
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
-                            <div>
-                                <h3 class="text-[13px] font-semibold text-gray-800 mb-1">Filter by Subject</h3>
-                                <div class="flex flex-wrap gap-1">
-                                    <button class="filter-btn px-2 py-1 text-sm rounded bg-green-600 text-white" data-subject="all">All Subjects</button>
-                                    {% for class_obj in classes_with_quizzes %}
-                                    <button class="filter-btn px-2 py-1 text-sm rounded bg-gray-200 hover:bg-gray-300" data-subject="{{ class_obj.subject_code|lower }}">{{ class_obj.subject_code }}</button>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                            <!-- Student Search -->
-                            <div>
-                                <label class="block text-[13px] font-semibold text-gray-800 mb-1">Search Student</label>
-                                <input type="text" id="studentSearch" class="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-green-500 text-sm" placeholder="Enter student name...">
-                            </div>
-
-                            <!-- Grade Range Filter -->
-                            <div>
-                                <label class="block text-[13px] font-semibold text-gray-800 mb-1">Grade Range</label>
-                                <select id="gradeRange" class="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-green-500 text-sm">
-                                    <option value="all">All Grades</option>
-                                    <option value="90-100">90-100 (Excellent)</option>
-                                    <option value="80-89">80-89 (Good)</option>
-                                    <option value="70-79">70-79 (Satisfactory)</option>
-                                    <option value="0-69">Below 70 (Needs Improvement)</option>
-                                </select>
-                            </div>
-                            <!-- Show Archived Toggle -->
-                            <div class="flex items-center mt-5 md:mt-0">
-                                <input type="checkbox" id="showArchived" class="mr-2">
-                                <label for="showArchived" class="text-sm text-gray-700">Show Archived</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Class Statistics -->
-                    <div class="bg-white shadow rounded-lg p-3 mb-3">
-                        <h3 class="text-[15px] font-semibold text-gray-800 mb-2">Class Performance Summary</h3>
-                        <div class="grid grid-cols-2 md:grid-cols-5 gap-2 text-center">
-                            <div class="bg-blue-50 p-2 rounded">
-                                <div class="text-lg font-bold text-blue-600" id="totalStudents">{{ total_students }}</div>
-                                <div class="text-xs text-gray-600">Total Students</div>
-                            </div>
-                            <div class="bg-green-50 p-2 rounded">
-                                <div class="text-lg font-bold text-green-600" id="classAverage">{{ class_average }}</div>
-                                <div class="text-xs text-gray-600">Class Average</div>
-                            </div>
-                            <div class="bg-yellow-50 p-2 rounded">
-                                <div class="text-lg font-bold text-yellow-600" id="highestScore">{{ highest_score }}</div>
-                                <div class="text-xs text-gray-600">Highest Score</div>
-                            </div>
-                            <div class="bg-red-50 p-2 rounded">
-                                <div class="text-lg font-bold text-red-600" id="lowestScore">{{ lowest_score }}</div>
-                                <div class="text-xs text-gray-600">Lowest Score</div>
-                            </div>
-                            <div class="bg-purple-50 p-2 rounded">
-                                <div class="text-lg font-bold text-purple-600" id="passingRate">{{ passing_rate }}%</div>
-                                <div class="text-xs text-gray-600">Passing Rate (≥75)</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="bg-white shadow rounded-lg p-3 mb-3 flex flex-wrap justify-between items-center gap-3">
-                        <div class="flex items-center gap-3">
-                            <label class="flex items-center gap-1 text-sm text-gray-700">
-                                <input type="checkbox" id="selectAll">
-                                Select All
-                            </label>
-                            <button id="bulkDeleteBtn" class="bg-red-500 text-white px-2 py-1 text-sm rounded disabled:opacity-50" disabled>Delete Selected</button>
-                            <button id="bulkArchiveBtn" class="bg-gray-500 text-white px-2 py-1 text-sm rounded disabled:opacity-50" disabled>Archive Selected</button>
-                        </div>
-                        
-                        <!-- Display Options -->
-                        <div class="flex items-center gap-2">
-                            <label for="recordsPerPage" class="text-sm text-gray-700">Show:</label>
-                            <select id="recordsPerPage" class="px-2 py-1 border border-gray-300 rounded text-sm">
-                                <option>10</option>
-                                <option selected>25</option>
-                                <option>50</option>
-                            </select>
-                            <span class="text-sm">records</span>
-                            <button id="exportCSV" class="bg-green-500 text-white px-2 py-1 text-sm rounded">Export CSV</button>
-                            <button id="printBtn" class="bg-blue-500 text-white px-2 py-1 text-sm rounded">Print</button>
-                        </div>
-                    </div>
-
-                    <!-- Quiz Records Table -->
-                    <div class="bg-white shadow rounded-lg p-3 overflow-x-auto quiz-table-container">
-                        <table class="w-full text-sm text-left quiz-table">
-                            <thead class="bg-green-100 text-green-800 font-semibold">
-                                <tr>
-                                    <th class="px-4 py-2 no-print">
-                                        <input type="checkbox" class="checkbox-custom" id="headerCheckbox">
-                                    </th>
-                                    <th class="px-4 py-2 sortable" data-sort="name">
-                                        Student Name
-                                        <span class="sort-icon"></span>
-                                    </th>
-                                    <th class="px-4 py-2 sortable" data-sort="subject">
-                                        Subject
-                                        <span class="sort-icon"></span>
-                                    </th>
-                                    {% for quiz in all_quizzes %}
-                                    <th class="px-4 py-2 sortable" data-sort="quiz{{ forloop.counter }}">
-                                        {{ quiz.title }}
-                                        <span class="sort-icon"></span>
-                                    </th>
-                                    {% endfor %}
-                                    <th class="px-4 py-2 sortable" data-sort="average">
-                                        Average
-                                        <span class="sort-icon"></span>
-                                    </th>
-                                    <th class="px-4 py-2 no-print">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="quizTableBody">
-                                {% for student_data in student_quiz_data %}
-                                <tr class="border-t student-row" data-subject="{{ student_data.class_obj.subject_code|lower }}" data-average="{{ student_data.average }}" data-is-archived="false">
-                                    <td class="px-4 py-2 no-print sticky left-0 bg-white z-10">
-                                        <input type="checkbox" class="row-checkbox checkbox-custom">
-                                    </td>
-                                    <td class="px-4 py-2 font-medium sticky left-12 bg-white z-10">{{ student_data.student.first_name }} {{ student_data.student.last_name }}</td>
-                                    <td class="px-4 py-2 sticky left-48 bg-white z-10">{{ student_data.class_obj.subject_code }}</td>
-                                    
-                                    {% for quiz in all_quizzes %}
-                                        <td class="px-4 py-2 min-w-32">
-                                            <div class="flex items-center space-x-2">
-                                                {% if quiz.title in student_data.quiz_scores %}
-                                                    {% with quiz_score=student_data.quiz_scores|get_item:quiz.title %}
-                                                        <input type="number" 
-                                                               class="score-input" 
-                                                               value="{{ quiz_score.score }}" 
-                                                               min="0" 
-                                                               max="{{ quiz_score.max_score }}" 
-                                                               data-grade-id="{{ quiz_score.grade_id }}"
-                                                               data-max-score="{{ quiz_score.max_score }}"
-                                                               data-quiz-title="{{ quiz.title }}"
-                                                               data-quiz-id="{{ quiz.id }}"
-                                                               data-student-id="{{ student_data.student.id }}">
-                                                        <button class="save-score-btn px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 hidden" title="Save Score">
-                                                            <i class="fas fa-save"></i>
-                                                        </button>
-                                                    {% endwith %}
-                                                {% else %}
-                                                    <input type="number" 
-                                                           class="score-input" 
-                                                           value="" 
-                                                           min="0" 
-                                                           max="100" 
-                                                           data-grade-id=""
-                                                           data-max-score="100"
-                                                           data-quiz-title="{{ quiz.title }}"
-                                                           data-quiz-id="{{ quiz.id }}"
-                                                           data-student-id="{{ student_data.student.id }}"
-                                                           placeholder="No grade">
-                                                    <button class="save-score-btn px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 hidden" title="Save Score">
-                                                        <i class="fas fa-save"></i>
-                                                    </button>
-                                                {% endif %}
-                                            </div>
-                                        </td>
-                                    {% endfor %}
-                                    
-                                    <td class="px-4 py-2 font-semibold text-center avg-cell grade-good sticky right-20 bg-white z-10">{{ student_data.average|floatformat:2 }}</td>
-                                    <td class="px-4 py-2 no-print sticky right-0 bg-white z-10">
-                                        <button class="delete-btn px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600" title="Delete Record">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                {% empty %}
-                                <tr class="border-t">
-                                    <td colspan="{{ all_quizzes|length|add:4 }}" class="px-4 py-8 text-center text-gray-500">
-                                        No quiz records found. Create some quizzes and grades to see data here.
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </main>
-        </div>
+  <!-- Class Statistics -->
+  <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">Class Performance Summary</h3>
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
+      <div class="bg-blue-50 p-4 rounded-lg">
+        <div class="text-xl font-bold text-blue-600" id="totalStudents">{{ total_students }}</div>
+        <div class="text-xs text-gray-600">Total Students</div>
+      </div>
+      <div class="bg-green-50 p-4 rounded-lg">
+        <div class="text-xl font-bold text-green-600" id="classAverage">{{ class_average }}</div>
+        <div class="text-xs text-gray-600">Class Average</div>
+      </div>
+      <div class="bg-yellow-50 p-4 rounded-lg">
+        <div class="text-xl font-bold text-yellow-600" id="highestScore">{{ highest_score }}</div>
+        <div class="text-xs text-gray-600">Highest Score</div>
+      </div>
+      <div class="bg-red-50 p-4 rounded-lg">
+        <div class="text-xl font-bold text-red-600" id="lowestScore">{{ lowest_score }}</div>
+        <div class="text-xs text-gray-600">Lowest Score</div>
+      </div>
+      <div class="bg-purple-50 p-4 rounded-lg">
+        <div class="text-xl font-bold text-purple-600" id="passingRate">{{ passing_rate }}%</div>
+        <div class="text-xs text-gray-600">Passing Rate (≥75)</div>
+      </div>
     </div>
+  </div>
 
+  <!-- Action Buttons -->
+  <div class="bg-white p-6 rounded-lg shadow-md mb-6 flex flex-wrap justify-between items-center gap-4">
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2">
+        <label for="recordsPerPage" class="text-sm text-gray-700">Show:</label>
+        <select id="recordsPerPage" class="px-3 py-2 border border-gray-300 rounded-lg text-sm">
+          <option>10</option>
+          <option selected>25</option>
+          <option>50</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-3">
+      <button id="exportCSV" class="bg-green-600 text-white px-4 py-2 text-sm rounded-lg hover:bg-green-700 transition">
+        Export CSV
+      </button>
+      <button id="printBtn" class="bg-blue-600 text-white px-4 py-2 text-sm rounded-lg hover:bg-blue-700 transition">
+        Print
+      </button>
+    </div>
+  </div>
+
+  <!-- Quiz Records Table -->
+  <div class="bg-white p-6 rounded-lg shadow-md overflow-x-auto quiz-table-container">
+    <table class="w-full text-sm text-left quiz-table">
+      <thead class="bg-green-100 text-green-800 font-semibold">
+        <tr>
+          <th class="px-4 py-3 sortable" data-sort="id">
+            Student ID
+            <span class="sort-icon"></span>
+          </th>
+          <th class="px-4 py-3 sortable" data-sort="name">
+            Student Name
+            <span class="sort-icon"></span>
+          </th>
+          <th class="px-4 py-3 sortable" data-sort="subject">
+            Subject
+            <span class="sort-icon"></span>
+          </th>
+          {% for quiz in all_quizzes %}
+          <th class="px-4 py-3 sortable" data-sort="quiz{{ forloop.counter }}">
+            {{ quiz.title }}
+            <span class="sort-icon"></span>
+          </th>
+          {% endfor %}
+          <th class="px-4 py-3 sortable" data-sort="average">
+            Average
+            <span class="sort-icon"></span>
+          </th>
+          <th class="px-4 py-3 no-print">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="quizTableBody">
+        {% for student_data in student_quiz_data %}
+        <tr class="border-t student-row" data-subject="{{ student_data.class_obj.subject_code|lower }}" data-average="{{ student_data.average }}">
+          <td class="px-4 py-3 sticky left-0 bg-white z-10">{{ student_data.student.student_id }}</td>
+          <td class="px-4 py-3 font-medium sticky left-20 bg-white z-10">{{ student_data.student.first_name }} {{ student_data.student.last_name }}</td>
+          <td class="px-4 py-3 sticky left-48 bg-white z-10">{{ student_data.class_obj.subject_code }}</td>
+          
+          {% for quiz in all_quizzes %}
+            <td class="px-4 py-3 min-w-32">
+              <div class="flex items-center space-x-2">
+                {% if quiz.title in student_data.quiz_scores %}
+                  {% with quiz_score=student_data.quiz_scores|get_item:quiz.title %}
+                    <input type="number" 
+                           class="score-input w-16 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500" 
+                           value="{{ quiz_score.score }}" 
+                           min="0" 
+                           max="{{ quiz_score.max_score }}" 
+                           data-grade-id="{{ quiz_score.grade_id }}"
+                           data-max-score="{{ quiz_score.max_score }}"
+                           data-quiz-title="{{ quiz.title }}"
+                           data-quiz-id="{{ quiz.id }}"
+                           data-student-id="{{ student_data.student.id }}">
+                    <button class="save-score-btn px-2 py-1 bg-blue-500 text-white text-xs rounded-lg hover:bg-blue-600 hidden" title="Save Score">
+                      <i class="fas fa-save"></i>
+                    </button>
+                  {% endwith %}
+                {% else %}
+                  <input type="number" 
+                         class="score-input w-16 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500" 
+                         value="" 
+                         min="0" 
+                         max="100" 
+                         data-grade-id=""
+                         data-max-score="100"
+                         data-quiz-title="{{ quiz.title }}"
+                         data-quiz-id="{{ quiz.id }}"
+                         data-student-id="{{ student_data.student.id }}"
+                         placeholder="No grade">
+                  <button class="save-score-btn px-2 py-1 bg-blue-500 text-white text-xs rounded-lg hover:bg-blue-600 hidden" title="Save Score">
+                    <i class="fas fa-save"></i>
+                  </button>
+                {% endif %}
+              </div>
+            </td>
+          {% endfor %}
+          
+          <td class="px-4 py-3 font-semibold text-center avg-cell sticky right-20 bg-white z-10
+            {% if student_data.average >= 90 %}bg-green-50 text-green-600
+            {% elif student_data.average >= 80 %}bg-yellow-50 text-yellow-600
+            {% elif student_data.average < 75 %}bg-red-50 text-red-600
+            {% else %}bg-gray-50 text-gray-600{% endif %}">
+            {{ student_data.average|floatformat:2 }}
+          </td>
+          <td class="px-4 py-3 no-print sticky right-0 bg-white z-10">
+            <button class="delete-btn px-3 py-1 bg-red-500 text-white text-xs rounded-lg hover:bg-red-600 transition" title="Delete Record">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        {% empty %}
+        <tr class="border-t">
+          <td colspan="{{ all_quizzes|length|add:4 }}" class="px-4 py-8 text-center text-gray-500">
+            No quiz records found. Create some quizzes and grades to see data here.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% block scripts %}
     <script>
         // Global variables
         let currentSort = { column: null, direction: 'asc' };
@@ -537,20 +304,21 @@
 
         // Filter by subject
         function filterBySubject(subject) {
-    const rows = document.querySelectorAll(".student-row");
-    
-    rows.forEach(row => {
-        const rowSubject = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
-        if (subject === "all" || rowSubject.includes(subject.toLowerCase())) {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
+            const rows = document.querySelectorAll(".student-row");
+            
+            rows.forEach(row => {
+                const rowSubject = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                if (subject === "all" || rowSubject.includes(subject.toLowerCase())) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+            
+            updateClassStatistics();
+            updatePagination();
         }
-    });
-    
-    updateClassStatistics();
-    updatePagination();
-}
+
         // Search functionality
         function searchStudents(query) {
             const rows = document.querySelectorAll(".student-row");
@@ -558,7 +326,9 @@
             
             rows.forEach(row => {
                 const studentName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-                if (studentName.includes(searchTerm)) {
+                const studentId = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+                
+                if (studentName.includes(searchTerm) || studentId.includes(searchTerm)) {
                     row.style.display = "";
                 } else {
                     row.style.display = "none";
@@ -601,30 +371,6 @@
             updatePagination();
         }
 
-        // Toggle archived records
-        function toggleArchivedRecords(showArchived) {
-            const rows = document.querySelectorAll(".student-row");
-            
-            rows.forEach(row => {
-                const isArchived = row.dataset.isArchived === 'true';
-                
-                if (showArchived) {
-                    // Show all rows when showing archived
-                    row.style.display = "";
-                } else {
-                    // Hide archived rows when not showing archived
-                    if (isArchived) {
-                        row.style.display = "none";
-                    } else {
-                        row.style.display = "";
-                    }
-                }
-            });
-            
-            updateClassStatistics();
-            updatePagination();
-        }
-
         // Sorting functionality
         function sortTable(column) {
             const tbody = document.getElementById('quizTableBody');
@@ -643,6 +389,10 @@
                 let aVal, bVal;
                 
                 switch (column) {
+                    case 'id':
+                        aVal = a.querySelector('td:nth-child(1)').textContent;
+                        bVal = b.querySelector('td:nth-child(1)').textContent;
+                        break;
                     case 'name':
                         aVal = a.querySelector('td:nth-child(2)').textContent;
                         bVal = b.querySelector('td:nth-child(2)').textContent;
@@ -682,47 +432,10 @@
             });
         }
 
-        // Bulk selection
-        function updateBulkActions() {
-            const checkboxes = document.querySelectorAll('.row-checkbox');
-            const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
-            const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
-            const bulkArchiveBtn = document.getElementById('bulkArchiveBtn');
-            
-            if (checkedBoxes.length > 0) {
-                bulkDeleteBtn.disabled = false;
-                bulkArchiveBtn.disabled = false;
-            } else {
-                bulkDeleteBtn.disabled = true;
-                bulkArchiveBtn.disabled = true;
-            }
-            
-            // Update select all checkbox
-            const selectAllCheckbox = document.getElementById('selectAll');
-            const headerCheckbox = document.getElementById('headerCheckbox');
-            
-            if (checkedBoxes.length === checkboxes.length && checkboxes.length > 0) {
-                selectAllCheckbox.checked = true;
-                headerCheckbox.checked = true;
-                selectAllCheckbox.indeterminate = false;
-                headerCheckbox.indeterminate = false;
-            } else if (checkedBoxes.length > 0) {
-                selectAllCheckbox.checked = false;
-                headerCheckbox.checked = false;
-                selectAllCheckbox.indeterminate = true;
-                headerCheckbox.indeterminate = true;
-            } else {
-                selectAllCheckbox.checked = false;
-                headerCheckbox.checked = false;
-                selectAllCheckbox.indeterminate = false;
-                headerCheckbox.indeterminate = false;
-            }
-        }
-
         // Export to CSV
         function exportToCSV() {
             const rows = document.querySelectorAll("#quizTableBody tr.student-row:not([style*='display: none'])");
-            let csv = "Student Name,Subject";
+            let csv = "Student ID,Student Name,Subject";
             
             // Add quiz headers
             const quizHeaders = document.querySelectorAll('thead th[data-sort^="quiz"]');
@@ -732,11 +445,12 @@
             csv += ",Average\n";
             
             rows.forEach(row => {
+                const id = row.querySelector('td:nth-child(1)').textContent;
                 const name = row.querySelector('td:nth-child(2)').textContent;
                 const subject = row.querySelector('td:nth-child(3)').textContent;
                 const average = row.querySelector('.avg-cell').textContent;
                 
-                csv += `"${name}","${subject}"`;
+                csv += `"${id}","${name}","${subject}"`;
                 
                 // Add quiz scores
                 const scoreInputs = row.querySelectorAll('.score-input');
@@ -824,14 +538,12 @@
         }
 
         // Delete record
-// Updated deleteRecord function
-function deleteRecord(button) {
+        function deleteRecord(button) {
     const row = button.closest('tr');
-    const studentId = row.querySelector('.score-input')?.dataset.studentId;
-    const quizId = row.querySelector('.score-input')?.dataset.quizId;
+    const gradeId = row.querySelector('.score-input')?.dataset.gradeId;
     
-    if (!studentId || !quizId) {
-        Swal.fire('Error', 'Required data not found for this record', 'error');
+    if (!gradeId) {
+        Swal.fire('Error', 'Grade ID not found for this record', 'error');
         return;
     }
     
@@ -852,79 +564,49 @@ function deleteRecord(button) {
                     'X-CSRFToken': getCookie('csrftoken')
                 },
                 body: JSON.stringify({ 
-                    student_id: studentId,
-                    quiz_id: quizId
+                    grade_id: gradeId
                 })
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    Swal.fire({
+                        title: data.notification.title,
+                        text: data.notification.message,
+                        icon: data.notification.type,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
                     row.remove();
                     updateClassStatistics();
                     updatePagination();
-                    showToast('Record deleted successfully!', 'success');
                 } else {
                     throw new Error(data.error || 'Failed to delete record');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                showToast('Failed to delete record: ' + error.message, 'error');
+                Swal.fire('Error', 'Failed to delete record: ' + error.message, 'error');
             });
         }
     });
 }
 
-        // Archive records
-        function archiveRecords(gradeIds) {
-            fetch('/archive-quiz-grades/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: JSON.stringify({ grade_ids: gradeIds })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showToast(`${gradeIds.length} records archived successfully!`, 'success');
-                    // Optionally remove or hide the rows
-                    document.querySelectorAll('.row-checkbox:checked').forEach(checkbox => {
-                        checkbox.closest('tr').remove();
-                    });
-                    updateClassStatistics();
-                    updatePagination();
-                } else {
-                    showToast('Failed to archive records: ' + data.error, 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showToast('Failed to archive records', 'error');
-            });
-        }
-
         // Get CSRF token
         function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
             }
-            return cookieValue;
         }
+    }
+    return cookieValue;
+}
 
         // Initialize score inputs
         function initializeScoreInputs() {
@@ -955,64 +637,70 @@ function deleteRecord(button) {
                     });
                     
                     saveBtn.addEventListener("click", async function() {
-                        const input = this.previousElementSibling;
-                        const gradeId = input.dataset.gradeId;
-                        const quizId = input.dataset.quizId;
-                        const studentId = input.dataset.studentId;
-                        const newScore = input.value;
-                        
-                        if (newScore === input.dataset.originalValue) {
-                            this.classList.add('hidden');
-                            return;
-                        }
-                        
-                        try {
-                            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-                            this.disabled = true;
-                            
-                            const response = await fetch('/update-quiz-score/', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRFToken': getCookie('csrftoken')
-                                },
-                                body: JSON.stringify({
-                                    grade_id: gradeId,
-                                    quiz_id: quizId,
-                                    student_id: studentId,
-                                    score: newScore
-                                })
-                            });
-                            
-                            const data = await response.json();
-                            
-                            if (data.success) {
-                                // Update the original value
-                                input.dataset.originalValue = newScore;
-                                input.dataset.gradeId = data.grade_id || gradeId;
-                                
-                                // Update the average
-                                updateAverages();
-                                
-                                // Show success toast
-                                showToast('Score saved successfully!', 'success');
-                                
-                                // Hide save button after delay
-                                setTimeout(() => {
-                                    this.classList.add('hidden');
-                                    this.innerHTML = '<i class="fas fa-save"></i>';
-                                    this.disabled = false;
-                                }, 1500);
-                            } else {
-                                throw new Error(data.error || 'Failed to save score');
-                            }
-                        } catch (error) {
-                            console.error('Error saving score:', error);
-                            showToast('Failed to save score: ' + error.message, 'error');
-                            this.innerHTML = '<i class="fas fa-save"></i>';
-                            this.disabled = false;
-                        }
-                    });
+    const input = this.previousElementSibling;
+    const gradeId = input.dataset.gradeId;
+    const quizId = input.dataset.quizId;
+    const studentId = input.dataset.studentId;
+    const newScore = input.value;
+    
+    if (newScore === input.dataset.originalValue) {
+        this.classList.add('hidden');
+        return;
+    }
+    
+    try {
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        this.disabled = true;
+        
+        const response = await fetch('/update-quiz-score/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                grade_id: gradeId,
+                quiz_id: quizId,
+                student_id: studentId,
+                score: newScore
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Show the notification from the backend
+            Swal.fire({
+                title: data.notification.title,
+                text: data.notification.message,
+                icon: data.notification.type,
+                timer: 2000,
+                showConfirmButton: false
+            });
+            
+            // Update the original value
+            input.dataset.originalValue = newScore;
+            input.dataset.gradeId = data.grade_id || gradeId;
+            
+            // Update the average
+            updateAverages();
+            
+            // Hide save button after delay
+            setTimeout(() => {
+                this.classList.add('hidden');
+                this.innerHTML = '<i class="fas fa-save"></i>';
+                this.disabled = false;
+            }, 1500);
+        } else {
+            throw new Error(data.error || 'Failed to save score');
+        }
+    } catch (error) {
+        console.error('Error saving score:', error);
+        Swal.fire('Error', 'Failed to save score: ' + error.message, 'error');
+        this.innerHTML = '<i class="fas fa-save"></i>';
+        this.disabled = false;
+    }
+});;
                 }
             });
         }
@@ -1041,11 +729,6 @@ function deleteRecord(button) {
                 filterByGradeRange(e.target.value);
             });
             
-            // Show archived toggle
-            document.getElementById('showArchived').addEventListener('change', function() {
-                toggleArchivedRecords(this.checked);
-            });
-            
             // Sorting
             document.querySelectorAll('.sortable').forEach(th => {
                 th.addEventListener('click', () => {
@@ -1058,105 +741,6 @@ function deleteRecord(button) {
                 button.addEventListener('click', () => {
                     deleteRecord(button);
                 });
-            });
-            
-            // Bulk selection
-            document.getElementById('selectAll').addEventListener('change', (e) => {
-                const checkboxes = document.querySelectorAll('.row-checkbox');
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = e.target.checked;
-                });
-                updateBulkActions();
-            });
-            
-            document.getElementById('headerCheckbox').addEventListener('change', (e) => {
-                const checkboxes = document.querySelectorAll('.row-checkbox');
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = e.target.checked;
-                });
-                updateBulkActions();
-            });
-            
-            document.querySelectorAll('.row-checkbox').forEach(checkbox => {
-                checkbox.addEventListener('change', updateBulkActions);
-            });
-            
-            // Bulk actions
-            document.getElementById('bulkDeleteBtn').addEventListener('click', () => {
-    const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
-    if (checkedBoxes.length > 0) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: `You're about to delete ${checkedBoxes.length} records!`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete them!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const deleteRequests = Array.from(checkedBoxes).map(checkbox => {
-                    const row = checkbox.closest('tr');
-                    const studentId = row.querySelector('.score-input')?.dataset.studentId;
-                    const quizId = row.querySelector('.score-input')?.dataset.quizId;
-                    
-                    return fetch('/delete-quiz-grade/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': getCookie('csrftoken')
-                        },
-                        body: JSON.stringify({ 
-                            student_id: studentId,
-                            quiz_id: quizId
-                        })
-                    });
-                });
-
-                Promise.all(deleteRequests)
-                    .then(responses => Promise.all(responses.map(r => r.json())))
-                    .then(results => {
-                        const successCount = results.filter(r => r.success).length;
-                        if (successCount > 0) {
-                            checkedBoxes.forEach(checkbox => checkbox.closest('tr').remove());
-                            updateClassStatistics();
-                            updatePagination();
-                            showToast(`${successCount} records deleted successfully!`, 'success');
-                        }
-                        if (successCount < checkedBoxes.length) {
-                            showToast(`${checkedBoxes.length - successCount} records failed to delete`, 'error');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        showToast('Error during bulk deletion', 'error');
-                    });
-            }
-        });
-    }
-})
-            
-            document.getElementById('bulkArchiveBtn').addEventListener('click', () => {
-                const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
-                if (checkedBoxes.length > 0) {
-                    Swal.fire({
-                        title: 'Are you sure?',
-                        text: `You're about to archive ${checkedBoxes.length} records!`,
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Yes, archive them!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            const gradeIds = Array.from(checkedBoxes).map(checkbox => {
-                                return checkbox.closest('tr').querySelector('.score-input')?.dataset.gradeId;
-                            }).filter(id => id);
-                            
-                            archiveRecords(gradeIds);
-                        }
-                    });
-                }
             });
             
             // Records per page
@@ -1184,5 +768,6 @@ function deleteRecord(button) {
             updatePagination();
         });
     </script>
-</body>
-</html>
+{% endblock %}
+
+{% endblock %}
