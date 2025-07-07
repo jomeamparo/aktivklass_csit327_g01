@@ -29,7 +29,7 @@
             <p class="text-gray-600">Find quick answers to common questions about AktivKlass</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105">
+            <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105 cursor-pointer" onclick="showGuide('createClass')">
                 <div class="flex items-start">
                     <div class="flex-shrink-0">
                         <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -43,7 +43,7 @@
                 </div>
             </div>
  
-            <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105">
+            <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105 cursor-pointer" onclick="showGuide('manageAttendance')">
                 <div class="flex items-start">
                     <div class="flex-shrink-0">
                         <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -57,7 +57,7 @@
                 </div>
             </div>
  
-            <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105">
+            <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105 cursor-pointer" onclick="showGuide('accountSecurity')">
                 <div class="flex items-start">
                     <div class="flex-shrink-0">
                         <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -71,7 +71,7 @@
                 </div>
             </div>
  
-            <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105">
+            <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105 cursor-pointer" onclick="showGuide('classManagement')">
                 <div class="flex items-start">
                     <div class="flex-shrink-0">
                         <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -136,54 +136,87 @@
             <p class="text-gray-600">Helpful guides and documentation</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="bg-white rounded-lg shadow-lg p-6 h-fit">
                 <h3 class="text-xl font-semibold text-gray-900 mb-4">Getting Started Guide</h3>
                 <ul class="space-y-3 text-gray-600">
-                    <li class="flex items-center">
-                        <svg class="h-5 w-5 text-green-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                        Setting up your account
+                    <li class="flex flex-col">
+                        <button type="button" onclick="toggleAccordion('gettingStarted1')" class="flex items-center w-full text-left focus:outline-none">
+                            <svg id="gettingStarted1Arrow" class="h-5 w-5 text-green-600 mr-2 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            Setting up your account
+                        </button>
+                        <div id="gettingStarted1" class="hidden mt-2 text-sm text-gray-700 pl-7">
+                            After registering, verify your email and log in. Complete your profile for a personalized experience.
+                        </div>
                     </li>
-                    <li class="flex items-center">
-                        <svg class="h-5 w-5 text-green-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                        Creating your first class
+                    <li class="flex flex-col">
+                        <button type="button" onclick="toggleAccordion('gettingStarted2')" class="flex items-center w-full text-left focus:outline-none">
+                            <svg id="gettingStarted2Arrow" class="h-5 w-5 text-green-600 mr-2 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            Creating your first class
+                        </button>
+                        <div id="gettingStarted2" class="hidden mt-2 text-sm text-gray-700 pl-7">
+                            Use the dashboard's "Create New Class" button, fill in the details, and invite students.
+                        </div>
                     </li>
-                    <li class="flex items-center">
-                        <svg class="h-5 w-5 text-green-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                        Managing students
+                    <li class="flex flex-col">
+                        <button type="button" onclick="toggleAccordion('gettingStarted3')" class="flex items-center w-full text-left focus:outline-none">
+                            <svg id="gettingStarted3Arrow" class="h-5 w-5 text-green-600 mr-2 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            Managing students
+                        </button>
+                        <div id="gettingStarted3" class="hidden mt-2 text-sm text-gray-700 pl-7">
+                            Add, remove, or group students for better class organization. Use the import feature for bulk actions.
+                        </div>
                     </li>
                 </ul>
             </div>
-            <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="bg-white rounded-lg shadow-lg p-6 h-fit">
                 <h3 class="text-xl font-semibold text-gray-900 mb-4">Best Practices</h3>
                 <ul class="space-y-3 text-gray-600">
-                    <li class="flex items-center">
-                        <svg class="h-5 w-5 text-green-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                        Effective class management
+                    <li class="flex flex-col">
+                        <button type="button" onclick="toggleAccordion('bestPractices1')" class="flex items-center w-full text-left focus:outline-none">
+                            <svg id="bestPractices1Arrow" class="h-5 w-5 text-green-600 mr-2 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            Effective class management
+                        </button>
+                        <div id="bestPractices1" class="hidden mt-2 text-sm text-gray-700 pl-7">
+                            Use consistent naming, archive old classes, and utilize groups for differentiation.
+                        </div>
                     </li>
-                    <li class="flex items-center">
-                        <svg class="h-5 w-5 text-green-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                        Attendance tracking tips
+                    <li class="flex flex-col">
+                        <button type="button" onclick="toggleAccordion('bestPractices2')" class="flex items-center w-full text-left focus:outline-none">
+                            <svg id="bestPractices2Arrow" class="h-5 w-5 text-green-600 mr-2 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            Attendance tracking tips
+                        </button>
+                        <div id="bestPractices2" class="hidden mt-2 text-sm text-gray-700 pl-7">
+                            Take attendance regularly, use notes for absences, and review patterns weekly.
+                        </div>
                     </li>
-                    <li class="flex items-center">
-                        <svg class="h-5 w-5 text-green-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                        Security recommendations
+                    <li class="flex flex-col">
+                        <button type="button" onclick="toggleAccordion('bestPractices3')" class="flex items-center w-full text-left focus:outline-none">
+                            <svg id="bestPractices3Arrow" class="h-5 w-5 text-green-600 mr-2 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            Security recommendations
+                        </button>
+                        <div id="bestPractices3" class="hidden mt-2 text-sm text-gray-700 pl-7">
+                            Use strong passwords, enable two-factor authentication, and never share your credentials.
+                        </div>
                     </li>
                 </ul>
             </div>
         </div>
     </section>
+ 
+    <!-- Modal for Guides -->
+    <div id="guideModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative mx-4">
+            <h3 id="modalTitle" class="text-xl font-bold mb-4"></h3>
+            <div id="modalContent" class="mb-4">
+                <!-- Content will be inserted here -->
+            </div>
+            <div class="flex justify-end">
+                <button onclick="closeModal()" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
  
 <style>
@@ -216,5 +249,138 @@
 html {
   scroll-behavior: smooth;
 }
+ 
+/* Modal styling */
+#guideModal {
+    transition: opacity 0.3s ease;
+}
+ 
+#guideModal > div {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+ 
+.rotate-90 {
+    transform: rotate(90deg);
+}
 </style>
+ 
+<script>
+// Modal functions
+function openModal(title, content) {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalContent').innerHTML = content;
+    document.getElementById('guideModal').classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+}
+ 
+function closeModal() {
+    document.getElementById('guideModal').classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+}
+ 
+// Guides content
+const guides = {
+    createClass: {
+        title: "Creating a New Class - Step by Step Guide",
+        content: `
+            <ol class="list-decimal pl-5 space-y-3 text-gray-700">
+                <li>Click on the "Create New Class" button in your dashboard</li>
+                <li>Enter the class name and subject</li>
+                <li>Set the class schedule (days and times)</li>
+                <li>Add students by entering their emails or uploading a CSV file</li>
+                <li>Configure attendance settings (optional)</li>
+                <li>Click "Create Class" to finish</li>
+            </ol>
+            <div class="mt-4 p-3 bg-green-50 rounded-md">
+                <p class="text-green-700"><strong>Tip:</strong> You can always edit these settings later from the class management page.</p>
+            </div>
+        `
+    },
+    manageAttendance: {
+        title: "Managing Attendance - Step by Step Guide",
+        content: `
+            <ol class="list-decimal pl-5 space-y-3 text-gray-700">
+                <li>Navigate to the class you want to manage</li>
+                <li>Click on the "Attendance" tab</li>
+                <li>Select the date from the calendar</li>
+                <li>Mark students as Present, Absent, or Late</li>
+                <li>Add notes for any special circumstances (optional)</li>
+                <li>Click "Save Attendance" to record</li>
+            </ol>
+            <div class="mt-4 p-3 bg-green-50 rounded-md">
+                <p class="text-green-700"><strong>Tip:</strong> You can export attendance records to Excel or PDF for reporting purposes.</p>
+            </div>
+        `
+    },
+    accountSecurity: {
+        title: "Account Security - Best Practices",
+        content: `
+            <ul class="list-disc pl-5 space-y-3 text-gray-700">
+                <li>Use a strong, unique password</li>
+                <li>Enable two-factor authentication in your account settings</li>
+                <li>Never share your login credentials</li>
+                <li>Log out when using public computers</li>
+                <li>Regularly review active sessions in your security settings</li>
+                <li>Be cautious of phishing emails</li>
+            </ul>
+            <div class="mt-4 p-3 bg-yellow-50 rounded-md">
+                <p class="text-yellow-700"><strong>Important:</strong> Contact support immediately if you suspect unauthorized access to your account.</p>
+            </div>
+        `
+    },
+    classManagement: {
+        title: "Class Management - Guide",
+        content: `
+            <ol class="list-decimal pl-5 space-y-3 text-gray-700">
+                <li>From your dashboard, select the class you want to manage</li>
+                <li>Use the tabs to navigate between different management options</li>
+                <li>Edit class details by clicking the "Settings" button</li>
+                <li>Add or remove students from the "Students" tab</li>
+                <li>Archive inactive classes to keep your dashboard organized</li>
+                <li>Generate reports from the "Reports" section</li>
+            </ol>
+            <div class="mt-4 p-3 bg-green-50 rounded-md">
+                <p class="text-green-700"><strong>Tip:</strong> Use the bulk actions feature to manage multiple students at once.</p>
+            </div>
+        `
+    }
+};
+ 
+// Function to show guide
+function showGuide(guideName) {
+    const guide = guides[guideName];
+    if (guide) {
+        openModal(guide.title, guide.content);
+    }
+}
+ 
+// Close modal when clicking outside
+document.getElementById('guideModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+ 
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeModal();
+    }
+});
+ 
+// Accordion toggles for Additional Resources
+function toggleAccordion(openId) {
+    const content = document.getElementById(openId);
+    const arrow = document.getElementById(openId + 'Arrow');
+    
+    if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        if (arrow) arrow.classList.add('rotate-90');
+    } else {
+        content.classList.add('hidden');
+        if (arrow) arrow.classList.remove('rotate-90');
+    }
+}
+</script>
 {% endblock %}

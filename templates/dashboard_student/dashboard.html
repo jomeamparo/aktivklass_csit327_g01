@@ -129,6 +129,11 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
     
         const formData = new FormData(form);
+        const classCode = formData.get('class_code');
+        
+        console.log('Submitting join request for class code:', classCode);
+        console.log('Form action:', form.action);
+        console.log('CSRF token:', formData.get('csrfmiddlewaretoken'));
     
         try {
             const response = await fetch(form.action, {
@@ -139,31 +144,42 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: formData,
             });
     
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
+            
             // First try to read as text
             const text = await response.text();
+            console.log('Response text:', text);
             
             try {
                 // Then try to parse as JSON
                 const data = JSON.parse(text);
+                console.log('Parsed JSON response:', data);
                 
                 if (response.ok) {
                     modal.classList.add('hidden');
                     alert("Request to join the class has been submitted successfully.");
+                    // Reload the page to show updated class list
+                    window.location.reload();
                 } else {
                     console.error('Error response:', data);
                     alert(data.error || text);  // Fallback to raw text if no error property
                 }
-            } catch {
+            } catch (jsonError) {
                 // If not JSON, use the raw text
+                console.log('Response is not JSON, using raw text');
                 if (response.ok) {
                     console.log('SUCCESS (non-JSON)', text);
+                    modal.classList.add('hidden');
+                    alert("Request to join the class has been submitted successfully.");
+                    window.location.reload();
                 } else {
                     console.error('Error response (non-JSON):', text);
                     alert(text);
                 }
             }
         } catch (error) {
-            console.error('Submission error:', error);
+            console.error('Network error during submission:', error);
             alert('Network error. Please check your connection and try again.');
         }
     });

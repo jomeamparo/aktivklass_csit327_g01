@@ -10,14 +10,23 @@ def teacher_student_list_view(request):
         last_name = request.POST.get("last_name")
         course = request.POST.get("course")
         year = request.POST.get("year")
+        email = request.POST.get("email")
 
-        if all([student_id, first_name, last_name, course, year]):
+        if all([student_id, first_name, last_name, course, year, email]):
+            if Student.objects.filter(email=email).exists():
+                # Email already exists, return error (could use messages or context)
+                return render(request, 'teacher_student/teacher_student_list.html', {
+                    'class_students': [],
+                    'role': 'faculty',
+                    'error': 'Email already exists.'
+                })
             if not Student.objects.filter(student_id=student_id).exists():
                 Student.objects.create(
                     student_id=student_id,
                     first_name=first_name,
                     middle_name=middle_name if middle_name.strip() else " ",
                     last_name=last_name,
+                    email=email,
                     course=course,
                     year=year,
                 )
