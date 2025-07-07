@@ -30,8 +30,4 @@ class PatchedEmailBackend(EmailBackend):
 
         if self.username and self.password:
             self.connection.login(self.username, self.password)
-<<<<<<< HEAD
-=======
-
->>>>>>> 44912e7 (removed the migration)
         return True
