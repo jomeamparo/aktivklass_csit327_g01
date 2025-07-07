@@ -189,6 +189,7 @@ EMAIL_BACKEND = 'core.email_backend.PatchedEmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
 EMAIL_HOST_USER = 'minecrafterusergame@gmail.com'  # Replace with your Gmail address
 EMAIL_HOST_PASSWORD = 'lukojehfetcplftj'  # Paste the 16-character app password here
 # Login URL configuration
