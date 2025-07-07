@@ -51,6 +51,19 @@ def debug_join_requests(request):
     
     return JsonResponse(debug_info)
 
+def update_session_pending_count(request, faculty):
+    """Update session with pending request count for notifications"""
+    try:
+        classes = Class.objects.filter(faculty=faculty)
+        pending_count = ClassJoinRequest.objects.filter(
+            class_requested__in=classes, 
+            status='pending'
+        ).count()
+        request.session['pending_requests_count'] = pending_count
+        request.session.modified = True
+    except Exception as e:
+        logger.error(f"Error updating session pending count: {e}")
+
 def class_join_request_view(request):
     logger.info("Class join request view accessed")
     
@@ -58,11 +71,10 @@ def class_join_request_view(request):
     faculty_id = request.session.get('user_id')
     logger.info(f"Faculty ID from session: {faculty_id}")
     
-    print('faculty_id:: ', faculty_id)
     if not faculty_id:
         logger.error("No faculty_id in session")
         messages.error(request, 'Faculty authentication required')
-        return redirect('login')  # or your login route
+        return redirect('login')
 
     try:
         faculty = Faculty.objects.get(faculty_id=faculty_id)
@@ -72,10 +84,23 @@ def class_join_request_view(request):
         messages.error(request, 'Faculty not found')
         return redirect('login')
 
+    # Update session with pending count
+    update_session_pending_count(request, faculty)
+
     # Get all classes taught by this faculty
     classes = Class.objects.filter(faculty=faculty).order_by('subject_name')
     logger.info(f"Faculty {faculty.first_name} teaches {classes.count()} classes")
-    print(f'Faculty {faculty.first_name} teaches {classes.count()} classes: {[c.subject_name for c in classes]}')
+    
+    if classes.count() == 0:
+        messages.warning(request, f'You are not assigned to any classes. Please contact the administrator.')
+        context = {
+            'role': 'faculty',
+            'faculty': faculty,
+            'class_join_requests_map': {},
+            'has_pending': False,
+            'no_classes': True
+        }
+        return render(request, 'class_join_request/class_join_request_list.html', context)
 
     # Prepare a mapping of each class to its join requests
     class_join_requests_map = defaultdict(list)
@@ -84,21 +109,22 @@ def class_join_request_view(request):
         join_requests = ClassJoinRequest.objects.filter(class_requested=class_obj, status='pending').select_related('student')
         class_join_requests_map[class_obj] = join_requests
         logger.info(f"Class {class_obj.subject_name} has {join_requests.count()} pending requests")
-        print(f'Class {class_obj.subject_name} has {join_requests.count()} pending requests')
     
     has_pending = any(join_requests.exists() for join_requests in class_join_requests_map.values())
     logger.info(f"Has pending requests: {has_pending}")
-    print(f'Has pending requests: {has_pending}')
 
-    # DEBUG: Print all pending join requests for this faculty's classes
+    # Get all pending join requests for this faculty's classes
     all_pending = ClassJoinRequest.objects.filter(class_requested__in=classes, status='pending')
     logger.info(f"All pending join requests for faculty {faculty_id}: {list(all_pending)}")
-    print(f'All pending join requests for faculty {faculty_id}: {list(all_pending)}')
+
+    # Add notification for new requests
+    if all_pending.count() > 0:
+        messages.info(request, f'You have {all_pending.count()} pending join request(s) to review.')
 
     context = {
         'role': 'faculty',
         'faculty': faculty,
-        'class_join_requests_map': dict(class_join_requests_map) ,
+        'class_join_requests_map': dict(class_join_requests_map),
         'has_pending': has_pending,
         'debug_info': {
             'faculty_id': faculty_id,
@@ -112,9 +138,24 @@ def class_join_request_view(request):
 def approve_join_request(request, request_id):
     logger.info(f"Approving join request {request_id}")
     
+    if request.method != 'POST':
+        messages.error(request, 'Invalid request method')
+        return redirect('class_join_request')
+    
     try:
         join_request = get_object_or_404(ClassJoinRequest, id=request_id)
         logger.info(f"Found join request: {join_request}")
+        
+        # Verify the faculty owns this class
+        faculty_id = request.session.get('user_id')
+        if not faculty_id:
+            messages.error(request, 'Authentication required')
+            return redirect('class_join_request')
+        
+        faculty = Faculty.objects.get(faculty_id=faculty_id)
+        if join_request.class_requested.faculty != faculty:
+            messages.error(request, 'You can only approve requests for your own classes')
+            return redirect('class_join_request')
         
         join_request.status = 'approved'
         join_request.save()
@@ -133,28 +174,51 @@ def approve_join_request(request, request_id):
             logger.info(f"Enrollment already exists for student {join_request.student} in class {join_request.class_requested}")
         
         messages.success(request, f"Join request approved. {join_request.student.first_name} {join_request.student.last_name} has been enrolled in {join_request.class_requested.subject_name}.")
-        return redirect(request.META.get('HTTP_REFERER', 'dashboard_faculty'))
+        
+        # Update session pending count
+        update_session_pending_count(request, faculty)
+        
+        return redirect('class_join_request')
         
     except Exception as e:
         logger.error(f"Error approving join request {request_id}: {e}")
         messages.error(request, f"Error approving join request: {e}")
-        return redirect(request.META.get('HTTP_REFERER', 'dashboard_faculty'))
+        return redirect('class_join_request')
 
 def reject_join_request(request, request_id):
     logger.info(f"Rejecting join request {request_id}")
+    
+    if request.method != 'POST':
+        messages.error(request, 'Invalid request method')
+        return redirect('class_join_request')
     
     try:
         join_request = get_object_or_404(ClassJoinRequest, id=request_id)
         logger.info(f"Found join request: {join_request}")
         
+        # Verify the faculty owns this class
+        faculty_id = request.session.get('user_id')
+        if not faculty_id:
+            messages.error(request, 'Authentication required')
+            return redirect('class_join_request')
+        
+        faculty = Faculty.objects.get(faculty_id=faculty_id)
+        if join_request.class_requested.faculty != faculty:
+            messages.error(request, 'You can only reject requests for your own classes')
+            return redirect('class_join_request')
+        
         join_request.status = 'rejected'
         join_request.save()
         logger.info(f"Join request {request_id} rejected")
         
-        messages.success(request, "Join request rejected.")
-        return redirect(request.META.get('HTTP_REFERER', 'dashboard_faculty'))
+        messages.success(request, f"Join request rejected for {join_request.student.first_name} {join_request.student.last_name}.")
+        
+        # Update session pending count
+        update_session_pending_count(request, faculty)
+        
+        return redirect('class_join_request')
         
     except Exception as e:
         logger.error(f"Error rejecting join request {request_id}: {e}")
         messages.error(request, f"Error rejecting join request: {e}")
-        return redirect(request.META.get('HTTP_REFERER', 'dashboard_faculty'))
+        return redirect('class_join_request')

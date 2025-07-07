@@ -7,6 +7,15 @@
         <a href="{% url 'debug_join_requests' %}" class="text-blue-600 hover:text-blue-800">Debug Info</a>
     </div>
 
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mb-4 p-4 rounded-lg {% if message.tags == 'error' %}bg-red-100 text-red-700{% elif message.tags == 'warning' %}bg-yellow-100 text-yellow-700{% elif message.tags == 'info' %}bg-blue-100 text-blue-700{% else %}bg-green-100 text-green-700{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <!-- Debug Information (only show if there are issues) -->
     {% if debug_info %}
     <div class="mb-4 p-4 bg-gray-100 rounded">
@@ -25,10 +34,16 @@
     </div>
     {% endif %}
 
-    {% if has_pending %}
+    <!-- No classes assigned -->
+    {% if no_classes %}
+    <div class="p-6 text-center text-gray-500 font-medium">
+        <p class="text-lg mb-2">You are not assigned to any classes.</p>
+        <p class="text-sm">Please contact the administrator to get assigned to classes.</p>
+    </div>
+    {% elif has_pending %}
         {% for class_obj, requests in class_join_requests_map.items %}
-        <div class="mb-8 p-4">
-            <h2 class="text-xl font-semibold mb-4">
+        <div class="mb-8 p-4 border border-gray-200 rounded-lg">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">
                 {{ class_obj.subject_code }} - {{ class_obj.subject_name }}
             </h2>
 
@@ -38,6 +53,8 @@
                     <thead class="bg-gray-100">
                         <tr>
                             <th class="border px-4 py-2 text-left">Student</th>
+                            <th class="border px-4 py-2 text-left">Student ID</th>
+                            <th class="border px-4 py-2 text-left">Course & Year</th>
                             <th class="border px-4 py-2 text-left">Requested At</th>
                             <th class="border px-4 py-2 text-left">Status</th>
                             <th class="border px-4 py-2 text-left">Actions</th>
@@ -52,18 +69,20 @@
                                     {{ request.student.middle_name|first }}.
                                 {% endif %}
                             </td>
+                            <td class="border px-4 py-2">{{ request.student.student_id }}</td>
+                            <td class="border px-4 py-2">{{ request.student.course }} - {{ request.student.year }}</td>
                             <td class="border px-4 py-2">{{ request.requested_at|date:"M d, Y H:i" }}</td>
                             <td class="border px-4 py-2 capitalize">{{ request.status }}</td>
                             <td class="border px-4 py-2">
                                 {% if request.status == 'pending' %}
                                 <div class="flex space-x-2">
-                                    <form method="post" action="{% url 'approve_join_request' request.id %}">
+                                    <form method="post" action="{% url 'approve_join_request' request.id %}" class="inline">
                                         {% csrf_token %}
-                                        <button type="submit" class="text-green-600 hover:text-green-800">Approve</button>
+                                        <button type="submit" class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm">Approve</button>
                                     </form>
-                                    <form method="post" action="{% url 'reject_join_request' request.id %}">
+                                    <form method="post" action="{% url 'reject_join_request' request.id %}" class="inline">
                                         {% csrf_token %}
-                                        <button type="submit" class="text-red-600 hover:text-red-800">Reject</button>
+                                        <button type="submit" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm">Reject</button>
                                     </form>
                                 </div>
                                 {% endif %}
@@ -80,7 +99,7 @@
         {% endfor %}
     {% else %}
     <div class="p-6 text-center text-gray-500 font-medium">
-        No pending join requests.
+        <p class="text-lg mb-2">No pending join requests.</p>
         {% if debug_info %}
         <p class="text-sm mt-2">Debug: Faculty teaches {{ debug_info.classes_count }} classes, but no pending requests found.</p>
         {% endif %}

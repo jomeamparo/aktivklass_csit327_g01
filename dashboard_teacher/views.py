@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
-from core.models import Class
+from core.models import Class, Faculty
 from django.contrib import messages
 
 # @login_required
@@ -19,13 +19,24 @@ def create_class(request):
     description = request.POST.get('description')
     schedule = request.POST.get('schedule')
     room = request.POST.get('room')
+    
+    # Get the faculty who is creating the class
+    faculty_id = request.session.get('user_id')
+    faculty = None
+    
+    if faculty_id:
+        try:
+            faculty = Faculty.objects.get(faculty_id=faculty_id)
+        except Faculty.DoesNotExist:
+            pass
 
     new_class = Class.objects.create(
         subject_name=subject_name,
         subject_code=subject_code,
         description=description,
         schedule=schedule,
-        room=room
+        room=room,
+        faculty=faculty  # Assign the faculty who created the class
     )
 
     return JsonResponse({
@@ -36,6 +47,7 @@ def create_class(request):
         'description': new_class.description,
         'schedule': new_class.schedule,
         'room': new_class.room,
+        'faculty_assigned': faculty.first_name + " " + faculty.last_name if faculty else "No faculty assigned"
     })
 
 def delete_class(request, class_id):
