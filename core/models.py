@@ -359,10 +359,10 @@ class FacultyProfile(models.Model):
     website = models.URLField(blank=True, null=True)
     birth_date = models.DateField(blank=True, null=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Active')
-
+ 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
-
+ 
     def completion_percentage(self):
         fields = [
             self.first_name, self.last_name, self.department, self.email,

@@ -30,5 +30,4 @@ class PatchedEmailBackend(EmailBackend):
 
         if self.username and self.password:
             self.connection.login(self.username, self.password)
-
         return True
