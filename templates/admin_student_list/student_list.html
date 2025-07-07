@@ -82,36 +82,28 @@
                     <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">First Name</th>
                     <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Middle Name</th>
                     <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Last Name</th>
+                    <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Email</th>
                     <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Course</th>
                     <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Year</th>
                     <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Status</th>
-                    <th class="border px-4 py-2 text-left text-gray-800 dark:text-gray-200">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for student in students %}
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" onclick="openEditModal('{{ student.student_id }}', '{{ student.first_name }}', '{{ student.middle_name }}', '{{ student.last_name }}', '{{ student.email }}', '{{ student.course }}', '{{ student.year }}')">
                     <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ student.student_id }}</td>
                     <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ student.first_name }}</td>
                     <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ student.middle_name }}</td>
                     <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ student.last_name }}</td>
+                    <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ student.email }}</td>
                     <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ student.course }}</td>
                     <td class="border px-4 py-2 text-gray-900 dark:text-gray-100">{{ student.year }}</td>
                     <td class="border px-4 py-2">
                         <button 
-                            onclick="toggleStudentStatus(this, '{{ student.student_id }}')"
+                            onclick="event.stopPropagation(); toggleStudentStatus(this, '{{ student.student_id }}')"
                             class="status-btn {% if student.is_disabled %}bg-green-600 hover:bg-green-700{% else %}bg-red-600 hover:bg-red-700{% endif %} text-white px-3 py-1 rounded transition">
                             {% if student.is_disabled %}Activate{% else %}Disable{% endif %}
                         </button>
-                    </td>
-                    <td class="border px-4 py-2">
-                        <a href="{% url 'edit_student' %}" 
-                           class="inline-flex items-center px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors dark:bg-blue-500 dark:hover:bg-blue-400 dark:text-gray-900">
-                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                            </svg>
-                            Edit
-                        </a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -154,6 +146,11 @@
                                class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
                     </div>
                     <div>
+                        <label for="email" class="block font-medium text-gray-700 dark:text-gray-100">Email</label>
+                        <input id="email" name="email" type="email" required
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
                         <label for="course" class="block font-medium text-gray-700 dark:text-gray-100">Course</label>
                         <select id="course" name="course" required
                                 class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500">
@@ -193,7 +190,7 @@
     <div id="editStudentModal" class="fixed inset-0 flex items-center justify-center hidden z-50">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md w-full p-6 relative">
             <h3 class="text-xl font-semibold mb-4 dark:text-gray-100">Edit Student</h3>
-            <form id="editStudentForm" method="post" action="{% url 'teacher_student_list' %}" onsubmit="return handleEditSubmit(event)">
+            <form id="editStudentForm" method="post" action="" onsubmit="return handleEditSubmit(event)">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="edit">
                 <div class="space-y-4 text-gray-900 dark:text-gray-100">
@@ -215,6 +212,11 @@
                     <div>
                         <label for="edit_last_name" class="block font-medium text-gray-700 dark:text-gray-100">Last Name</label>
                         <input id="edit_last_name" name="last_name" type="text" required
+                               class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                    <div>
+                        <label for="edit_email" class="block font-medium text-gray-700 dark:text-gray-100">Email</label>
+                        <input id="edit_email" name="email" type="email" required
                                class="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500" />
                     </div>
                     <div>
@@ -285,11 +287,12 @@
         backdrop.classList.add('hidden');
     });
 
-    function openEditModal(studentId, firstName, middleName, lastName, course, year) {
+    function openEditModal(studentId, firstName, middleName, lastName, email, course, year) {
         document.getElementById('edit_student_id').value = studentId;
         document.getElementById('edit_first_name').value = firstName;
         document.getElementById('edit_middle_name').value = middleName;
         document.getElementById('edit_last_name').value = lastName;
+        document.getElementById('edit_email').value = email;
         document.getElementById('edit_course').value = course;
         document.getElementById('edit_year').value = year;
         
@@ -320,7 +323,7 @@
             cells[5].textContent = year;
 
             // Update the onclick attribute with new values
-            row.setAttribute('onclick', `openEditModal('${studentId}', '${firstName}', '${middleName}', '${lastName}', '${course}', '${year}')`);
+            row.setAttribute('onclick', `openEditModal('${studentId}', '${firstName}', '${middleName}', '${lastName}', '${email}', '${course}', '${year}')`);
         }
 
         // Close the modal
@@ -379,4 +382,4 @@
         document.documentElement.classList.remove("dark");
       }
 </script>
-{% endblock %}  q
+{% endblock %} 

@@ -29,7 +29,8 @@
             <p class="text-gray-600">Find quick answers to common questions about AktivKlass</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105">
+            <!-- Admin: Class Creation -->
+            <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105 cursor-pointer" onclick="openModal('classModal')">
                 <div class="flex items-start">
                     <div class="flex-shrink-0">
                         <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -37,13 +38,14 @@
                         </svg>
                     </div>
                     <div class="ml-4">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2 cursor-pointer" onclick="openModal('classModal')">Admin: Class Creation</h3>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Admin: Class Creation</h3>
                         <p class="text-gray-600">Learn how to create and configure classes with advanced administrative settings, including teacher assignments and access controls.</p>
                     </div>
                 </div>
             </div>
  
-            <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105">
+            <!-- Admin: Attendance Oversight -->
+            <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105 cursor-pointer" onclick="openModal('attendanceModal')">
                 <div class="flex items-start">
                     <div class="flex-shrink-0">
                         <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -51,13 +53,14 @@
                         </svg>
                     </div>
                     <div class="ml-4">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2 cursor-pointer" onclick="openModal('attendanceModal')">Admin: Attendance Oversight</h3>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Admin: Attendance Oversight</h3>
                         <p class="text-gray-600">Monitor and manage attendance across all classes, generate institution-wide reports, and configure attendance policies.</p>
                     </div>
                 </div>
             </div>
  
-            <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105">
+            <!-- Admin: Security Administration -->
+            <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105 cursor-pointer" onclick="openModal('securityModal')">
                 <div class="flex items-start">
                     <div class="flex-shrink-0">
                         <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -65,13 +68,14 @@
                         </svg>
                     </div>
                     <div class="ml-4">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2 cursor-pointer" onclick="openModal('securityModal')">Admin: Security Administration</h3>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Admin: Security Administration</h3>
                         <p class="text-gray-600">Configure system-wide security settings, manage user permissions, and enforce institutional security policies.</p>
                     </div>
                 </div>
             </div>
  
-            <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105">
+            <!-- Admin: System Management -->
+            <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105 cursor-pointer" onclick="openModal('managementModal')">
                 <div class="flex items-start">
                     <div class="flex-shrink-0">
                         <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -79,7 +83,7 @@
                         </svg>
                     </div>
                     <div class="ml-4">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2 cursor-pointer" onclick="openModal('managementModal')">Admin: System Management</h3>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Admin: System Management</h3>
                         <p class="text-gray-600">Manage all classes, users, and system configurations with administrative tools and bulk operations.</p>
                     </div>
                 </div>
@@ -186,10 +190,11 @@
     </section>
 </div>
 
+<!-- Modals Section -->
 <!-- Modal for Creating a New Class -->
 <div id="classModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
   <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-xl relative">
-    <button onclick="closeModal('classModal')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+    <button onclick="closeModal('classModal')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl" aria-label="Close modal">&times;</button>
     <h2 class="text-2xl font-bold mb-4 text-gray-800">Creating a New Class</h2>
     <p class="text-gray-700 mb-2">Follow these steps to create a new class as an Admin:</p>
     <ol class="list-decimal list-inside space-y-2 text-gray-600">
@@ -205,7 +210,7 @@
 <!-- Modal for Managing Attendance -->
 <div id="attendanceModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
     <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-xl relative">
-        <button onclick="closeModal('attendanceModal')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+        <button onclick="closeModal('attendanceModal')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl" aria-label="Close modal">&times;</button>
         <h2 class="text-2xl font-bold mb-4 text-gray-800">Managing Attendance</h2>
         <ul class="list-disc list-inside text-gray-700 space-y-2">
             <li>Navigate to the "Attendance" tab in your class.</li>
@@ -219,7 +224,7 @@
 <!-- Modal for Account Security -->
 <div id="securityModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
     <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-xl relative">
-        <button onclick="closeModal('securityModal')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+        <button onclick="closeModal('securityModal')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl" aria-label="Close modal">&times;</button>
         <h2 class="text-2xl font-bold mb-4 text-gray-800">Account Security</h2>
         <p class="text-gray-700 mb-4">Best practices for keeping your AktivKlass account secure:</p>
         <ul class="list-disc list-inside text-gray-700 space-y-2">
@@ -235,7 +240,7 @@
 <!-- Modal for Class Management -->
 <div id="managementModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
     <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-xl relative">
-        <button onclick="closeModal('managementModal')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+        <button onclick="closeModal('managementModal')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl" aria-label="Close modal">&times;</button>
         <h2 class="text-2xl font-bold mb-4 text-gray-800">Class Management</h2>
         <p class="text-gray-700 mb-4">Comprehensive guide to managing your classes:</p>
         <ul class="list-disc list-inside text-gray-700 space-y-2">
@@ -251,7 +256,7 @@
 <!-- Modal for Setting Up Account -->
 <div id="accountSetupModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
   <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-xl relative">
-    <button onclick="closeModal('accountSetupModal')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+    <button onclick="closeModal('accountSetupModal')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl" aria-label="Close modal">&times;</button>
     <h2 class="text-2xl font-bold mb-4 text-gray-800">Setting Up Your Account</h2>
     <ol class="list-decimal list-inside space-y-2 text-gray-600">
       <li>Complete your profile information after registration</li>
@@ -266,7 +271,7 @@
 <!-- Modal for Creating First Class -->
 <div id="firstClassModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
   <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-xl relative">
-    <button onclick="closeModal('firstClassModal')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+    <button onclick="closeModal('firstClassModal')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl" aria-label="Close modal">&times;</button>
     <h2 class="text-2xl font-bold mb-4 text-gray-800">Creating Your First Class</h2>
     <ol class="list-decimal list-inside space-y-2 text-gray-600">
       <li>Navigate to the Classes section in your dashboard</li>
@@ -282,7 +287,7 @@
 <!-- Modal for Managing Students -->
 <div id="studentManagementModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
   <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-xl relative">
-    <button onclick="closeModal('studentManagementModal')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+    <button onclick="closeModal('studentManagementModal')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl" aria-label="Close modal">&times;</button>
     <h2 class="text-2xl font-bold mb-4 text-gray-800">Managing Students</h2>
     <ul class="list-disc list-inside text-gray-700 space-y-2">
       <li>Add students individually or import from a CSV file</li>
@@ -298,7 +303,7 @@
 <!-- Modal for Effective Class Management -->
 <div id="classManagementModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
   <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-xl relative">
-    <button onclick="closeModal('classManagementModal')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+    <button onclick="closeModal('classManagementModal')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl" aria-label="Close modal">&times;</button>
     <h2 class="text-2xl font-bold mb-4 text-gray-800">Effective Class Management</h2>
     <ul class="list-disc list-inside text-gray-700 space-y-2">
       <li>Establish clear naming conventions for your classes</li>
@@ -314,7 +319,7 @@
 <!-- Modal for Attendance Tracking Tips -->
 <div id="attendanceTipsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
   <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-xl relative">
-    <button onclick="closeModal('attendanceTipsModal')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+    <button onclick="closeModal('attendanceTipsModal')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl" aria-label="Close modal">&times;</button>
     <h2 class="text-2xl font-bold mb-4 text-gray-800">Attendance Tracking Tips</h2>
     <ul class="list-disc list-inside text-gray-700 space-y-2">
       <li>Take attendance at the same time each day to establish routine</li>
@@ -330,7 +335,7 @@
 <!-- Modal for Security Recommendations -->
 <div id="securityRecommendationsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
   <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-xl relative">
-    <button onclick="closeModal('securityRecommendationsModal')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+    <button onclick="closeModal('securityRecommendationsModal')" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl" aria-label="Close modal">&times;</button>
     <h2 class="text-2xl font-bold mb-4 text-gray-800">Security Recommendations</h2>
     <ul class="list-disc list-inside text-gray-700 space-y-2">
       <li>Require all users to enable two-factor authentication</li>
@@ -383,22 +388,34 @@ html {
 <script>
 function openModal(id) {
     document.getElementById(id).classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
 }
 
 function closeModal(id) {
     document.getElementById(id).classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
 }
 
-// Close modal when clicking outside of it
-window.onclick = function(event) {
-    if (event.target.classList.contains('fixed')) {
-        const modals = document.querySelectorAll('.fixed.hidden');
+// Close modal when clicking outside of modal content
+window.addEventListener('click', function(event) {
+    const modals = document.querySelectorAll('.fixed.inset-0.bg-black.bg-opacity-50.flex.items-center.justify-center.z-50');
+    modals.forEach(modal => {
+        if (!modal.classList.contains('hidden') && event.target === modal) {
+            closeModal(modal.id);
+        }
+    });
+});
+
+// Close modal on Escape key
+window.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const modals = document.querySelectorAll('.fixed.inset-0.bg-black.bg-opacity-50.flex.items-center.justify-center.z-50');
         modals.forEach(modal => {
             if (!modal.classList.contains('hidden')) {
-                modal.classList.add('hidden');
+                closeModal(modal.id);
             }
         });
     }
-}
+});
 </script>
 {% endblock %}

@@ -4,7 +4,26 @@
 <div class="container">
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-bold text-gray-800">Class Join Requests</h2>
+        <a href="{% url 'debug_join_requests' %}" class="text-blue-600 hover:text-blue-800">Debug Info</a>
     </div>
+
+    <!-- Debug Information (only show if there are issues) -->
+    {% if debug_info %}
+    <div class="mb-4 p-4 bg-gray-100 rounded">
+        <h3 class="font-bold text-gray-800">Debug Information:</h3>
+        <p>Faculty ID: {{ debug_info.faculty_id }}</p>
+        <p>Classes Count: {{ debug_info.classes_count }}</p>
+        <p>Pending Requests Count: {{ debug_info.pending_requests_count }}</p>
+        {% if debug_info.all_pending_requests %}
+        <p>All Pending Requests:</p>
+        <ul class="list-disc list-inside">
+            {% for request in debug_info.all_pending_requests %}
+            <li>{{ request.student }} -> {{ request.class_requested }} ({{ request.status }})</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endif %}
 
     {% if has_pending %}
         {% for class_obj, requests in class_join_requests_map.items %}
@@ -62,6 +81,9 @@
     {% else %}
     <div class="p-6 text-center text-gray-500 font-medium">
         No pending join requests.
+        {% if debug_info %}
+        <p class="text-sm mt-2">Debug: Faculty teaches {{ debug_info.classes_count }} classes, but no pending requests found.</p>
+        {% endif %}
     </div>
     {% endif %}
 </div>
