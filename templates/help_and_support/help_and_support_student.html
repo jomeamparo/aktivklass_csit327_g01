@@ -4,7 +4,7 @@
  
 {% block content %}
 <div class="container mx-auto px-4 py-8">
-   
+ 
     <!-- Header Section -->
     <div class="text-center mb-12">
         <h1 class="text-4xl font-bold text-gray-800 mb-4">Help & Support Center</h1>
@@ -23,69 +23,71 @@
     </div>
  
     <!-- FAQ Section -->
-    <section id="faq" class="mb-16">
-        <div class="text-center mb-8">
-            <h2 class="text-3xl font-bold text-gray-800 mb-2">Frequently Asked Questions</h2>
-            <p class="text-gray-600">Find quick answers to common questions about AktivKlass</p>
+<section id="faq" class="mb-16">
+  <div class="text-center mb-8">
+    <h2 class="text-3xl font-bold text-gray-800 mb-2">Frequently Asked Questions</h2>
+    <p class="text-gray-600">Find quick answers to common questions about AktivKlass as a student</p>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- Joining a Class -->
+    <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105 cursor-pointer" onclick="showGuide('joinClass')">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m2 0a2 2 0 012 2v6a2 2 0 01-2 2H7a2 2 0 01-2-2v-6a2 2 0 012-2m10 0V9a2 2 0 00-2-2M7 12V9a2 2 0 012-2" />
+          </svg>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105 cursor-pointer" onclick="showGuide('createClass')">
-                <div class="flex items-start">
-                    <div class="flex-shrink-0">
-                        <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                        </svg>
-                    </div>
-                    <div class="ml-4">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Creating a New Class</h3>
-                        <p class="text-gray-600">Learn how to set up and manage your classes effectively. Follow our step-by-step guide to create engaging learning environments.</p>
-                    </div>
-                </div>
-            </div>
- 
-            <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105 cursor-pointer" onclick="showGuide('manageAttendance')">
-                <div class="flex items-start">
-                    <div class="flex-shrink-0">
-                        <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                        </svg>
-                    </div>
-                    <div class="ml-4">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Managing Attendance</h3>
-                        <p class="text-gray-600">Track student attendance efficiently with our comprehensive attendance management system. Generate reports and analyze patterns.</p>
-                    </div>
-                </div>
-            </div>
- 
-            <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105 cursor-pointer" onclick="showGuide('accountSecurity')">
-                <div class="flex items-start">
-                    <div class="flex-shrink-0">
-                        <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                    </div>
-                    <div class="ml-4">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Account Security</h3>
-                        <p class="text-gray-600">Keep your account secure with our best practices guide. Learn about password management and security features.</p>
-                    </div>
-                </div>
-            </div>
- 
-            <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105 cursor-pointer" onclick="showGuide('classManagement')">
-                <div class="flex items-start">
-                    <div class="flex-shrink-0">
-                        <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <div class="ml-4">
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Class Management</h3>
-                        <p class="text-gray-600">Organize your classes efficiently. Learn about archiving, student management, and class settings.</p>
-                    </div>
-                </div>
-            </div>
+        <div class="ml-4">
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Joining a Class</h3>
+          <p class="text-gray-600">Learn how to join your classes using the invitation link or class code from your teacher.</p>
         </div>
-    </section>
+      </div>
+    </div>
+    <!-- Checking Attendance -->
+    <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105 cursor-pointer" onclick="showGuide('checkAttendance')">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 4h10M5 11h14M5 15h14M5 19h14" />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Checking Your Attendance</h3>
+          <p class="text-gray-600">See how to view your attendance records and track your participation in classes.</p>
+        </div>
+      </div>
+    </div>
+    <!-- Account Security -->
+    <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105 cursor-pointer" onclick="showGuide('accountSecurity')">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Account Security</h3>
+          <p class="text-gray-600">Keep your account safe with recommended security practices and tips.</p>
+        </div>
+      </div>
+    </div>
+    <!-- Accessing Class Materials -->
+    <div class="bg-white rounded-lg shadow-lg p-6 transition-transform hover:scale-105 cursor-pointer" onclick="showGuide('accessMaterials')">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Accessing Class Materials</h3>
+          <p class="text-gray-600">Learn where to find assignments, resources, and announcements shared by your teachers.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
  
     <!-- Contact Support Section -->
     <section id="contact" class="mb-16">
@@ -102,7 +104,10 @@
                 </div>
                 <h3 class="text-xl font-semibold text-gray-900 mb-2">Email Support</h3>
                 <p class="text-gray-600 mb-4">Get in touch with our support team</p>
-                <a href="mailto:support@aktivklass.com" class="text-green-600 hover:text-green-700 font-medium">support@aktivklass.com</a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=support@aktivklass.com" target="_blank" rel="noopener" class="text-green-600 hover:text-green-700 font-medium">
+  Email Support
+</a>
+ 
             </div>
  
             <div class="bg-white rounded-lg shadow-lg p-6 text-center">
@@ -113,7 +118,19 @@
                 </div>
                 <h3 class="text-xl font-semibold text-gray-900 mb-2">Phone Support</h3>
                 <p class="text-gray-600 mb-4">Call us during business hours</p>
-                <a href="tel:+1234567890" class="text-green-600 hover:text-green-700 font-medium">+1 (234) 567-890</a>
+                <div class="flex flex-col items-center space-y-2">
+  <a href="tel:+1234567890"
+     class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
+    Call Now
+  </a>
+  <a href="https://contacts.google.com/new?tel=+1234567890"
+     target="_blank"
+     rel="noopener"
+     class="px-3 py-1 bg-gray-100 text-green-700 rounded hover:bg-gray-200">
+    Add to Contacts
+  </a>
+</div>
+ 
             </div>
  
             <div class="bg-white rounded-lg shadow-lg p-6 text-center">
@@ -130,78 +147,79 @@
     </section>
  
     <!-- Resources Section -->
-    <section id="resources" class="mb-16">
-        <div class="text-center mb-8">
-            <h2 class="text-3xl font-bold text-gray-800 mb-2">Additional Resources</h2>
-            <p class="text-gray-600">Helpful guides and documentation</p>
+<section id="resources" class="mb-16">
+    <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold text-gray-800 mb-2">Additional Resources</h2>
+        <p class="text-gray-600">Helpful guides and documentation for students</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-white rounded-lg shadow-lg p-6 h-fit">
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">Getting Started Guide</h3>
+            <ul class="space-y-3 text-gray-600">
+                <li class="flex flex-col">
+                    <button type="button" onclick="toggleAccordion('gettingStarted1')" class="flex items-center w-full text-left focus:outline-none">
+                        <svg id="gettingStarted1Arrow" class="h-5 w-5 text-green-600 mr-2 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        Setting up your student account
+                    </button>
+                    <div id="gettingStarted1" class="hidden mt-2 text-sm text-gray-700 pl-7">
+                        After registering, verify your email and log in. Complete your profile for a personalized learning experience.
+                    </div>
+                </li>
+                <li class="flex flex-col">
+                    <button type="button" onclick="toggleAccordion('gettingStarted2')" class="flex items-center w-full text-left focus:outline-none">
+                        <svg id="gettingStarted2Arrow" class="h-5 w-5 text-green-600 mr-2 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        Joining your first class
+                    </button>
+                    <div id="gettingStarted2" class="hidden mt-2 text-sm text-gray-700 pl-7">
+                        Use the class code shared by your teacher to join the class and start learning.
+                    </div>
+                </li>
+                <li class="flex flex-col">
+                    <button type="button" onclick="toggleAccordion('gettingStarted3')" class="flex items-center w-full text-left focus:outline-none">
+                        <svg id="gettingStarted3Arrow" class="h-5 w-5 text-green-600 mr-2 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        Navigating your class materials
+                    </button>
+                    <div id="gettingStarted3" class="hidden mt-2 text-sm text-gray-700 pl-7">
+                        Access your class materials from the dashboard, including assignments, notes, and recorded lectures.
+                    </div>
+                </li>
+            </ul>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="bg-white rounded-lg shadow-lg p-6 h-fit">
-                <h3 class="text-xl font-semibold text-gray-900 mb-4">Getting Started Guide</h3>
-                <ul class="space-y-3 text-gray-600">
-                    <li class="flex flex-col">
-                        <button type="button" onclick="toggleAccordion('gettingStarted1')" class="flex items-center w-full text-left focus:outline-none">
-                            <svg id="gettingStarted1Arrow" class="h-5 w-5 text-green-600 mr-2 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                            Setting up your account
-                        </button>
-                        <div id="gettingStarted1" class="hidden mt-2 text-sm text-gray-700 pl-7">
-                            After registering, verify your email and log in. Complete your profile for a personalized experience.
-                        </div>
-                    </li>
-                    <li class="flex flex-col">
-                        <button type="button" onclick="toggleAccordion('gettingStarted2')" class="flex items-center w-full text-left focus:outline-none">
-                            <svg id="gettingStarted2Arrow" class="h-5 w-5 text-green-600 mr-2 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                            Creating your first class
-                        </button>
-                        <div id="gettingStarted2" class="hidden mt-2 text-sm text-gray-700 pl-7">
-                            Use the dashboard's "Create New Class" button, fill in the details, and invite students.
-                        </div>
-                    </li>
-                    <li class="flex flex-col">
-                        <button type="button" onclick="toggleAccordion('gettingStarted3')" class="flex items-center w-full text-left focus:outline-none">
-                            <svg id="gettingStarted3Arrow" class="h-5 w-5 text-green-600 mr-2 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                            Managing students
-                        </button>
-                        <div id="gettingStarted3" class="hidden mt-2 text-sm text-gray-700 pl-7">
-                            Add, remove, or group students for better class organization. Use the import feature for bulk actions.
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="bg-white rounded-lg shadow-lg p-6 h-fit">
-                <h3 class="text-xl font-semibold text-gray-900 mb-4">Best Practices</h3>
-                <ul class="space-y-3 text-gray-600">
-                    <li class="flex flex-col">
-                        <button type="button" onclick="toggleAccordion('bestPractices1')" class="flex items-center w-full text-left focus:outline-none">
-                            <svg id="bestPractices1Arrow" class="h-5 w-5 text-green-600 mr-2 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                            Effective class management
-                        </button>
-                        <div id="bestPractices1" class="hidden mt-2 text-sm text-gray-700 pl-7">
-                            Use consistent naming, archive old classes, and utilize groups for differentiation.
-                        </div>
-                    </li>
-                    <li class="flex flex-col">
-                        <button type="button" onclick="toggleAccordion('bestPractices2')" class="flex items-center w-full text-left focus:outline-none">
-                            <svg id="bestPractices2Arrow" class="h-5 w-5 text-green-600 mr-2 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                            Attendance tracking tips
-                        </button>
-                        <div id="bestPractices2" class="hidden mt-2 text-sm text-gray-700 pl-7">
-                            Take attendance regularly, use notes for absences, and review patterns weekly.
-                        </div>
-                    </li>
-                    <li class="flex flex-col">
-                        <button type="button" onclick="toggleAccordion('bestPractices3')" class="flex items-center w-full text-left focus:outline-none">
-                            <svg id="bestPractices3Arrow" class="h-5 w-5 text-green-600 mr-2 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                            Security recommendations
-                        </button>
-                        <div id="bestPractices3" class="hidden mt-2 text-sm text-gray-700 pl-7">
-                            Use strong passwords, enable two-factor authentication, and never share your credentials.
-                        </div>
-                    </li>
-                </ul>
-            </div>
+        <div class="bg-white rounded-lg shadow-lg p-6 h-fit">
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">Best Practices</h3>
+            <ul class="space-y-3 text-gray-600">
+                <li class="flex flex-col">
+                    <button type="button" onclick="toggleAccordion('bestPractices1')" class="flex items-center w-full text-left focus:outline-none">
+                        <svg id="bestPractices1Arrow" class="h-5 w-5 text-green-600 mr-2 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        Staying organized with assignments
+                    </button>
+                    <div id="bestPractices1" class="hidden mt-2 text-sm text-gray-700 pl-7">
+                        Stay on top of deadlines by checking your assignments regularly and setting reminders.
+                    </div>
+                </li>
+                <li class="flex flex-col">
+                    <button type="button" onclick="toggleAccordion('bestPractices2')" class="flex items-center w-full text-left focus:outline-none">
+                        <svg id="bestPractices2Arrow" class="h-5 w-5 text-green-600 mr-2 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        Effective study habits
+                    </button>
+                    <div id="bestPractices2" class="hidden mt-2 text-sm text-gray-700 pl-7">
+                        Break your study sessions into manageable time blocks, review class materials regularly, and reach out for help when needed.
+                    </div>
+                </li>
+                <li class="flex flex-col">
+                    <button type="button" onclick="toggleAccordion('bestPractices3')" class="flex items-center w-full text-left focus:outline-none">
+                        <svg id="bestPractices3Arrow" class="h-5 w-5 text-green-600 mr-2 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                        Maintaining account security
+                    </button>
+                    <div id="bestPractices3" class="hidden mt-2 text-sm text-gray-700 pl-7">
+                        Use a strong password, enable two-factor authentication, and be cautious about sharing personal information online.
+                    </div>
+                </li>
+            </ul>
         </div>
-    </section>
+    </div>
+</section>
+ 
  
     <!-- Modal for Guides -->
     <div id="guideModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden">
@@ -281,71 +299,70 @@ function closeModal() {
  
 // Guides content
 const guides = {
-    createClass: {
-        title: "Creating a New Class - Step by Step Guide",
+    joinClass: {
+        title: "Joining a Class - Step by Step Guide",
         content: `
             <ol class="list-decimal pl-5 space-y-3 text-gray-700">
-                <li>Click on the "Create New Class" button in your dashboard</li>
-                <li>Enter the class name and subject</li>
-                <li>Set the class schedule (days and times)</li>
-                <li>Add students by entering their emails or uploading a CSV file</li>
-                <li>Configure attendance settings (optional)</li>
-                <li>Click "Create Class" to finish</li>
+                <li>Log in to your student account</li>
+                <li>Click on the "Join Class" button on your dashboard</li>
+                <li>Enter the class code provided by your teacher</li>
+                <li>Confirm the class details shown on the screen</li>
+                <li>Click "Join" to become a member of the class</li>
             </ol>
             <div class="mt-4 p-3 bg-green-50 rounded-md">
-                <p class="text-green-700"><strong>Tip:</strong> You can always edit these settings later from the class management page.</p>
+                <p class="text-green-700"><strong>Tip:</strong> You can view all your joined classes anytime on your dashboard.</p>
             </div>
         `
     },
-    manageAttendance: {
-        title: "Managing Attendance - Step by Step Guide",
+    checkAttendance: {
+        title: "Checking Your Attendance - Step by Step Guide",
         content: `
             <ol class="list-decimal pl-5 space-y-3 text-gray-700">
-                <li>Navigate to the class you want to manage</li>
+                <li>Log in and go to your class page</li>
                 <li>Click on the "Attendance" tab</li>
-                <li>Select the date from the calendar</li>
-                <li>Mark students as Present, Absent, or Late</li>
-                <li>Add notes for any special circumstances (optional)</li>
-                <li>Click "Save Attendance" to record</li>
+                <li>Browse the calendar to see your attendance records</li>
+                <li>Review your status for each date (Present, Absent, Late)</li>
+                <li>If you notice any errors, contact your teacher</li>
             </ol>
             <div class="mt-4 p-3 bg-green-50 rounded-md">
-                <p class="text-green-700"><strong>Tip:</strong> You can export attendance records to Excel or PDF for reporting purposes.</p>
+                <p class="text-green-700"><strong>Tip:</strong> Regularly checking your attendance helps you stay updated.</p>
             </div>
         `
     },
     accountSecurity: {
-        title: "Account Security - Best Practices",
+        title: "Keeping Your Account Secure",
         content: `
             <ul class="list-disc pl-5 space-y-3 text-gray-700">
-                <li>Use a strong, unique password</li>
-                <li>Enable two-factor authentication in your account settings</li>
-                <li>Never share your login credentials</li>
-                <li>Log out when using public computers</li>
-                <li>Regularly review active sessions in your security settings</li>
-                <li>Be cautious of phishing emails</li>
+                <li>Use a strong password you don’t use anywhere else</li>
+                <li>Enable two-factor authentication in your settings</li>
+                <li>Never share your login details with others</li>
+                <li>Always log out when using shared or public computers</li>
+                <li>Regularly check which devices are logged into your account</li>
+                <li>Watch out for suspicious emails or links</li>
             </ul>
             <div class="mt-4 p-3 bg-yellow-50 rounded-md">
-                <p class="text-yellow-700"><strong>Important:</strong> Contact support immediately if you suspect unauthorized access to your account.</p>
+                <p class="text-yellow-700"><strong>Important:</strong> If you think your account has been compromised, contact support immediately.</p>
             </div>
         `
     },
-    classManagement: {
-        title: "Class Management - Guide",
+    accessMaterials: {
+        title: "Accessing Class Materials - Step by Step Guide",
         content: `
             <ol class="list-decimal pl-5 space-y-3 text-gray-700">
-                <li>From your dashboard, select the class you want to manage</li>
-                <li>Use the tabs to navigate between different management options</li>
-                <li>Edit class details by clicking the "Settings" button</li>
-                <li>Add or remove students from the "Students" tab</li>
-                <li>Archive inactive classes to keep your dashboard organized</li>
-                <li>Generate reports from the "Reports" section</li>
+                <li>Go to your dashboard to see all your classes</li>
+                <li>Click on a class card to open the class page</li>
+                <li>Use the tabs to view lessons, attendance, or announcements</li>
+                <li>Check your assignments and deadlines regularly</li>
+                <li>If you no longer need access, you can leave a class (if allowed)</li>
+                <li>Contact your teacher for any questions about the class</li>
             </ol>
             <div class="mt-4 p-3 bg-green-50 rounded-md">
-                <p class="text-green-700"><strong>Tip:</strong> Use the bulk actions feature to manage multiple students at once.</p>
+                <p class="text-green-700"><strong>Tip:</strong> Enable notifications to stay updated with new materials and announcements.</p>
             </div>
         `
     }
 };
+ 
  
 // Function to show guide
 function showGuide(guideName) {
@@ -373,7 +390,7 @@ document.addEventListener('keydown', function(e) {
 function toggleAccordion(openId) {
     const content = document.getElementById(openId);
     const arrow = document.getElementById(openId + 'Arrow');
-    
+ 
     if (content.classList.contains('hidden')) {
         content.classList.remove('hidden');
         if (arrow) arrow.classList.add('rotate-90');
