@@ -7,6 +7,7 @@ from django.db.models import Count
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
+# This is a test
 # Utility for generating unique class codes
 def generate_random_code(length=10):
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
